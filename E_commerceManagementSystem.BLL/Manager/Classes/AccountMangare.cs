@@ -1,6 +1,7 @@
 ﻿using Azure;
 using E_commerceManagementSystem.BLL.DTOs;
-using  E_commerceManagementSystem.DAL.Data.Models;
+using E_commerceManagementSystem.BLL.Manager.Interfaces;
+using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -8,16 +9,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
- namespace E_commerceManagementSystem.BLL.Manager
+namespace E_commerceManagementSystem.BLL.Manager.Classes
 {
-    public class AccountManager : IAccountManager
+    public class AccountMangare : IAccountManager
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signinManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtTokenService _jwtTokenService;
 
-        public AccountManager(UserManager<ApplicationUser> userManager,
+        public AccountMangare(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signinManager,
             RoleManager<IdentityRole> roleManager,
             IJwtTokenService JwtTokenService)
@@ -28,17 +29,17 @@ using System.Threading.Tasks;
             _jwtTokenService = JwtTokenService;
         }
 
-      
+
         public async Task<GeneralRespons> RegisterAsync(UserRegisterDTO UserRegister)
         {
-            
+
             ApplicationUser user = new ApplicationUser();
             user.UserName = UserRegister.UserName;
             user.Email = UserRegister.Email;
 
             var Response = new GeneralRespons();
-            var result =  await _userManager.CreateAsync(user, UserRegister.Password);
-            if(result.Succeeded)
+            var result = await _userManager.CreateAsync(user, UserRegister.Password);
+            if (result.Succeeded)
             {
 
 
@@ -53,25 +54,25 @@ using System.Threading.Tasks;
         }
         public async Task<TokenRespons> LoginAsync(UserLoginDTO loginDTO)
         {
-           
+
             var user = await _userManager.FindByNameAsync(loginDTO.UserName);
-           
+
             if (user != null)
             {
                 var result = await _signinManager.PasswordSignInAsync
                                            (user, loginDTO.Password, false, false);
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
-                   var rols = await _userManager.GetRolesAsync(user);
-                    TokenRespons tokenRespons= _jwtTokenService.GenerateJwtToken(user, rols);
+                    var rols = await _userManager.GetRolesAsync(user);
+                    TokenRespons tokenRespons = _jwtTokenService.GenerateJwtToken(user, rols);
 
                     return tokenRespons;
 
                 }
                 return null;
             }
-           
-            return null ;
+
+            return null;
         }
 
         public async Task LogOutAsync()
@@ -79,8 +80,8 @@ using System.Threading.Tasks;
             await _signinManager.SignOutAsync();
         }
 
-       
-       
+
+
 
         public Task<UserRegisterDTO> LoginAsync(UserRegisterDTO loginVM)
         {

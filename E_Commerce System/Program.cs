@@ -1,13 +1,12 @@
-
-using E_commerceManagementSystem.BLL.Manager;
 using E_commerceManagementSystem.DAL.Data.Dphelper;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.BLL.DTOs;
-using E_commerceManagementSystem.BLL.Manager;
 
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using E_commerceManagementSystem.BLL.Manager.Classes;
+using E_commerceManagementSystem.BLL.Manager.Interfaces;
 
 
 namespace E_Commerce_System
@@ -32,7 +31,7 @@ namespace E_Commerce_System
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddScoped<IAccountManager, AccountManager>();
+            builder.Services.AddScoped<IAccountManager, AccountMangare>();
             // register for the service 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

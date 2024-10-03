@@ -1,4 +1,5 @@
 ﻿using E_commerceManagementSystem.BLL.DTOs;
+using E_commerceManagementSystem.BLL.Manager.Interfaces;
 using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -10,9 +11,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager
+namespace E_commerceManagementSystem.BLL.Manager.Classes
 {
-    public class JwtTokenService:IJwtTokenService
+    public class JwtTokenService : IJwtTokenService
     {
         private readonly IConfiguration _configuration;
 

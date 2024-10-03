@@ -1,7 +1,7 @@
 ﻿using E_commerceManagementSystem.BLL.DTOs;
-using E_commerceManagementSystem.BLL.Manager;
-using E_commerceManagementSystem.DAL.Data.Models;
-using Microsoft.AspNetCore.Http;
+using E_commerceManagementSystem.BLL.Manager.Interfaces;
+
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

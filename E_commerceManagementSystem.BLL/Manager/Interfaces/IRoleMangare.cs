@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager
+namespace E_commerceManagementSystem.BLL.Manager.Interfaces
 {
-    public interface  IRoleMangare
+    public interface IRoleMangare
     {
         public Task<GeneralRespons> CreateRole([FromBody] RoleAddDTO roleAddDTO);
-        public  Task<GeneralRespons> AssignRole([FromBody] AssignRoleDTO model);
-      //  public  Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
+        public Task<GeneralRespons> AssignRole([FromBody] AssignRoleDTO model);
+        //  public  Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
     }
 }
