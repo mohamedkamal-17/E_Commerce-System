@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.DTOs
+namespace E_commerceManagementSystem.BLL.DTOs.RoleDto
 {
     public class RoleAddDTO
     {
-       public string RoleName { get; set; }
+        public string RoleName { get; set; }
     }
 }

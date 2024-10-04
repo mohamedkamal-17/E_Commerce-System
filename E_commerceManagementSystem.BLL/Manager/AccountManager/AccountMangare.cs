@@ -1,6 +1,8 @@
 ﻿using Azure;
 using E_commerceManagementSystem.BLL.DTOs;
-using E_commerceManagementSystem.BLL.Manager.Interfaces;
+using E_commerceManagementSystem.BLL.DTOs.AccountDto;
+using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.BLL.Manager.JwtTokenManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -9,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager.Classes
+namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 {
     public class AccountMangare : IAccountManager
     {
@@ -30,14 +32,14 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
         }
 
 
-        public async Task<GeneralRespons> RegisterAsync(UserRegisterDTO UserRegister)
+        public async Task<GeneralResponsDto> RegisterAsync(UserRegisterDTO UserRegister)
         {
 
             ApplicationUser user = new ApplicationUser();
             user.UserName = UserRegister.UserName;
             user.Email = UserRegister.Email;
 
-            var Response = new GeneralRespons();
+            var Response = new GeneralResponsDto();
             var result = await _userManager.CreateAsync(user, UserRegister.Password);
             if (result.Succeeded)
             {

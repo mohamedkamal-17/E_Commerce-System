@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager.Interfaces
+namespace E_commerceManagementSystem.BLL.Manager.JwtTokenManager
 {
     public interface IJwtTokenService
     {

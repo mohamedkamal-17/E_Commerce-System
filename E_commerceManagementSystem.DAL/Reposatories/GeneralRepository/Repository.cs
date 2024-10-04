@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.DAL.Repositories.Classes
+namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
