@@ -9,6 +9,6 @@ namespace E_commerceManagementSystem.BLL.Manager.Interfaces
 {
     public interface IProductMangare:IManager<Product>
     {
-        Task<IEnumerable<Product>> GetPraoductByCategoryNameAsync(string Name);
+        Task<IEnumerable<Product>> GetProductByCategoryNameAsync(string Name);
     }
 }

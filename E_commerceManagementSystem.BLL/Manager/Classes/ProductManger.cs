@@ -12,9 +12,13 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
     public class ProductManger : Manager<Product>, IProductMangare
     {
         ProductManger(IRepository<Product> repo) : base(repo) { }
-        public Task<IEnumerable<Product>> GetPraoductByCategoryNameAsync(string Name)
+        public Task<IEnumerable<Product>> GetProductByCategoryNameAsync(string Name)
         {
             throw new NotImplementedException();
         }
+
+
+
+
     }
 }
