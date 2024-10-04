@@ -1,7 +1,7 @@
 ﻿using E_commerceManagementSystem.BLL.DTOs;
-using E_commerceManagementSystem.BLL.Manager.Interfaces;
-
-
+using E_commerceManagementSystem.BLL.DTOs.AccountDto;
+using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.BLL.Manager.AccountManager;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,15 +23,14 @@ namespace E_Commerce_System.Controllers
         public async Task<IActionResult> RegistarAsync([FromBody]UserRegisterDTO UserRegisterDTO )
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
-            GeneralRespons result=await _AccountManager.RegisterAsync(UserRegisterDTO);
+            GeneralResponsDto result=await _AccountManager.RegisterAsync(UserRegisterDTO);
             if (!result.Successe)
                 return BadRequest(result);
 
-            else 
-            return Ok("User registered successfully!");
-       
+            else
+                return Ok("User registered successfully!");
         }
 
         [HttpPost("login")]
@@ -39,22 +38,14 @@ namespace E_Commerce_System.Controllers
         public async Task<IActionResult>LoginAsync([FromBody] UserLoginDTO UserLoginDTO)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             TokenRespons result = await _AccountManager.LoginAsync(UserLoginDTO);
             if (result != null)
             {
                 return Ok(result);
-
-
             }
-
-                return BadRequest("User name or Paswword is not valid");
-
-           
-
+                return BadRequest("User name or Password is not valid");
         }
-
-
     }
 }

@@ -5,9 +5,9 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Commerce System", "E_Commerce System\E_Commerce System.csproj", "{9A666139-7FE2-41F8-A438-8F070DFB5FC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_commerceManagementSystem.BLL", "E_commerceManagementSystem.BLL\E_commerceManagementSystem.BLL.csproj", "{C6C14D2A-F702-4BB0-8EFD-4AE3DAD5D3DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_commerceManagementSystem.BLL", "E_commerceManagementSystem.BLL\E_commerceManagementSystem.BLL.csproj", "{C6C14D2A-F702-4BB0-8EFD-4AE3DAD5D3DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_commerceManagementSystem.DAL", "E_commerceManagementSystem.DAL\E_commerceManagementSystem.DAL.csproj", "{70FBF20D-57FB-4EFC-9953-69673E454C27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_commerceManagementSystem.DAL", "E_commerceManagementSystem.DAL\E_commerceManagementSystem.DAL.csproj", "{70FBF20D-57FB-4EFC-9953-69673E454C27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

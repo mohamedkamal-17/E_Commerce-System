@@ -1,6 +1,7 @@
 ﻿using E_commerceManagementSystem.DAL.Data.Dphelper;
 using E_commerceManagementSystem.DAL.Data.Models;
-using E_commerceManagementSystem.DAL.Repositories.Interfaces;
+using E_commerceManagementSystem.DAL.Reposatories.GeneralRepository;
+using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

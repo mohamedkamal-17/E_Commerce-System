@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.DTOs
+namespace E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto
 {
-    public class GeneralRespons
+    public class GeneralResponsDto
     {
         public bool Successe { get; set; } = false;
 

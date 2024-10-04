@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager.Interfaces
+namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 {
     public interface IManager<T> where T : class
     {

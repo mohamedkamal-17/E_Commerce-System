@@ -1,5 +1,6 @@
-﻿using E_commerceManagementSystem.BLL.DTOs;
-using E_commerceManagementSystem.BLL.Manager.Interfaces;
+﻿using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.BLL.DTOs.RoleDto;
+using E_commerceManagementSystem.BLL.Manager.RoleManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +28,9 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
             _RoleManager = roleManager;
         }
 
-        public async Task<GeneralRespons> AssignRole([FromBody] AssignRoleDTO model)
+        public async Task<GeneralResponsDto> AssignRole([FromBody] AssignRoleDTO model)
         {
-            GeneralRespons respons = new GeneralRespons();
+            GeneralResponsDto respons = new GeneralResponsDto();
 
             var user = await _UserManager.FindByIdAsync(model.UserId);
             if (user != null)
@@ -59,9 +60,9 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
 
         }
 
-        public async Task<GeneralRespons> CreateRole([FromBody] RoleAddDTO roleAddDTO)
+        public async Task<GeneralResponsDto> CreateRole([FromBody] RoleAddDTO roleAddDTO)
         {
-            GeneralRespons respons = new GeneralRespons();
+            GeneralResponsDto respons = new GeneralResponsDto();
             var roleExists = await _RoleManager.RoleExistsAsync(roleAddDTO.RoleName);
             if (roleExists)
             {

@@ -5,8 +5,8 @@ using E_commerceManagementSystem.BLL.DTOs;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using E_commerceManagementSystem.BLL.Manager.Classes;
-using E_commerceManagementSystem.BLL.Manager.Interfaces;
+using E_commerceManagementSystem.BLL.Manager.AccountManager;
+using E_commerceManagementSystem.BLL.Manager.JwtTokenManager;
 
 
 namespace E_Commerce_System
