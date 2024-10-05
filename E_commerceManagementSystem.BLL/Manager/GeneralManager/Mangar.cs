@@ -1,4 +1,5 @@
-﻿using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+﻿using AutoMapper;
+using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
     public class Manager<T> : IManager<T> where T : class
     {
         private readonly IRepository<T> _repository;
+        private readonly IMapper _mapper;
 
-        public Manager(IRepository<T> repository)
+        public Manager(IRepository<T> repository,IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<GeneralRespons> GetAllAsync()
@@ -63,15 +66,15 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             }
         }
 
-        public async Task<GeneralRespons> AddAsync(T entity)
+        public async Task<GeneralRespons> AddAsync(object dto)
         {
             var response = new GeneralRespons();
+               T entity= _mapper.Map<T>(dto);
             try
             {
-               
+
                 await _repository.AddAsync(entity);
 
-                
                 response.Success = true;
                 response.Message = $"{nameof(entity)} added successfully"; 
                 response.Model = entity;
@@ -89,9 +92,10 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         }
 
-        public async Task<GeneralRespons> UpdateAsync(T entity)
+        public async Task<GeneralRespons> UpdateAsync(object dto)
         {
             var response = new GeneralRespons();
+            T entity = _mapper.Map<T>(dto);
             try
             {
 
@@ -113,17 +117,19 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             }
         }
 
-        public async Task<GeneralRespons> DeleteAsync(T entity)
+        public async Task<GeneralRespons> DeleteAsync(int id)
         {
             var response = new GeneralRespons();
+           
             try
             {
+                T entity =await _repository.GetByIdAsync(id);
 
                 await _repository.DeleteAsync(entity);
 
 
                 response.Success = true;
-                response.Message = $"{nameof(entity)} added successfully";
+                response.Message = $"{nameof(entity)} deleted successfully";
                 response.Model = entity;
                 return response;
             }
@@ -131,11 +137,13 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             {
 
                 response.Success = false;
-                response.Message = $"Error adding {nameof(entity)}: {ex.Message}";
+                response.Message = $"Error deleted  {ex.Message}";
                 response.Model = null;
                 return response;
             }
         }
+
+       
     }
 
 }
