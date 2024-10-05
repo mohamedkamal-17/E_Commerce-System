@@ -1,4 +1,5 @@
-﻿using System;
+﻿using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,12 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 {
     public interface IManager<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetByIdAsync(int id);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+        Task<GeneralRespons> GetAllAsync();
+        Task<GeneralRespons> GetByIdAsync(int id);
+        Task<GeneralRespons> AddAsync(T entity);
+        Task<GeneralRespons> UpdateAsync(T entity);
+        Task<GeneralRespons> DeleteAsync(T entity);
     }
 
 }
-}
+

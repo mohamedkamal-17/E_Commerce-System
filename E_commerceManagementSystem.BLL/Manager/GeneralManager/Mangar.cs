@@ -1,7 +1,9 @@
-﻿using E_commerceManagementSystem.DAL.Repositories.Interfaces;
+﻿using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,29 +18,123 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             _repository = repository;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<GeneralRespons> GetAllAsync()
         {
-            return await _repository.GetAllAsync();
+            var respons = new GeneralRespons();
+
+
+            var result = await _repository.GetAllAsync();
+            if (!(result.Count == 0 || result == null))
+            {
+                respons.Success = true;
+                respons.Model = result;
+                respons.Message = $"{nameof(T)}sretrieved successfully";
+                return respons;
+            }
+            else
+            {
+                respons.Success = false;
+                respons.Model = null;
+                respons.Message = $" {nameof(T)} not Found successfully";
+                return respons;
+            }
+
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<GeneralRespons> GetByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            var respons =new GeneralRespons();
+            var result = await _repository.GetByIdAsync(id);
+            if(result!=null)
+            {
+                respons.Success = true;
+                respons.Model = result;
+                respons.Message = $"{nameof(T)} retrieved successfully";
+                return respons;
+
+
+            }
+            else
+            {
+                respons.Success = false;
+                respons.Model = null;
+                respons.Message = $" {nameof(T)} not Found successfully";
+                return respons;
+            }
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<GeneralRespons> AddAsync(T entity)
         {
-            await _repository.AddAsync(entity);
+            var response = new GeneralRespons();
+            try
+            {
+               
+                await _repository.AddAsync(entity);
+
+                
+                response.Success = true;
+                response.Message = $"{nameof(entity)} added successfully"; 
+                response.Model = entity;
+                return response;
+            }
+            catch (Exception ex)
+            {
+              
+                response.Success = false;
+                response.Message = $"Error adding {nameof(entity)}: {ex.Message}"; 
+                response.Model = null;
+                return response;
+            }
+
+
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task<GeneralRespons> UpdateAsync(T entity)
         {
-            await _repository.UpdateAsync(entity);
+            var response = new GeneralRespons();
+            try
+            {
+
+                await _repository.UpdateAsync(entity);
+
+
+                response.Success = true;
+                response.Message = $"{nameof(entity)} added successfully";
+                response.Model = entity;
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = $"Error adding {nameof(entity)}: {ex.Message}";
+                response.Model = null;
+                return response;
+            }
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task<GeneralRespons> DeleteAsync(T entity)
         {
-            await _repository.DeleteAsync(entity);
+            var response = new GeneralRespons();
+            try
+            {
+
+                await _repository.DeleteAsync(entity);
+
+
+                response.Success = true;
+                response.Message = $"{nameof(entity)} added successfully";
+                response.Model = entity;
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = $"Error adding {nameof(entity)}: {ex.Message}";
+                response.Model = null;
+                return response;
+            }
         }
     }
 
