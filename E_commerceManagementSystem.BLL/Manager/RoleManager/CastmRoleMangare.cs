@@ -28,9 +28,9 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
             _RoleManager = roleManager;
         }
 
-        public async Task<GeneralResponsDto> AssignRole([FromBody] AssignRoleDTO model)
+        public async Task<GeneralRespons> AssignRole([FromBody] AssignRoleDTO model)
         {
-            GeneralResponsDto respons = new GeneralResponsDto();
+            GeneralRespons respons = new GeneralRespons();
 
             var user = await _UserManager.FindByIdAsync(model.UserId);
             if (user != null)
@@ -41,7 +41,7 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
                     var result = await _UserManager.AddToRoleAsync(user, model.RoleName);
                     if (result.Succeeded)
                     {
-                        respons.Successe = true;
+                        respons.Success = true;
                         return respons;
                     }
                 }
@@ -60,9 +60,9 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
 
         }
 
-        public async Task<GeneralResponsDto> CreateRole([FromBody] RoleAddDTO roleAddDTO)
+        public async Task<GeneralRespons> CreateRole([FromBody] RoleAddDTO roleAddDTO)
         {
-            GeneralResponsDto respons = new GeneralResponsDto();
+            GeneralRespons respons = new GeneralRespons();
             var roleExists = await _RoleManager.RoleExistsAsync(roleAddDTO.RoleName);
             if (roleExists)
             {
@@ -80,7 +80,7 @@ namespace E_commerceManagementSystem.BLL.Manager.Classes
                     respons.Errors.Add(error.Description);
                 }
             }
-            respons.Successe = true;
+            respons.Success = true;
             return respons;
         }
 

@@ -32,20 +32,20 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
         }
 
 
-        public async Task<GeneralResponsDto> RegisterAsync(UserRegisterDTO UserRegister)
+        public async Task<GeneralRespons> RegisterAsync(UserRegisterDTO UserRegister)
         {
 
             ApplicationUser user = new ApplicationUser();
             user.UserName = UserRegister.UserName;
             user.Email = UserRegister.Email;
 
-            var Response = new GeneralResponsDto();
+            var Response = new GeneralRespons();
             var result = await _userManager.CreateAsync(user, UserRegister.Password);
             if (result.Succeeded)
             {
 
 
-                Response.Successe = true;
+                Response.Success = true;
                 return Response;
             }
             foreach (var error in result.Errors)

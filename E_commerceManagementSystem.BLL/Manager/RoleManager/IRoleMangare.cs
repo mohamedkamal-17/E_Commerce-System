@@ -11,8 +11,8 @@ namespace E_commerceManagementSystem.BLL.Manager.RoleManager
 {
     public interface IRoleMangare
     {
-        public Task<GeneralResponsDto> CreateRole([FromBody] RoleAddDTO roleAddDTO);
-        public Task<GeneralResponsDto> AssignRole([FromBody] AssignRoleDTO model);
+        public Task<GeneralRespons> CreateRole([FromBody] RoleAddDTO roleAddDTO);
+        public Task<GeneralRespons> AssignRole([FromBody] AssignRoleDTO model);
         //  public  Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
     }
 }

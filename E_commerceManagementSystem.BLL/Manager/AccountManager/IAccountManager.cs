@@ -12,7 +12,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 {
     public interface IAccountManager
     {
-        Task<GeneralResponsDto> RegisterAsync(UserRegisterDTO registerVM);
+        Task<GeneralRespons> RegisterAsync(UserRegisterDTO registerVM);
         Task<TokenRespons> LoginAsync(UserLoginDTO UserLoginDTO);
         Task<UserRegisterDTO> CreateRoleAsync(UserRegisterDTO roleVM);
         Task<UserRegisterDTO> AssignRoleToUserAsync(UserRegisterDTO roleToUserVM);
