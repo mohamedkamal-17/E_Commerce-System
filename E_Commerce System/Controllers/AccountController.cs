@@ -25,8 +25,8 @@ namespace E_Commerce_System.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            GeneralResponsDto result=await _AccountManager.RegisterAsync(UserRegisterDTO);
-            if (!result.Successe)
+            GeneralRespons result=await _AccountManager.RegisterAsync(UserRegisterDTO);
+            if (!result.Success)
                 return BadRequest(result);
 
             else
