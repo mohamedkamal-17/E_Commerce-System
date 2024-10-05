@@ -20,7 +20,7 @@ namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<ICollection<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
