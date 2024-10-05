@@ -10,6 +10,6 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
     public interface IProductMangare : IManager<Product>
     {
-        Task<IEnumerable<Product>> GetProductByCategoryNameAsync(string Name);
+        Task<ICollection<Product>> GetProductByCategoryNameAsync(string Name);
     }
 }
