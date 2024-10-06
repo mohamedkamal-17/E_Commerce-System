@@ -1,4 +1,5 @@
 ﻿using E_commerceManagementSystem.BLL.Dto.ProductDto;
+using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using System;
@@ -11,6 +12,11 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
     public interface IProductMangare : IManager<Product,AddproductDto,UpdateProductDto>
     {
-        Task<ICollection<Product>> GetProductByCategoryNameAsync(string Name);
+        Task<GeneralRespons> GetProductByCategoryNameAsync(string Name);
+        Task<GeneralRespons> GetByCategoryNameAsync();
+        Task<GeneralRespons> GetByPraiceAsync(float price);
+        Task<GeneralRespons> GetByPraiceInRangeAsync(float highPrice, float lowPrice);
+        Task<GeneralRespons> GetByPraicelessthanAsync(float highPrice);
+        Task<GeneralRespons> GetByPraicelargthanAsync(float lowPrice);
     }
 }
