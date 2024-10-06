@@ -17,8 +17,8 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public Manager(IRepository<T> repository, IMapper mapper)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _repository = repository;// ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper;//?? throw new ArgumentNullException(nameof(mapper));
         }
 
         private GeneralRespons CreateResponse(bool success, object? model, string message, List<string>? errors = null)
