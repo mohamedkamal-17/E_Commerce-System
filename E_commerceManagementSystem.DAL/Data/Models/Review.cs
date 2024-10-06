@@ -10,9 +10,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
     {
         public int Id { get; set; } // (Primary Key) 
         public int Rating { get; set; } // (1-5) Scale
-        public int ReviewText { get; set; }
-        public int CreatedAt { get; set; }
-
+        public string ReviewText { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int ProductId { get; set; } //Foreign Key referencing Product
         public Product Product { get; set; } //Navigation prop
         public string UserId { get; set; } //(Foreign Key referencing ApplicationUser) 
