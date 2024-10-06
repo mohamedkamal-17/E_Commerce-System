@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using E_commerceManagementSystem.BLL.Dto.ShippingDto;
+using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
@@ -20,5 +21,26 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManger
        
    
         : base(rpository, mapper) { }
-    
-}}
+
+
+        public Task<GeneralRespons> GetByOrderIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<GeneralRespons> GetByShipingState(string statu)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<GeneralRespons> GetByShippingDate(DateTime shippingDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<GeneralRespons> GetBytrackingnumber(int id)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
