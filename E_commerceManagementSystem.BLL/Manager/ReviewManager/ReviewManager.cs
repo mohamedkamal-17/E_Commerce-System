@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
 {
-    public class ReviewManager : Manager<Review, AddReviewDto, UpdateReviewDto>, IReviewManager
+    public class ReviewManager : Manager<Review, ReadReviewDto, AddReviewDto, UpdateReviewDto>, IReviewManager
     {
         private readonly IReviewRepo _reviewRepo;
         private readonly IProductRepo _productRepo;

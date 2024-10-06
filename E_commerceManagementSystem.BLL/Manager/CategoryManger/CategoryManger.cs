@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.CategoryManger
 {
-    public class CategoryManger:Manager<Category, AddCategoryDTO, UpdateCategoryDto>, ICategoryManger
+    public class CategoryManger:Manager<Category, ReadCategoryDto, AddCategoryDTO, UpdateCategoryDto>, ICategoryManger
       
     {
         public CategoryManger(IRepository<Category> repository,IMapper mapper):base(repository, mapper) { }

@@ -8,7 +8,7 @@ using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 namespace E_commerceManagementSystem.BLL.Manager.ShippingManger
 {
-    public interface IShippingManger:IManager<Shipping,AddShippingDto,UpdateShippingDto>
+    public interface IShippingManger:IManager<Shipping, ReadShippingDto, AddShippingDto, UpdateShippingDto>
     {
     }
 }

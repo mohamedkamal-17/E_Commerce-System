@@ -12,7 +12,7 @@ using E_commerceManagementSystem.DAL.Reposatories.ShippingRepository;
 
 namespace E_commerceManagementSystem.BLL.Manager.ShippingManger
 {
-    public class ShippingManger:Manager<Shipping,AddShippingDto,UpdateShippingDto>,IShippingManger
+    public class ShippingManger:Manager<Shipping, ReadShippingDto,AddShippingDto, UpdateShippingDto>,IShippingManger
     {
         
    

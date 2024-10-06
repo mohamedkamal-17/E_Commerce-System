@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.CategoryManger
 {
-    public interface ICategoryManger: IManager<Category, AddCategoryDTO, UpdateCategoryDto>
+    public interface ICategoryManger: IManager<Category, ReadCategoryDto, AddCategoryDTO, UpdateCategoryDto>
     {
     }
 }

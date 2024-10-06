@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
-    public class ProductManger : Manager<Product, AddproductDto, UpdateProductDto>, IProductMangare
+    public class ProductManger : Manager<Product, ReadProductDto, AddproductDto, UpdateProductDto>, IProductMangare
     {
         private readonly IProductRepo _repository;
 

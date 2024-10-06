@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
 {
-    public interface IReviewManager : IManager<Review,AddReviewDto,UpdateReviewDto>
+    public interface IReviewManager : IManager<Review, ReadReviewDto, AddReviewDto, UpdateReviewDto>
     {
         Task<GeneralRespons> GetByUserIdAsync(string userId);
         Task<GeneralRespons> GetByProductIdAsync(int productid);

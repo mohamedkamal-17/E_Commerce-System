@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
-    public interface IProductMangare : IManager<Product,AddproductDto,UpdateProductDto>
+    public interface IProductMangare : IManager<Product, ReadProductDto, AddproductDto,UpdateProductDto>
     {
         Task<GeneralRespons> GetProductByCategoryNameAsync(string Name);
         Task<GeneralRespons> GetByCategoryNameAsync();
