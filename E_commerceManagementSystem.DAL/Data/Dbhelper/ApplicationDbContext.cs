@@ -24,7 +24,7 @@ namespace E_commerceManagementSystem.DAL.Data.Dphelper
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Cart).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Inventory).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Review).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CartProduct).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CartItem).Assembly);
 
 
             base.OnModelCreating(modelBuilder);
@@ -40,7 +40,7 @@ namespace E_commerceManagementSystem.DAL.Data.Dphelper
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Shipping> Shipping { get; set; }
         public DbSet<Cart> Carts { get; set; }
-        public DbSet<CartProduct> CartProduct { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<WishList> WishLists { get; set; }
 
 
