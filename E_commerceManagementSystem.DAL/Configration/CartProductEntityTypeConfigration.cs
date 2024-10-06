@@ -8,18 +8,18 @@ using E_commerceManagementSystem.DAL.Data.Models;
 
 namespace E_commerceManagementSystem.DAL.Configration
 {
-    internal class CartProductEntityTypeConfigration : IEntityTypeConfiguration<CartProduct>
+    internal class CartProductEntityTypeConfigration : IEntityTypeConfiguration<CartItem>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<CartProduct> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<CartItem> builder)
         {
 
-            builder.HasKey(o => new { o.ProductId, o.ShoppingCartID });
-            builder.HasOne(o => o.ShoppingCart)
-                 .WithMany(o => o.ShoppingCartProduct)
-                  .HasForeignKey(o => o.ShoppingCartID);
+            builder.HasKey(o => new { o.ProductId, o.CartID });
+            builder.HasOne(o => o.Cart)
+                 .WithMany(o => o.CartItems)
+                  .HasForeignKey(o => o.CartID);
 
             builder.HasOne(o => o.Product)
-                .WithMany(o => o.ShoppingCartProduct)
+                .WithMany(o => o.CartItem)
                  .HasForeignKey(o => o.ProductId);
 
 

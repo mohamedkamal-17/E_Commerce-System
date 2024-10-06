@@ -16,11 +16,11 @@ namespace E_commerceManagementSystem.DAL.Configration
             {
                 builder.HasKey(a => a.Id);
             builder.HasOne(s => s.Product)               // One orderItem is enrolled in one product type
-           .WithMany(c => c.orderItems)           // One product type can have many orderItem
+           .WithMany(c => c.OrderItems)           // One product type can have many orderItem
            .HasForeignKey(s => s.ProductId);     // Define ProductID as the foreign key
 
             builder.HasOne(s => s.Order)               // One orderItem is enrolled in one order 
-             .WithMany(c => c.orderItems)           // One order type can have many orderItem
+             .WithMany(c => c.OrderItems)           // One order type can have many orderItem
              .HasForeignKey(s => s.OrderId);     // Define OrderID as the foreign key
 
 
