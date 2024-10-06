@@ -2,6 +2,7 @@
 using E_commerceManagementSystem.BLL.Dto.ProductDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
     public class ProductManger : Manager<Product, AddproductDto, UpdateProductDto>, IProductMangare
     {
-        public ProductManger(IRepository<Product> repository, IMapper mapper)
+        public ProductManger(IProductRepo repository, IMapper mapper)
              : base(repository, mapper)
         {
         }
