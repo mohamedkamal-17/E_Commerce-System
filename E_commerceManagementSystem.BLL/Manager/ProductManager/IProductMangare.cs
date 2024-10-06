@@ -1,4 +1,5 @@
-﻿using E_commerceManagementSystem.BLL.Manager.GeneralManager;
+﻿using E_commerceManagementSystem.BLL.Dto.ProductDto;
+using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
-    public interface IProductMangare : IManager<Product>
+    public interface IProductMangare : IManager<Product,AddproductDto,UpdateProductDto>
     {
         Task<ICollection<Product>> GetProductByCategoryNameAsync(string Name);
     }

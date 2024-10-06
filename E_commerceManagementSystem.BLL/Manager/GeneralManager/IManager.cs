@@ -15,7 +15,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
         Task<GeneralRespons> GetAllAsync();
         Task<GeneralRespons> GetByIdAsync(int id);
         Task<GeneralRespons> AddAsync(TAddDto dto);
-        Task<GeneralRespons> UpdateAsync(TUpdateDto dto);
+        Task<GeneralRespons> UpdateAsync(int id ,TUpdateDto dto);
         Task<GeneralRespons> DeleteAsync(int id);
     }
 
