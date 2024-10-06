@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using E_commerceManagementSystem.BLL.Manager.AccountManager;
 using E_commerceManagementSystem.BLL.Manager.JwtTokenManager;
+using E_commerceManagementSystem.BLL.Manager.ProductManager;
+using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
+using E_commerceManagementSystem.DAL.Repositories.Classes;
+using E_commerceManagementSystem.DAL.Reposatories.ReviewRepository;
+using E_commerceManagementSystem.BLL.Manager.ReviewManager;
+using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 
 
 namespace E_Commerce_System
@@ -32,6 +38,17 @@ namespace E_Commerce_System
 
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IAccountManager, AccountMangare>();
+
+
+            builder.Services.AddScoped<IProductMangare,ProductManger>();
+            builder.Services.AddScoped<IProductRepo, ProductRepo>();
+
+            builder.Services.AddScoped<IReviewManager, ReviewManager>();
+            builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
+
+
+            builder.Services.AddAutoMapper(typeof(Program));
+
             // register for the service 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
