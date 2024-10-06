@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Data.Models
 {
-    public class CartProduct
+    public class CartItem
     {
+        public int Quantity { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
 
-        public int ShoppingCartID { get; set; }
-        public Cart ShoppingCart { get; set; }
+        public int CartID { get; set; }
+        public Cart Cart { get; set; }
 
     }
 }

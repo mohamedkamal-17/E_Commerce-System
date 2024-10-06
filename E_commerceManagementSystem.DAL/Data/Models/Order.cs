@@ -10,17 +10,15 @@ namespace E_commerceManagementSystem.DAL.Data.Models
     {
         public int Id { get; set; }
         public string UserId { get; set; } //Foreign Key Referencing ApplicationUser 
-        public DateTime OrderDate { get; set; }
-        public string OrderStatus { get; set; }
-        public double TotalAmount { get; set; }
-        public int ShippingAddress { get; set; }
-        public int BillingAddress { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public int paymentId { get; set; }
+        public string Status { get; set; }
+        public double TotalPrice { get; set; }
+        public string Address { get; set; }
+        public DateTime? ShippingDate { get; set; } // = DateTime.Now;
+        public DateTime? ArrivalDate { get; set; }
+        public int PaymentId { get; set; }
         public ApplicationUser User { get; set; } // Navigation prop
-        public ICollection<OrderItem> orderItems { get; set; }  // Navigation prop
-        public Payment payment { get; set; } // Navigation prop
+        public ICollection<OrderItem> OrderItems { get; set; }  // Navigation prop
+        public Payment? Payment { get; set; } // Navigation prop
 
         public Shipping Shipping { get; set; }
     }
