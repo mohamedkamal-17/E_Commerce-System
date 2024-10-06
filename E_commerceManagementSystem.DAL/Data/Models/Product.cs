@@ -14,7 +14,7 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public double Price { get; set; }
         public int? StockQuantity { get; set; }
         public string? ImageURL { get; set; }
-        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? CreatedAt { get; set; }// = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public int? CategoryId { get; set; } // Foreign Key
         public Category? Category{ get; set; } // Navigation property

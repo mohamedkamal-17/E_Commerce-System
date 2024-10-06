@@ -13,8 +13,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public string Status { get; set; }
         public double TotalPrice { get; set; }
         public string Address { get; set; }
-        public DateTime? ShippingDate { get; set; }  = DateTime.Now;
-        public DateOnly? ArrivalDate { get; set; }
+        public DateTime? ShippingDate { get; set; } // = DateTime.Now;
+        public DateTime? ArrivalDate { get; set; }
         public int PaymentId { get; set; }
         public ApplicationUser User { get; set; } // Navigation prop
         public ICollection<OrderItem> OrderItems { get; set; }  // Navigation prop
