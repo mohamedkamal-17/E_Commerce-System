@@ -20,9 +20,9 @@ namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<ICollection<T>> GetAllAsync()
+        public async Task<IQueryable<T>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            return  _dbSet.AsNoTracking();
         }
 
         public async Task<T> GetByIdAsync(int id)
