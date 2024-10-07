@@ -13,7 +13,7 @@ namespace E_commerceManagementSystem.BLL.Dto.ProductDto
         public double Price { get; set; }
         public int StockQuantity { get; set; }
 
-        public string ImageURL { get; set; }
+        public string? ImageURL { get; set; }
 
     }
 }
