@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.BLL.Manager.CartItemManager;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,6 +22,10 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
         {
             _repository = repository;// ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper;//?? throw new ArgumentNullException(nameof(mapper));
+        }
+
+        public Manager(ICartItemManager repository, IMapper mapper)
+        {
         }
 
         private GeneralRespons CreateResponse(bool success, object? model, string message, List<string>? errors = null)
