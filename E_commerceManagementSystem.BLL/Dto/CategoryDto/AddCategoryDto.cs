@@ -8,5 +8,9 @@ namespace E_commerceManagementSystem.BLL.Dto.CategoryDto
 {
     public class AddCategoryDTO
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string ImgUrel { get; set; }
+
     }
 }
