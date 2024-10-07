@@ -13,6 +13,10 @@ using E_commerceManagementSystem.DAL.Repositories.Classes;
 using E_commerceManagementSystem.DAL.Reposatories.ReviewRepository;
 using E_commerceManagementSystem.BLL.Manager.ReviewManager;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
+using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
+using E_commerceManagementSystem.BLL.Manager.OrderManager;
+using E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository;
+using E_commerceManagementSystem.BLL.Manager.OrderItemManager;
 
 
 namespace E_Commerce_System
@@ -46,6 +50,11 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IReviewManager, ReviewManager>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
 
+            builder.Services.AddScoped<IOrderRepo, OrderRepo>();
+            builder.Services.AddScoped<IOrderManager, OrderManager>();
+
+            builder.Services.AddScoped<IOrderItemRepo, OrderItemRepo>();
+            builder.Services.AddScoped<IOrderItemManager, OrderItemManager>();
 
             builder.Services.AddAutoMapper(typeof(Program));
 
