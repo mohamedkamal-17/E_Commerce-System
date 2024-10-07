@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 {
-    public interface IManager<T, TAddDto, TUpdateDto> 
+    public interface IManager<T, TReadDto, TAddDto, TUpdateDto> 
         where T : class
+        where TReadDto : class
         where TAddDto : class
         where TUpdateDto : class
+
     {
         Task<GeneralRespons> GetAllAsync();
         Task<GeneralRespons> GetByIdAsync(int id);

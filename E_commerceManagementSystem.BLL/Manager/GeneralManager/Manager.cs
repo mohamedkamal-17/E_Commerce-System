@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 {
-    public class Manager<T, TAddDto, TUpdateDto> : IManager<T, TAddDto, TUpdateDto>
+    public class Manager<T, TReadDto, TAddDto, TUpdateDto> : IManager<T, TReadDto, TAddDto, TUpdateDto>
         where T : class
+        where TReadDto : class
         where TAddDto : class
         where TUpdateDto : class
     {
@@ -34,12 +36,16 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public async Task<GeneralRespons> GetAllAsync()
         {
-            var result = await _repository.GetAllAsync();
-            if (result != null && result.Count > 0)
+            var queryableResult = await _repository.GetAllAsync();
+
+            var resultList = await queryableResult.ToListAsync();
+            
+            if (resultList != null && resultList.Count > 0)
             {
-                return CreateResponse(true, result, $"{nameof(T)}s retrieved successfully.");
+                var dtoList = _mapper.Map<List<TReadDto>>(resultList);
+                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.");
             }
-            return CreateResponse(false, null, $"{nameof(T)}s not found.");
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.");
         }
 
         public async Task<GeneralRespons> GetByIdAsync(int id)
@@ -47,9 +53,9 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             var result = await _repository.GetByIdAsync(id);
             if (result != null)
             {
-                return CreateResponse(true, result, $"{nameof(T)} retrieved successfully.");
+                return CreateResponse(true, result, $"{typeof(T).Name} retrieved successfully.");
             }
-            return CreateResponse(false, null, $"{nameof(T)} not found.");
+            return CreateResponse(false, null, $"{typeof(T).Name} not found.");
         }
 
         // Method for adding an entity using TAddDto
@@ -65,11 +71,11 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             try
             {
                 await _repository.AddAsync(entity);
-                return CreateResponse(true, entity, $"{nameof(T)} added successfully.");
+                return CreateResponse(true, entity, $"{typeof(T).Name} added successfully.");
             }
             catch (Exception ex)
             {
-                return CreateResponse(false, null, $"Error adding {nameof(T)}: {ex.Message}", new List<string> { ex.Message });
+                return CreateResponse(false, null, $"Error adding {typeof(T).Name}: {ex.Message}", new List<string> { ex.Message });
             }
         }
 
@@ -89,15 +95,15 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
                 var existingEntity = await _repository.GetByIdAsync(id);
                 if (existingEntity == null)
                 {
-                    return CreateResponse(false, null, $"{nameof(T)} with ID {id} not found.");
+                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found.");
                 }
 
                 await _repository.UpdateAsync(entity);
-                return CreateResponse(true, entity, $"{nameof(T)} updated successfully.");
+                return CreateResponse(true, entity, $"{typeof(T).Name} updated successfully.");
             }
             catch (Exception ex)
             {
-                return CreateResponse(false, null, $"Error updating {nameof(T)}: {ex.Message}", new List<string> { ex.Message });
+                return CreateResponse(false, null, $"Error updating {typeof(T).Name}: {ex.Message}", new List<string> { ex.Message });
             }
         }
 
@@ -108,15 +114,15 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
                 var entity = await _repository.GetByIdAsync(id);
                 if (entity == null)
                 {
-                    return CreateResponse(false, null, $"{nameof(T)} with ID {id} not found for deletion.");
+                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.");
                 }
 
                 await _repository.DeleteAsync(entity);
-                return CreateResponse(true, entity, $"{nameof(T)} deleted successfully.");
+                return CreateResponse(true, null, $"{typeof(T).Name} deleted successfully.");
             }
             catch (Exception ex)
             {
-                return CreateResponse(false, null, $"Error deleting {nameof(T)}: {ex.Message}", new List<string> { ex.Message });
+                return CreateResponse(false, null, $"Error deleting {typeof(T).Name}: {ex.Message}", new List<string> { ex.Message });
             }
         }
     }
