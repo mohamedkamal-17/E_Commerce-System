@@ -10,7 +10,7 @@ namespace E_commerceManagementSystem.DAL.Data.Models
     {
         public int Id { get; set; } // Primary Key
         public int StockQuantity { get; set; }
-        public string ReorderLevel { get; set; }
+        public int ReorderLevel { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 

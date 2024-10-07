@@ -10,7 +10,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? ParentCategoryID { get; set; }
+        public string Description { get; set; }
+         public string ImgUrel { get; set; }
       
         public ICollection<Product> Products { get; set; } // Navigation prop
     }
