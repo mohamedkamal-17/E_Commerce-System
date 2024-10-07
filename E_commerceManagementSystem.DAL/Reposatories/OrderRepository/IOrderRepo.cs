@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Reposatories.OrederRepository
 {
-    public interface IOrederRepo : IRepository<Order>
+    public interface IOrderRepo : IRepository<Order>
     {
         Task<IQueryable<Order>> GetByUserIdAsync(string userId);
     }
