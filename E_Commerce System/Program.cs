@@ -17,6 +17,10 @@ using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository;
 using E_commerceManagementSystem.BLL.Manager.OrderItemManager;
+using E_commerceManagementSystem.BLL.Manager.CartItemManager;
+using E_commerceManagementSystem.DAL.Reposatories.CartItemRepository;
+using E_commerceManagementSystem.BLL.Manager.CartManager;
+using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 
 
 namespace E_Commerce_System
@@ -55,6 +59,13 @@ namespace E_Commerce_System
 
             builder.Services.AddScoped<IOrderItemRepo, OrderItemRepo>();
             builder.Services.AddScoped<IOrderItemManager, OrderItemManager>();
+
+            builder.Services.AddScoped<ICartManager, CartManager>();
+            builder.Services.AddScoped<ICartRepo, CartRepo>();
+
+            builder.Services.AddScoped<ICartItemManager, CartItemManager>();
+            builder.Services.AddScoped<ICartItemRepo, CartItemRepo>();
+
 
             builder.Services.AddAutoMapper(typeof(Program));
 
