@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using E_commerceManagementSystem.BLL.Dto.CartDto;
 using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.Dto.OrederItemDto;
 using E_commerceManagementSystem.BLL.Dto.ProductDto;
@@ -6,6 +7,7 @@ using E_commerceManagementSystem.BLL.Dto.ReviewDto;
 using E_commerceManagementSystem.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Text;
@@ -42,7 +44,14 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<Review, UpdateReviewDto>().ReverseMap();
             CreateMap<Review, AddReviewDto>().ReverseMap();
 
+            CreateMap<Cart, ReadCartDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
 
+            CreateMap<Cart, UpdateCartDto>().ReverseMap()
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.Now));
+
+            CreateMap<Cart, AddCartDto>().ReverseMap()
+               .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.Now));
 
         }
 
