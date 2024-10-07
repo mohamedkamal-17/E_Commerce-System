@@ -6,6 +6,7 @@ using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.GeneralRepository;
 using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,16 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
-    public class ProductManger : Manager<Product, AddproductDto, UpdateProductDto>, IProductMangare
+    public class ProductManger : Manager<Product, ReadProductDto, AddproductDto, UpdateProductDto>, IProductMangare
     {
         private readonly IProductRepo _repository;
+        private readonly IMapper _mapper;
 
         public ProductManger(IProductRepo repository, IMapper mapper)
              : base(repository, mapper)
         {
            _repository = repository;
+            _mapper = mapper;
         }
         private GeneralRespons CreateResponse(bool success, object? model, string message, List<string>? errors = null)
         {
@@ -34,21 +37,19 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
             };
         }
 
-        public Task<GeneralRespons> GetByCategoryNameAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<GeneralRespons> GetByPraiceAsync(float price)
         {
             try
             {
                 var products = await _repository.GetAllAsync();
-                var result = products.Where(p => p.Price == price).ToList();
+                var resultLoist = await products.Where(p => p.Price == price).ToListAsync();
 
-                if (result.Count > 0)
+                if (resultLoist != null && resultLoist.Count > 0)
                 {
-                    return CreateResponse(true, result, "Products retrieved successfully by price.");
+                   List<ReadProductDto> readDtos= _mapper.Map<List<ReadProductDto>>(resultLoist);
+
+                    return CreateResponse(true, readDtos, "Products retrieved successfully by price.");
                 }
                 return CreateResponse(false, null, "No products found for the given price.");
             }
@@ -64,11 +65,12 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
             try
             {
                 var products = await _repository.GetAllAsync();
-                var result = products.Where(p => p.Price >= lowPrice && p.Price <= highPrice).ToList();
+                var resultList = await products.Where(p => p.Price >= lowPrice && p.Price <= highPrice).ToListAsync();
 
-                if (result.Count > 0)
+                if (resultList != null && resultList.Count > 0)
                 {
-                    return CreateResponse(true, result, "Products retrieved successfully within the price range.");
+                    List<ReadProductDto> readDtos = _mapper.Map<List<ReadProductDto>>(resultList);
+                    return CreateResponse(true, readDtos, "Products retrieved successfully within the price range.");
                 }
                 return CreateResponse(false, null, "No products found within the price range.");
             }
@@ -84,11 +86,12 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
             try
             {
                 var products = await _repository.GetAllAsync();
-                var result = products.Where(p => p.Price > lowPrice).ToList();
+                var resultList = products.Where(p => p.Price > lowPrice).ToList();
 
-                if (result.Count > 0)
+                if (resultList != null && resultList.Count > 0)
                 {
-                    return CreateResponse(true, result, "Products retrieved successfully with price greater than specified.");
+                    List<ReadProductDto> readDtos = _mapper.Map<List<ReadProductDto>>(resultList);
+                    return CreateResponse(true, readDtos, "Products retrieved successfully with price greater than specified.");
                 }
                 return CreateResponse(false, null, "No products found with price greater than specified.");
             }
@@ -104,11 +107,13 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
             try
             {
                 var products = await _repository.GetAllAsync();
-                var result = products.Where(p => p.Price < highPrice).ToList();
+                var resultList = await products.Where(p => p.Price < highPrice).ToListAsync();
 
-                if (result.Count > 0)
+                if (resultList != null && resultList.Count > 0)
                 {
-                    return CreateResponse(true, result, "Products retrieved successfully with price less than specified.");
+                    List<ReadProductDto> readDtos = _mapper.Map<List<ReadProductDto>>(resultList);
+
+                    return CreateResponse(true, readDtos, "Products retrieved successfully with price less than specified.");
                 }
                 return CreateResponse(false, null, "No products found with price less than specified.");
             }
@@ -121,16 +126,38 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 
 
 
-        async Task<GeneralRespons> IProductMangare.GetProductByCategoryNameAsync(string categoryName)
+        async Task<GeneralRespons> IProductMangare.GetByCategoryNameAsync(string categoryName)
         {
             try
             {
                 var products = await _repository.GetAllAsync(); // Assume GetAllAsync returns IQueryable<Product>
-                var result = products.Where(p => p.Category.Name == categoryName).ToList();
-              
-                if (result.Count > 0)
+                var resultList = products.Where(p => p.Category.Name == categoryName).ToList();
+
+                if (resultList != null && resultList.Count > 0)
                 {
-                    return CreateResponse(true, result, "Products retrieved successfully by category.");
+                    List<ReadProductDto> readDtos = _mapper.Map<List<ReadProductDto>>(resultList);
+                    return CreateResponse(true, readDtos, "Products retrieved successfully by category.");
+                }
+                return CreateResponse(false, null, "No products found for the given category.");
+            }
+            catch (Exception ex)
+            {
+                return CreateResponse(false, null, $"Error retrieving products: {ex.Message}", new List<string> { ex.Message });
+            }
+
+        }
+
+        public async Task<GeneralRespons> GetByProductNameAsync(string ProductName)
+        {
+            try
+            {
+                var products = await _repository.GetAllAsync(); // Assume GetAllAsync returns IQueryable<Product>
+                var product = products.FirstOrDefault(p => p.ProductName == ProductName);
+              
+                if (product != null)
+                {
+                    ReadProductDto readDtos = _mapper.Map<ReadProductDto>(product);
+                    return CreateResponse(true, readDtos, "Products retrieved successfully by category.");
                 }
                 return CreateResponse(false, null, "No products found for the given category.");
             }
