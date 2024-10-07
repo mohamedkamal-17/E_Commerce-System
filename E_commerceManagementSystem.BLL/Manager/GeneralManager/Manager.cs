@@ -53,7 +53,8 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             var result = await _repository.GetByIdAsync(id);
             if (result != null)
             {
-                return CreateResponse(true, result, $"{typeof(T).Name} retrieved successfully.");
+                var dto = _mapper.Map<TReadDto>(result);
+                return CreateResponse(true, dto, $"{typeof(T).Name} retrieved successfully.");
             }
             return CreateResponse(false, null, $"{typeof(T).Name} not found.");
         }

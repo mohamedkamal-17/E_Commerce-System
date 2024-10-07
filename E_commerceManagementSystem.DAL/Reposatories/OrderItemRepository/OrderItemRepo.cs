@@ -8,18 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.DAL.Reposatories.OrederRepository
+namespace E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository
 {
-    public class OrederRepo : Repository<Order>, IOrederRepo
+    public class OrderItemRepo : Repository<OrderItem> , IOrderItemRepo
     {
         private readonly ApplicationDbContext _context;
-        public OrederRepo(ApplicationDbContext context) : base(context)
+        public OrderItemRepo(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
-        public async Task<IQueryable<Order>> GetByUserIdAsync(string userId)
+
+        public async Task<IQueryable<OrderItem>> GetByOrderIdAsync(int orderId)
         {
-            return _context.Orders.Where(u=>u.UserId== userId).AsNoTracking();
+            return _context.OrderItems.AsNoTracking();
         }
     }
 }
