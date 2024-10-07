@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Reposatories.CategoryRepository
 {
-    public class CategoryRepo:Repository<Product>,ICategoryRepo
+    public class CategoryRepo:Repository<Category>,ICategoryRepo
     {
         CategoryRepo(ApplicationDbContext context):base(context) { }
     }
