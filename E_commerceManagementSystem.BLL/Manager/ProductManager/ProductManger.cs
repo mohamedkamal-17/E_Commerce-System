@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
-    public class ProductManger : Manager<Product, ReadProductDto, AddproductDto, UpdateProductDto>, IProductMangare
+    public class ProductManger : Manager<Product, ReadProductDto, AddProductDto, UpdateProductDto>, IProductMangare
     {
         private readonly IProductRepo _repository;
         private readonly IMapper _mapper;
@@ -38,7 +38,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
         }
 
 
-        public async Task<GeneralRespons> GetByPraiceAsync(float price)
+        public async Task<GeneralRespons> GetByPriceAsync(float price)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
         }
 
 
-        public async Task<GeneralRespons> GetByPraiceInRangeAsync(float highPrice, float lowPrice)
+        public async Task<GeneralRespons> GetByPriceInRangeAsync(float highPrice, float lowPrice)
         {
             try
             {

@@ -62,7 +62,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManger
             }
         }
 
-        public async Task<GeneralRespons> GetByShipingState(string shipingStatu)
+        public async Task<GeneralRespons> GetByShippingState(string shipingStatu)
         {
             try
             {

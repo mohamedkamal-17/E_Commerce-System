@@ -8,6 +8,7 @@ namespace E_commerceManagementSystem.BLL.Dto.ShippingDto
 {
     public class ReadShippingDto
     {
+        public int Id { get; set; }
         public string UserId { get; set; }
         public int OrderId { get; set; } // Foreign Key referencing Orders
 

@@ -15,7 +15,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManger
         Task<GeneralRespons> GetByOrderIdAsync(int id);
         Task<GeneralRespons> GetByTrackingNumber(int trackingNumber);
         Task<GeneralRespons> GetByShippingDate(DateTime shippingDate);
-        Task<GeneralRespons> GetByShipingState(string statu);
+        Task<GeneralRespons> GetByShippingState(string statu);
 
     }
 }

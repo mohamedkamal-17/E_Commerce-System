@@ -14,7 +14,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
         public MappingProfile()
         {
 
-            CreateMap<Product, AddproductDto>().ReverseMap();
+            CreateMap<Product, AddProductDto>().ReverseMap();
             CreateMap<Product,UpdateProductDto>().ReverseMap();
          
         }

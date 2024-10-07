@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Dto.ProductDto
 {
-    public class AddproductDto
+    public class AddProductDto
     {
       
         public string ProductName { get; set; }

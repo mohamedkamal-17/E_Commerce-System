@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.InventoryManager
 {
-    public class InventoryManagre:Manager<Inventory, ReadInventoryDto, AddInventoryDto, UpdateInventoryDto>,IInventoryManagre
+    public class InventoryManagre : Manager<Inventory, ReadInventoryDto, AddInventoryDto, UpdateInventoryDto>, IInventoryManagre
     {
         private readonly IInventoryRepo _repository;
         private readonly IMapper _mapper;
 
-        public InventoryManagre(IInventoryRepo repository,IMapper mapper):base(repository, mapper)
+        public InventoryManagre(IInventoryRepo repository, IMapper mapper) : base(repository, mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -35,15 +35,15 @@ namespace E_commerceManagementSystem.BLL.Manager.InventoryManager
         }
 
 
-       
+
         public async Task<GeneralRespons> GetByProductId(int productId)
         {
             try
             {
                 var inventories = await _repository.GetAllAsync();
-                var resultLoist =  inventories.FirstOrDefault(inv=>inv.ProductId == productId);
+                var resultLoist = inventories.FirstOrDefault(inv => inv.ProductId == productId);
 
-                if (resultLoist != null )
+                if (resultLoist != null)
                 {
                     var readDtos = _mapper.Map<ReadInventoryDto>(resultLoist);
 
@@ -57,5 +57,6 @@ namespace E_commerceManagementSystem.BLL.Manager.InventoryManager
             }
         }
 
-      
+
+    }
 }

@@ -1,60 +1,56 @@
-﻿using E_commerceManagementSystem.BLL.Dto.CategoryDto;
-using E_commerceManagementSystem.BLL.Dto.InventoryDto;
+﻿using E_commerceManagementSystem.BLL.Dto.InventoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.InventoryManager;
 using E_commerceManagementSystem.DAL.Data.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class inventoryContoroller : ControllerBase
+    public class InventoryController : ControllerBase
     {
-        private readonly IInventoryManagre _Inventorymanger;
+        private readonly IInventoryManagre _inventoryManager;
 
-        public inventoryContoroller(IInventoryManagre inventorymanger)
+        public InventoryController(IInventoryManagre inventoryManager)
         {
-            _Inventorymanger = inventorymanger;
+            _inventoryManager = inventoryManager;
         }
+
+        [HttpGet]
         public async Task<ActionResult<GeneralRespons>> GetAll()
         {
-
-            var response = await _Inventorymanger.GetAllAsync();
+            var response = await _inventoryManager.GetAllAsync();
             if (!response.Success)
             {
                 return NotFound(response);
             }
             return Ok(response);
-
-
         }
 
-
-
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")] // Route constraint to enforce int type
         public async Task<ActionResult<GeneralRespons>> GetById(int id)
         {
             if (id <= 0)
             {
-                return BadRequest(new { meassge = "id shoud largTha Zero" });
+                return BadRequest(new { message = "ID should be greater than zero" });
             }
-            var response = await _Inventorymanger.GetByIdAsync(id);
+            var response = await _inventoryManager.GetByIdAsync(id);
             if (!response.Success)
             {
                 return NotFound(response);
             }
             return Ok(response);
         }
-        [HttpGet("{ProductId}")]
+
+        [HttpGet("product/{productId:int}")] // More descriptive route to avoid conflicts
         public async Task<ActionResult<GeneralRespons>> GetByProductId(int productId)
         {
-            if (productId <=0)
+            if (productId <= 0)
             {
-                return BadRequest(new { meassge = "id shoud largTha Zero" });
+                return BadRequest(new { message = "Product ID should be greater than zero" });
             }
-            var response = await _Inventorymanger.GetByProductId(productId);
+            var response = await _inventoryManager.GetByProductId(productId);
             if (!response.Success)
             {
                 return NotFound(response);
@@ -62,27 +58,23 @@ namespace E_Commerce_System.Controllers
             return Ok(response);
         }
 
-
         [HttpPost]
-        public async Task<ActionResult<GeneralRespons>> Create([FromBody]AddInventoryDto model)
+        public async Task<ActionResult<GeneralRespons>> Create([FromBody] AddInventoryDto model)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var response = await _Inventorymanger.AddAsync(model);
+            var response = await _inventoryManager.AddAsync(model);
             if (!response.Success)
             {
                 return NotFound(response);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = (response.Model as Product)?.Id }, response); // Return 201 Created
-
-
+            return CreatedAtAction(nameof(GetById), new { id = (response.Model as Inventory)?.Id }, response);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateInventoryDto model)
         {
             if (!ModelState.IsValid)
@@ -90,7 +82,7 @@ namespace E_Commerce_System.Controllers
                 return BadRequest(ModelState);
             }
 
-            var response = await _Inventorymanger.UpdateAsync(id, model);
+            var response = await _inventoryManager.UpdateAsync(id, model);
             if (!response.Success)
             {
                 return NotFound(response);
@@ -99,16 +91,15 @@ namespace E_Commerce_System.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> Delete(int id)
         {
-
-            var resppnse = await _Inventorymanger.DeleteAsync(id);
-            if (!resppnse.Success)
+            var response = await _inventoryManager.DeleteAsync(id);
+            if (!response.Success)
             {
-                return BadRequest(resppnse);
+                return BadRequest(response);
             }
-            return Ok(resppnse);
+            return Ok(response);
         }
     }
 }

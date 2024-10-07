@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
-    public interface IProductMangare : IManager<Product, ReadProductDto, AddproductDto,UpdateProductDto>
+    public interface IProductMangare : IManager<Product, ReadProductDto, AddProductDto,UpdateProductDto>
     {
        
         Task<GeneralRespons> GetByCategoryNameAsync(string categoryName);
         Task<GeneralRespons> GetByProductNameAsync(string ProductName);
-        Task<GeneralRespons> GetByPraiceAsync(float price);
-        Task<GeneralRespons> GetByPraiceInRangeAsync(float highPrice, float lowPrice);
+        Task<GeneralRespons> GetByPriceAsync(float price);
+        Task<GeneralRespons> GetByPriceInRangeAsync(float highPrice, float lowPrice);
         Task<GeneralRespons> GetByPraicelessthanAsync(float highPrice);
         Task<GeneralRespons> GetByPraicelargthanAsync(float lowPrice);
     }

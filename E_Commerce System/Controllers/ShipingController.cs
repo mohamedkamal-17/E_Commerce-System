@@ -1,175 +1,147 @@
 ﻿using AutoMapper;
-using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.Dto.ShippingDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
-using E_commerceManagementSystem.BLL.Manager.CategoryManger;
 using E_commerceManagementSystem.BLL.Manager.ShippingManger;
-using E_commerceManagementSystem.DAL.Data.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShippingController : ControllerBase { 
-    private readonly IShippingManger _shippingManger;
-    private readonly IMapper _mapper;
-
-      public  ShippingController(IShippingManger ShippingManger, IMapper mapper)
+    public class ShippingController : ControllerBase
     {
-        _shippingManger = ShippingManger;
-        _mapper = mapper;
-    }
+        private readonly IShippingManger _shippingManger;
+        private readonly IMapper _mapper;
 
-
-
-    [HttpGet]
-    public async Task<ActionResult<GeneralRespons>> GetAll()
-    {
-
-        var response = await _shippingManger.GetAllAsync();
-        if (!response.Success)
+        public ShippingController(IShippingManger shippingManger, IMapper mapper)
         {
-            return NotFound(response);
+            _shippingManger = shippingManger;
+            _mapper = mapper;
         }
-        return Ok(response);
 
-
-    }
-
-
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<GeneralRespons>> GetById(int id)
-    {
-        var response = await _shippingManger.GetByIdAsync(id);
-        if (!response.Success)
+        [HttpGet]
+        public async Task<ActionResult<GeneralRespons>> GetAllAsync()
         {
-            return NotFound(response);
+            var response = await _shippingManger.GetAllAsync();
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
-        return Ok(response);
-    }
 
-      
-        
-        //Task<GeneralRespons> GetByShippingDate(DateTime shippingDate);
-        //Task<GeneralRespons> GetByShipingState(string statu);
-
-        [HttpGet("{orderId}")]
-        public async Task<ActionResult<GeneralRespons>> GetByOrderID(int orderId)
+        [HttpGet("{id:int}")] // Ensure id is an integer
+        public async Task<ActionResult<GeneralRespons>> GetByIdAsync(int id)
         {
-            if (orderId >= 0)
+            var response = await _shippingManger.GetByIdAsync(id);
+            if (!response.Success)
             {
-                return BadRequest(new { Meassge = "orderId shoud by larg than Zero" });
-
+                return NotFound(response);
             }
-            var Response = await _shippingManger.GetByOrderIdAsync(orderId);
-            if (!Response.Success)
-            {
-                return NotFound(Response);
-            }
-            else return Ok(Response);
-
+            return Ok(response);
         }
-        [HttpGet("{orderId}")]
-        public async Task<ActionResult<GeneralRespons>> GetByShipingState(string ShipingState)
+
+        [HttpGet("order/{orderId:int}")] // Changed to unique route
+        public async Task<ActionResult<GeneralRespons>> GetByOrderIdAsync(int orderId)
         {
-            if (ShipingState ==null )
+            if (orderId <= 0) // Check for valid orderId
             {
-                return BadRequest(new { Meassge = "ShipingState shoud by exit" });
-
+                return BadRequest(new { Message = "orderId should be greater than zero." });
             }
-            var Response = await _shippingManger.GetByShipingState(ShipingState);
-            if (!Response.Success)
+            var response = await _shippingManger.GetByOrderIdAsync(orderId);
+            if (!response.Success)
             {
-                return NotFound(Response);
+                return NotFound(response);
             }
-            else return Ok(Response);
-
+            return Ok(response);
         }
-        [HttpGet("{orderId}")]
-        public async Task<ActionResult<GeneralRespons>> GetByTrakingNumber(int takingNumber)
+
+        [HttpGet("state/{shippingState}")] // Changed to unique route
+        public async Task<ActionResult<GeneralRespons>> GetByShippingStateAsync(string shippingState)
         {
-            if (takingNumber >= 0)
+            if (string.IsNullOrEmpty(shippingState))
             {
-                return BadRequest(new { Meassge = "takingNumber shoud by larg than Zero" });
-
+                return BadRequest(new { Message = "ShippingState should not be empty." });
             }
-            var Response = await _shippingManger.GetByTrackingNumber(takingNumber);
-            if (!Response.Success)
+            var response = await _shippingManger.GetByShippingState(shippingState);
+            if (!response.Success)
             {
-                return NotFound(Response);
+                return NotFound(response);
             }
-            else return Ok(Response);
-
+            return Ok(response);
         }
-        [HttpGet("{shippingDate}")]
-        public async Task<ActionResult<GeneralRespons>> GetByShippingDate(DateTime shippingDate)
+
+        [HttpGet("tracking/{trackingNumber:int}")] // Changed to unique route
+        public async Task<ActionResult<GeneralRespons>> GetByTrackingNumberAsync(int trackingNumber)
         {
-            if (!shippingDate.IsDaylightSavingTime())
+            if (trackingNumber <= 0) // Check for valid trackingNumber
             {
-                return BadRequest(new { Meassge = "takingNumber shoud by larg than Zero" });
-
+                return BadRequest(new { Message = "TrackingNumber should be greater than zero." });
             }
-            var Response = await _shippingManger.GetByShippingDate(shippingDate);
-            if (!Response.Success)
+            var response = await _shippingManger.GetByTrackingNumber(trackingNumber);
+            if (!response.Success)
             {
-                return NotFound(Response);
+                return NotFound(response);
             }
-            else return Ok(Response);
+            return Ok(response);
+        }
 
+        [HttpGet("date/{shippingDate}")] // Changed to unique route
+        public async Task<ActionResult<GeneralRespons>> GetByShippingDateAsync(DateTime shippingDate)
+        {
+            if (shippingDate == DateTime.MinValue) // Check for valid shippingDate
+            {
+                return BadRequest(new { Message = "Invalid shipping date." });
+            }
+            var response = await _shippingManger.GetByShippingDate(shippingDate);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
 
         [HttpPost]
-    public async Task<ActionResult<GeneralRespons>> Create(AddShippingDto model)
-    {
-
-        if (!ModelState.IsValid)
+        public async Task<ActionResult<GeneralRespons>> CreateAsync(AddShippingDto model)
         {
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var response = await _shippingManger.AddAsync(model);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as ReadShippingDto)?.Id }, response); // Return 201 Created
         }
-        var response = await _shippingManger.AddAsync(model);
-        if (!response.Success)
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<GeneralRespons>> UpdateAsync(int id, [FromBody] UpdateShippingDto model)
         {
-            return NotFound(response);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var response = await _shippingManger.UpdateAsync(id, model);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+
+            return Ok(response);
         }
 
-        return CreatedAtAction(nameof(GetById), new { id = (response.Model as Product)?.Id }, response); // Return 201 Created
-
-
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<GeneralRespons>> DeleteAsync(int id)
+        {
+            var response = await _shippingManger.DeleteAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
-  
-    [HttpPut("{id}")]
-    public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateShippingDto model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var response = await _shippingManger.UpdateAsync(id, model);
-        if (!response.Success)
-        {
-            return NotFound(response);
-        }
-
-        return Ok(response);
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<GeneralRespons>> Delete(int id)
-    {
-
-        var resppnse = await _shippingManger.DeleteAsync(id);
-        if (!resppnse.Success)
-        {
-            return BadRequest(resppnse);
-        }
-        return Ok(resppnse);
-    }
-
 }
-}
-
-
