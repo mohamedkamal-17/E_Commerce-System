@@ -51,10 +51,78 @@ namespace E_Commerce_System.Controllers
         return Ok(response);
     }
 
-   
+      
+        
+        //Task<GeneralRespons> GetByShippingDate(DateTime shippingDate);
+        //Task<GeneralRespons> GetByShipingState(string statu);
 
-    [HttpPost]
-    public async Task<ActionResult<GeneralRespons>> Add(AddShippingDto model)
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<GeneralRespons>> GetByOrderID(int orderId)
+        {
+            if (orderId >= 0)
+            {
+                return BadRequest(new { Meassge = "orderId shoud by larg than Zero" });
+
+            }
+            var Response = await _shippingManger.GetByOrderIdAsync(orderId);
+            if (!Response.Success)
+            {
+                return NotFound(Response);
+            }
+            else return Ok(Response);
+
+        }
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<GeneralRespons>> GetByShipingState(string ShipingState)
+        {
+            if (ShipingState ==null )
+            {
+                return BadRequest(new { Meassge = "ShipingState shoud by exit" });
+
+            }
+            var Response = await _shippingManger.GetByShipingState(ShipingState);
+            if (!Response.Success)
+            {
+                return NotFound(Response);
+            }
+            else return Ok(Response);
+
+        }
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<GeneralRespons>> GetByTrakingNumber(int takingNumber)
+        {
+            if (takingNumber >= 0)
+            {
+                return BadRequest(new { Meassge = "takingNumber shoud by larg than Zero" });
+
+            }
+            var Response = await _shippingManger.GetByTrackingNumber(takingNumber);
+            if (!Response.Success)
+            {
+                return NotFound(Response);
+            }
+            else return Ok(Response);
+
+        }
+        [HttpGet("{shippingDate}")]
+        public async Task<ActionResult<GeneralRespons>> GetByShippingDate(DateTime shippingDate)
+        {
+            if (!shippingDate.IsDaylightSavingTime())
+            {
+                return BadRequest(new { Meassge = "takingNumber shoud by larg than Zero" });
+
+            }
+            var Response = await _shippingManger.GetByShippingDate(shippingDate);
+            if (!Response.Success)
+            {
+                return NotFound(Response);
+            }
+            else return Ok(Response);
+
+        }
+
+        [HttpPost]
+    public async Task<ActionResult<GeneralRespons>> Create(AddShippingDto model)
     {
 
         if (!ModelState.IsValid)
