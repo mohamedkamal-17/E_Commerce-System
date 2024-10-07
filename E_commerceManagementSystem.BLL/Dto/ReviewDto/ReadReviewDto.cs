@@ -9,6 +9,7 @@ namespace E_commerceManagementSystem.BLL.Dto.ReviewDto
 {
     public class ReadReviewDto
     {
+        public int Id { get; set; }
         public int Rating { get; set; }
         public string ReviewText { get; set; }
         public DateTime? CreatedDate { get; set; }

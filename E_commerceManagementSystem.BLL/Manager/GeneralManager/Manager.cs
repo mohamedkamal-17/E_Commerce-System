@@ -44,7 +44,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             var queryableResult = await _repository.GetAllAsync();
 
             var resultList = await queryableResult.ToListAsync();
-
+            
             if (resultList != null && resultList.Count > 0)
             {
                 var dtoList = _mapper.Map<List<TReadDto>>(resultList);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Dto.ProductDto
 {
-    public class AddproductDto
+    public class AddProductDto
     {
       
         public string ProductName { get; set; }
@@ -14,7 +14,7 @@ namespace E_commerceManagementSystem.BLL.Dto.ProductDto
         public double Price { get; set; }
         public int StockQuantity { get; set; }
        
-        public string ImageURL { get; set; }
+        public string? ImageURL { get; set; }
 
         public int CategoryId { get; set; } // Foreign Key
     }

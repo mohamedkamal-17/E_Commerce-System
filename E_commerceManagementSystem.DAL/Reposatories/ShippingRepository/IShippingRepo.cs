@@ -10,5 +10,6 @@ namespace E_commerceManagementSystem.DAL.Reposatories.ShippingRepository
 {
     public interface IShippingRepo:IRepository<Shipping>
     {
+       public ICollection<Shipping> GetByOrderIdAsync(int id);
     }
 }

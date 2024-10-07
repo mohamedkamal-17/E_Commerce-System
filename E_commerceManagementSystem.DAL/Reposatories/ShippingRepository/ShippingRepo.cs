@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Reposatories.ShippingRepository
 {
-    public class ShippingRepo:Repository<Shipping>
+    public class ShippingRepo:Repository<Shipping>,IShippingRepo
     {
         private readonly ApplicationDbContext context;
 
@@ -17,9 +17,12 @@ namespace E_commerceManagementSystem.DAL.Reposatories.ShippingRepository
         {
             context = Context;
         }
-        
-            
+
+        public ICollection<Shipping>  GetByOrderIdAsync(int orderId)
+        {
+            return _context.Set<Shipping>().Where(sh=> sh.OrderId == orderId).ToList()  ;
         }
+    }
 
     }
 

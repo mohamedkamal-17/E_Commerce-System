@@ -19,6 +19,7 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public ICollection<Review>? Reviews { get; set; } // Nvigation prop
 
         public ICollection<WishList>? WishList { get; set; }
+        public ICollection<Shipping>? Shipping { get; set; }
 
     }
 }

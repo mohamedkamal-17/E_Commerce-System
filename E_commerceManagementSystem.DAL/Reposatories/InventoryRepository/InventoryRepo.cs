@@ -7,10 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.DAL.Reposatories.CategoryRepository
+namespace E_commerceManagementSystem.DAL.Reposatories.InventoryRepository
 {
-    public class CategoryRepo:Repository<Category>,ICategoryRepo
+    public class InventoryRepo:Repository<Inventory>,IInventoryRepo
     {
-        CategoryRepo(ApplicationDbContext context):base(context) { }
+        public InventoryRepo(ApplicationDbContext Context):base(Context)
+        {
+            
+        }
+
     }
 }
