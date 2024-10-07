@@ -8,7 +8,7 @@ namespace E_commerceManagementSystem.DAL.Repositories.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-         Task<IQueryable<T>> GetAllAsync();
+        Task<IQueryable<T>> GetAllAsync();
         Task<T> GetByIdAsync(int id);
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
