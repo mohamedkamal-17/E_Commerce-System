@@ -43,6 +43,10 @@ namespace E_Commerce_System.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GeneralRespons>> GetById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { meassge = "id shoud largTha Zero" });
+            }
             var response = await _categoryManger.GetByIdAsync(id);
             if (!response.Success)
             {
@@ -50,15 +54,24 @@ namespace E_Commerce_System.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("{categoryName}")]
+        public async Task<ActionResult<GeneralRespons>> GetByCategoryName(string categoryName)
+        {
+            if (categoryName ==null )
+            {
+                return BadRequest(new { meassge = "id shoud largTha Zero" });
+            }
+            var response = await _categoryManger.GetByCategoryNameAsync(categoryName);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
 
-        //Task<GeneralRespons> GetAllAsync();
-        //Task<GeneralRespons> GetByIdAsync(int id);
-
-
-        //Task<GeneralRespons> AddAsync(TAddDto dto);
 
         [HttpPost]
-        public async Task<ActionResult<GeneralRespons>> Add(AddCategoryDTO model)
+        public async Task<ActionResult<GeneralRespons>> Create(AddCategoryDTO model)
         {
 
             if (!ModelState.IsValid)
@@ -75,7 +88,7 @@ namespace E_Commerce_System.Controllers
 
 
         }
-        //Task<GeneralRespons> UpdateAsync(TUpdateDto dto);
+       
         [HttpPut("{id}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateCategoryDto model)
         {
