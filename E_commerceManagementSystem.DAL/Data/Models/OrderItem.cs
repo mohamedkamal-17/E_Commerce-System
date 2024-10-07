@@ -15,6 +15,6 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public double UnitPrice { get; set; }
         public double TotalPrice { get; set; }
         public Order Order { get; set; }
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

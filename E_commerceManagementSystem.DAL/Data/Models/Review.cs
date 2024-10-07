@@ -13,9 +13,9 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public string ReviewText { get; set; }
         public DateTime? CreatedDate { get; set; } = DateTime.Now;
         public int ProductId { get; set; } //Foreign Key referencing Product
-        public Product Product { get; set; } //Navigation prop
+        public virtual Product Product { get; set; } //Navigation prop
         public string UserId { get; set; } //(Foreign Key referencing ApplicationUser) 
-        public ApplicationUser User { get; set; } //Navigation prop
+        public virtual ApplicationUser User { get; set; } //Navigation prop
 
 
     }
