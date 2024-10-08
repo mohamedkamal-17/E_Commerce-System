@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using E_commerceManagementSystem.BLL.Dtos.OtpDto.OtpDto;
+using E_commerceManagementSystem.BLL.Dtos.OtpDto;
 
 namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 {
@@ -17,6 +19,10 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
         Task<UserRegisterDTO> CreateRoleAsync(UserRegisterDTO roleVM);
         Task<UserRegisterDTO> AssignRoleToUserAsync(UserRegisterDTO roleToUserVM);
         Task LogOutAsync();
+
+        Task<GeneralAccountResponse> SendOtpForPasswordReset(SendOtpRequestDto dto);
+        Task<GeneralAccountResponse> VerifyOtp(VerifyOtpRequestDto dto);
+        Task<GeneralAccountResponse> ResetPasswordWithOtp(ResetPasswordRequestDto dto);
     }
 
 }
