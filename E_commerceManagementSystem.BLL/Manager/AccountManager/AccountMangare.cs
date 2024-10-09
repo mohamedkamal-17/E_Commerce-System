@@ -6,6 +6,7 @@ using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq; // Added for LINQ
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -30,8 +31,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
         public AccountManager(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signinManager,
             RoleManager<IdentityRole> roleManager,
-            IJwtTokenService jwtTokenService)
-            IJwtTokenService JwtTokenService,
+            IJwtTokenService jwtTokenService, // Corrected constructor parameter
             IConfiguration configuration,
             IOtpManager otpManager,
             IMemoryCache cache,
@@ -41,8 +41,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             _signinManager = signinManager;
             _roleManager = roleManager;
             _jwtTokenService = jwtTokenService;
-            _jwtTokenService = JwtTokenService;
-            _configuration = configuration;
+            _configuration = configuration; // Removed duplicate assignment
             _otpManager = otpManager;
             _cache = cache;
             _emailManager = emailManager;
@@ -75,9 +74,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                 return CreateResponse(true, null, "User registered successfully.", 201); // Created
             }
 
-                Response.Success = true;
-                return Response;
-            }
+            // Removed extra Response variable
             foreach (var error in result.Errors)
             {
                 response.Errors.Add(error.Description);
@@ -109,8 +106,6 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             await _signinManager.SignOutAsync();
         }
 
-        
-      
         public Task<UserRegisterDTO> LoginAsync(UserRegisterDTO loginVM)
         {
             throw new NotImplementedException();
@@ -128,18 +123,17 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 
         public async Task<GeneralAccountResponse> SendOtpForPasswordReset(SendOtpRequestDto dto)
         {
-            GeneralAccountResponse GeneralAccountResponse = new GeneralAccountResponse();
+            GeneralAccountResponse generalAccountResponse = new GeneralAccountResponse();
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
             {
-                GeneralAccountResponse.IsSucceeded = false;
-                GeneralAccountResponse.Message = "User not found";
-                return GeneralAccountResponse;
+                generalAccountResponse.IsSucceeded = false;
+                generalAccountResponse.Message = "User not found";
+                return generalAccountResponse;
             }
 
             var otpCode = await _otpManager.GenerateOtpAsync(dto.Email);
-
 
             var emailResponse = await _emailManager.SendEmailAsync(user.Email, "Your Password Reset OTP Code", $"Your OTP code for resetting your password is: {otpCode}");
             if (!emailResponse.IsSucceeded)
@@ -147,85 +141,83 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                 return emailResponse; // Return the email error if sending failed
             }
 
-            GeneralAccountResponse.Message = "OTP sent successfully.";
-            GeneralAccountResponse.IsSucceeded = emailResponse.IsSucceeded;
-            return GeneralAccountResponse;
+            generalAccountResponse.Message = "OTP sent successfully.";
+            generalAccountResponse.IsSucceeded = emailResponse.IsSucceeded;
+            return generalAccountResponse;
         }
 
         public async Task<GeneralAccountResponse> VerifyOtp(VerifyOtpRequestDto dto)
         {
-            GeneralAccountResponse GeneralAccountResponse = new GeneralAccountResponse();
+            GeneralAccountResponse generalAccountResponse = new GeneralAccountResponse();
 
             // Retrieve email from cache using OTP
             if (!_cache.TryGetValue($"{dto.Email}_Verified", out string storedOtp) || storedOtp != dto.Otp)
             {
-                GeneralAccountResponse.IsSucceeded = false;
-                GeneralAccountResponse.Message = "Invalid or expired OTP";
-                return GeneralAccountResponse;
+                generalAccountResponse.IsSucceeded = false;
+                generalAccountResponse.Message = "Invalid or expired OTP";
+                return generalAccountResponse;
             }
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
             {
-                GeneralAccountResponse.IsSucceeded = false;
-                GeneralAccountResponse.Message = "User not found";
-                return GeneralAccountResponse;
+                generalAccountResponse.IsSucceeded = false;
+                generalAccountResponse.Message = "User not found";
+                return generalAccountResponse;
             }
 
             _cache.Set($"{dto.Email}_Verified", true, TimeSpan.FromMinutes(10));
 
-            GeneralAccountResponse.IsSucceeded = true;
-            GeneralAccountResponse.Message = "OTP verified successfully. You can now reset your password.";
-            return GeneralAccountResponse;
+            generalAccountResponse.IsSucceeded = true;
+            generalAccountResponse.Message = "OTP verified successfully. You can now reset your password.";
+            return generalAccountResponse;
         }
 
         public async Task<GeneralAccountResponse> ResetPasswordWithOtp(ResetPasswordRequestDto dto)
         {
-            GeneralAccountResponse GeneralAccountResponse = new GeneralAccountResponse();
+            GeneralAccountResponse generalAccountResponse = new GeneralAccountResponse();
 
             if (!_cache.TryGetValue($"{dto.Email}_Verified", out bool otpVerified) || !otpVerified)
             {
-                GeneralAccountResponse.IsSucceeded = false;
-                GeneralAccountResponse.Message = "Invalid or expired OTP";
-                return GeneralAccountResponse;
+                generalAccountResponse.IsSucceeded = false;
+                generalAccountResponse.Message = "Invalid or expired OTP";
+                return generalAccountResponse;
             }
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
             {
-                GeneralAccountResponse.IsSucceeded = false;
-                GeneralAccountResponse.Message = "User not found";
-                return GeneralAccountResponse;
+                generalAccountResponse.IsSucceeded = false;
+                generalAccountResponse.Message = "User not found";
+                return generalAccountResponse;
             }
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, resetToken, dto.Password);
             if (!result.Succeeded)
             {
-                GeneralAccountResponse.IsSucceeded = false;
-                GeneralAccountResponse.Message = string.Join(", ", result.Errors.Select(e => e.Description));
-                return GeneralAccountResponse;
+                generalAccountResponse.IsSucceeded = false;
+                generalAccountResponse.Message = string.Join(", ", result.Errors.Select(e => e.Description));
+                return generalAccountResponse;
             }
 
             await _otpManager.RemoveOtpAsync(dto.Email);
 
             var claims = await _userManager.GetClaimsAsync(user);
-            var rols = await _userManager.GetRolesAsync(user);
-
+            var roles = await _userManager.GetRolesAsync(user);
 
             //  GeneralAccountResponse = GeneralToken(claims);
-             var  token =  _jwtTokenService.GenerateJwtToken(user, rols);
-            GeneralAccountResponse.Token = token.Token;
+            var token = _jwtTokenService.GenerateJwtToken(user, roles);
+            generalAccountResponse.Token = token.Token;
 
-            GeneralAccountResponse.ExpireDate = token.Exp;
-            GeneralAccountResponse.IsSucceeded = true;
-            GeneralAccountResponse.Message = "Password reset successfully";
-            return GeneralAccountResponse;
+            generalAccountResponse.ExpireDate = token.Exp;
+            generalAccountResponse.IsSucceeded = true;
+            generalAccountResponse.Message = "Password reset successfully";
+            return generalAccountResponse;
         }
 
-    /*    private GeneralAccountResponse GeneralToken(IList<Claim> claims)
+        /*private GeneralAccountResponse GeneralToken(IList<Claim> claims)
         {
-
             var securityKeyOfString = _configuration.GetSection("Key").Value;
             var securityKeyOfBytes = Encoding.ASCII.GetBytes(securityKeyOfString);
             var securityKey = new SymmetricSecurityKey(securityKeyOfBytes);

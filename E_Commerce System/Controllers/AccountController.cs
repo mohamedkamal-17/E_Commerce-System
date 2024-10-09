@@ -28,11 +28,11 @@ namespace E_Commerce_System.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = _AccountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
+                var response = _accountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
                 return BadRequest(response);
             }
 
-            GeneralRespons result = await _AccountManager.RegisterAsync(UserRegisterDTO);
+            GeneralRespons result = await _accountManager.RegisterAsync(UserRegisterDTO);
 
             if (!result.Success)
                 return StatusCode(result.StatusCode, result);
@@ -45,19 +45,19 @@ namespace E_Commerce_System.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = _AccountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
+                var response = _accountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
                 return BadRequest(response);
             }
 
-            TokenRespons tokenResponse = await _AccountManager.LoginAsync(UserLoginDTO);
+            TokenRespons tokenResponse = await _accountManager.LoginAsync(UserLoginDTO);
 
             if (tokenResponse != null)
             {
-                var response = _AccountManager.CreateResponse(true, tokenResponse, "Login successful", 200);
+                var response = _accountManager.CreateResponse(true, tokenResponse, "Login successful", 200);
                 return Ok(response);
             }
 
-            var failedResponse = _AccountManager.CreateResponse(false, null, "Invalid username or password", 400);
+            var failedResponse = _accountManager.CreateResponse(false, null, "Invalid username or password", 400);
             return BadRequest(failedResponse);
         }
 

@@ -58,6 +58,9 @@ namespace E_Commerce_System
                             .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllers();
 
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
+
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IAccountManager, AccountManager>();
 
