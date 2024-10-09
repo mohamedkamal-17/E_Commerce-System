@@ -1,11 +1,10 @@
-﻿using E_commerceManagementSystem.BLL.Dto.OrderDto;
-using E_commerceManagementSystem.BLL.Dto.ProductDto;
+﻿using Azure;
+using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
-using E_commerceManagementSystem.BLL.Manager.ProductManager;
 using E_commerceManagementSystem.DAL.Data.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace E_Commerce_System.Controllers
 {
@@ -14,60 +13,66 @@ namespace E_Commerce_System.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderManager _orderManager;
+
         public OrderController(IOrderManager orderManager)
         {
             _orderManager = orderManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<ActionResult<GeneralRespons>> GetAllAsync()
         {
-            var result = await _orderManager.GetAllAsync();
-            if(!result.Success)
+            var response = await _orderManager.GetAllAsync();
+            if (!response.Success)
             {
-                return NotFound(result.Message);
+                // Check status code in response and return appropriate result
+                return StatusCode(response.StatusCode, response);
             }
-            return Ok(result.Model);
+            return Ok(response);
         }
 
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GeneralRespons>> GetByIdAsync(int id)
         {
-            var result = await _orderManager.GetByIdAsync(id);
-            if (!result.Success)
+            var response = await _orderManager.GetByIdAsync(id);
+            if (!response.Success)
             {
-                return NotFound(result.Message);
+                // Check status code in response and return appropriate result
+                return StatusCode(response.StatusCode, response);
             }
-            return Ok(result.Model);
+            return Ok(response);
         }
 
-        [HttpGet("UserId/{Id}")]
-        public async Task<IActionResult> GetByUserAsync(string userId)
+        [HttpGet("UserId/{userId}")]
+        public async Task<ActionResult<GeneralRespons>> GetByUserAsync(string userId)
         {
-            var result = await _orderManager.GetByUserIdAsync(userId);
-            if (!result.Success)
+            var response = await _orderManager.GetByUserIdAsync(userId);
+            if (!response.Success)
             {
-                return NotFound(result.Message);
+                // Check status code in response and return appropriate result
+                return StatusCode(response.StatusCode, response);
             }
-            return Ok(result.Model);
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<GeneralRespons>> AddAsync(AddOrderDto dto)
+        public async Task<ActionResult<GeneralRespons>> AddAsync([FromBody] AddOrderDto dto)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             var response = await _orderManager.AddAsync(dto);
             if (!response.Success)
             {
-                return NotFound(response.Message);
+                // Check status code in response and return appropriate result
+                return StatusCode(response.StatusCode, response);
             }
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as Order)?.Id }, response); // Return 201 Created
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as Order)?.Id }, response);
         }
+
         [HttpPut("{id}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateOrderDto dto)
         {
@@ -79,24 +84,24 @@ namespace E_Commerce_System.Controllers
             var response = await _orderManager.UpdateAsync(id, dto);
             if (!response.Success)
             {
-                return NotFound(response.Message);
+                // Check status code in response and return appropriate result
+                return StatusCode(response.StatusCode, response);
             }
 
-            return Ok(response.Model);
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<GeneralRespons>> Delete(int id)
         {
-
-            var resppnse = await _orderManager.DeleteAsync(id);
-            if (!resppnse.Success)
+            var response = await _orderManager.DeleteAsync(id);
+            if (!response.Success)
             {
-                return BadRequest(resppnse.Message);
+                // Check status code in response and return appropriate result
+                return StatusCode(response.StatusCode, response);
             }
-            return Ok(resppnse.Model);
+
+            return Ok(response);
         }
-
-
     }
 }

@@ -1,6 +1,8 @@
-﻿using E_commerceManagementSystem.DAL.Data.Models;
+﻿using AutoMapper;
+using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.BLL.DTOs.RoleDto;
+using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -14,104 +16,98 @@ namespace E_Commerce_System.Controllers
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _mapper = mapper;
+        }
+
+        private ActionResult<GeneralRespons> HandleResponse(GeneralRespons response)
+        {
+            if (!response.Success)
+            {
+                return StatusCode((int)response.StatusCode, response); // Return the appropriate status code and response
+            }
+            return Ok(response); // Return 200 OK if successful
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateRole([FromBody] RoleModel model)
+        public async Task<ActionResult<GeneralRespons>> CreateRoleAsync([FromBody] RoleAddDTO model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new GeneralRespons { Success = false, Message = "Invalid model state." });
 
-           
+            var roleExists = await _roleManager.RoleExistsAsync(model.RoleName);
+            if (roleExists)
+                return BadRequest(new GeneralRespons { Success = false, Message = "Role already exists." });
 
-            return Ok("Role created successfully.");
+            var role = new IdentityRole(model.RoleName);
+            var result = await _roleManager.CreateAsync(role);
+
+            if (!result.Succeeded)
+                return BadRequest(new GeneralRespons { Success = false, Message = "Error creating role.", Model = result.Errors });
+
+            var response = new GeneralRespons { Success = true, Message = "Role created successfully." };
+            return HandleResponse(response);
         }
 
         [HttpPost("assign")]
-        public async Task<IActionResult> AssignRole([FromBody] AssignRoleModel model)
+        public async Task<ActionResult<GeneralRespons>> AssignRoleAsync([FromBody] AssignRoleDTO model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
-                return NotFound("User not found.");
+                return NotFound(new GeneralRespons { Success = false, Message = "User not found." });
 
             var roleExists = await _roleManager.RoleExistsAsync(model.RoleName);
             if (!roleExists)
-                return NotFound("Role not found.");
+                return NotFound(new GeneralRespons { Success = false, Message = "Role not found." });
 
             var result = await _userManager.AddToRoleAsync(user, model.RoleName);
-
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(new GeneralRespons { Success = false, Message = "Error assigning role.", Model = result.Errors });
 
-            return Ok("Role assigned successfully.");
+            var response = new GeneralRespons { Success = true, Message = "Role assigned successfully." };
+            return HandleResponse(response);
         }
 
-        // Update Role endpoint
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
+        public async Task<ActionResult<GeneralRespons>> UpdateRoleAsync([FromBody] UpdateRoleDTO model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new GeneralRespons { Success = false, Message = "Invalid model state." });
 
             var role = await _roleManager.FindByIdAsync(model.RoleId);
             if (role == null)
-                return NotFound("Role not found.");
+                return NotFound(new GeneralRespons { Success = false, Message = "Role not found." });
 
             role.Name = model.NewRoleName;
             var result = await _roleManager.UpdateAsync(role);
-
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(new GeneralRespons { Success = false, Message = "Error updating role.", Model = result.Errors });
 
-            return Ok("Role updated successfully.");
+            var response = new GeneralRespons { Success = true, Message = "Role updated successfully." };
+            return HandleResponse(response);
         }
 
-        // Delete Role endpoint
         [HttpDelete("delete/{roleId}")]
-        public async Task<IActionResult> DeleteRole(string roleId)
+        public async Task<ActionResult<GeneralRespons>> DeleteRoleAsync(string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role == null)
-                return NotFound("Role not found.");
+                return NotFound(new GeneralRespons { Success = false, Message = "Role not found." });
 
             var result = await _roleManager.DeleteAsync(role);
-
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(new GeneralRespons { Success = false, Message = "Error deleting role.", Model = result.Errors });
 
-            return Ok("Role deleted successfully.");
+            var response = new GeneralRespons { Success = true, Message = "Role deleted successfully." };
+            return HandleResponse(response);
         }
     }
 
     // Models
-    public class RoleModel
-    {
-        [Required]
-        public string RoleName { get; set; }
-    }
-
-    public class AssignRoleModel
-    {
-        [Required]
-        public string UserId { get; set; }
-
-        [Required]
-        public string RoleName { get; set; }
-    }
-
-    public class UpdateRoleModel
-    {
-        [Required]
-        public string RoleId { get; set; }
-
-        [Required]
-        public string NewRoleName { get; set; }
-    }
-
-
+   
 }
