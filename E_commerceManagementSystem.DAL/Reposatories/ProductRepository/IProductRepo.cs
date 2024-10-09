@@ -11,7 +11,7 @@ namespace E_commerceManagementSystem.DAL.Reposatories.ProductRepository
 {
     public interface IProductRepo : IRepository<Product>
     {
-        Task<IEnumerable<Product>> GetByCategoryNameAsync();
+      
 
     }
 }

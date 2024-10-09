@@ -17,14 +17,6 @@ namespace E_commerceManagementSystem.DAL.Reposatories.ReviewRepository
         {
             _context = context;
         }
-        public async Task<IQueryable<Review>> GetByProductIdAsync(int productId)
-        {
-            return _context.Reviews.Where(x => x.ProductId == productId).AsNoTracking();
-        }
-
-        public async Task<IQueryable<Review>> GetByUserIdAsync(string userId)
-        {
-            return _context.Reviews.Where(x => x.UserId == userId).AsNoTracking();
-        }
+       
     }
 }

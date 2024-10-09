@@ -10,6 +10,6 @@ namespace E_commerceManagementSystem.DAL.Reposatories.OrederRepository
 {
     public interface IOrderRepo : IRepository<Order>
     {
-        Task<IQueryable<Order>> GetByUserIdAsync(string userId);
+       
     }
 }

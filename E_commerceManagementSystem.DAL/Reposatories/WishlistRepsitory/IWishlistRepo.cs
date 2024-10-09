@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.DAL.Reposatories.CategoryRepository
+namespace E_commerceManagementSystem.DAL.Reposatories.WishlistRepsitory
 {
-    public interface ICategoryRepo : IRepository<Category>
+    public interface IWishlistRepo:IRepository<WishList>
     {
     }
 }

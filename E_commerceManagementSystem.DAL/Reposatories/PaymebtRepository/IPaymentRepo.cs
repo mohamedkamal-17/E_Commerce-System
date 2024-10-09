@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.DAL.Reposatories.CategoryRepository
+namespace E_commerceManagementSystem.DAL.Reposatories.PaymebtRepository
 {
-    public interface ICategoryRepo : IRepository<Category>
+    public interface IPaymentRepo:IRepository<Payment>
     {
+       public  Payment GetByPaymentIntentId(string  paymentIntentId);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,6 +47,17 @@ namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
         {
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
+        }
+
+    
+        IQueryable<T> IRepository<T>.GetByConditionAsync(Expression<Func<T, bool>> expression)
+        {
+            IQueryable<T> result = _dbSet.Where(expression);
+            return result;
+        }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync(); 
         }
     }
 

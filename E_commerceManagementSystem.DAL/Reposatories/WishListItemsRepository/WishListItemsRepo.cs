@@ -1,22 +1,21 @@
 ﻿using E_commerceManagementSystem.DAL.Data.Dphelper;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.GeneralRepository;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.DAL.Reposatories.OrederRepository
+namespace E_commerceManagementSystem.DAL.Reposatories.WishListItemsRepository
 {
-    public class OrderRepo : Repository<Order>, IOrderRepo
+    public class WishListItemsRepo:Repository<WishListItems>,IWishListItemsRepo
     {
         private readonly ApplicationDbContext _context;
-        public OrderRepo(ApplicationDbContext context) : base(context)
+
+        public WishListItemsRepo(ApplicationDbContext context):base(context)
         {
             _context = context;
         }
-       
     }
 }
