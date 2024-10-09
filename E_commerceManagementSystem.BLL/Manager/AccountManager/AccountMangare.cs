@@ -178,6 +178,8 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                 return GeneralAccountResponse;
             }
 
+
+            ///////////////////////////////--
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, resetToken, dto.Password);
             if (!result.Succeeded)
