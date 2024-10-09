@@ -26,7 +26,7 @@ namespace E_Commerce_System.Controllers
             var response = await _productManager.GetAllAsync();
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
             return Ok(response);
         }
@@ -38,10 +38,11 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(new { message = "ID should be greater than zero." });
             }
+
             var response = await _productManager.GetByIdAsync(id);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
             return Ok(response);
         }
@@ -53,10 +54,11 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(new { message = "Product name must be provided." });
             }
+
             var response = await _productManager.GetByProductNameAsync(productName);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
             return Ok(response);
         }
@@ -68,10 +70,11 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(new { message = "Category name must be provided." });
             }
+
             var response = await _productManager.GetByCategoryNameAsync(categoryName);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
             return Ok(response);
         }
@@ -83,10 +86,11 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(new { message = "Price should be greater than or equal to zero." });
             }
+
             var response = await _productManager.GetByPriceAsync(price);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
             return Ok(response);
         }
@@ -98,10 +102,11 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(new { message = "High price and low price must be non-negative." });
             }
+
             var response = await _productManager.GetByPriceInRangeAsync(highPrice, lowPrice);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
             return Ok(response);
         }
@@ -113,10 +118,11 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var response = await _productManager.AddAsync(model);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
 
             return CreatedAtAction(nameof(GetById), new { id = (response.Model as Product)?.Id }, response);
@@ -133,7 +139,7 @@ namespace E_Commerce_System.Controllers
             var response = await _productManager.UpdateAsync(id, model);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
 
             return Ok(response);
@@ -145,7 +151,7 @@ namespace E_Commerce_System.Controllers
             var response = await _productManager.DeleteAsync(id);
             if (!response.Success)
             {
-                return BadRequest(response);
+                return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
             return Ok(response);
         }

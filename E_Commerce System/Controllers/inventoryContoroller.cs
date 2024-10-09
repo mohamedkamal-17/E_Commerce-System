@@ -10,9 +10,9 @@ namespace E_Commerce_System.Controllers
     [ApiController]
     public class InventoryController : ControllerBase
     {
-        private readonly IInventoryManagre _inventoryManager;
+        private readonly IInventoryManager _inventoryManager;
 
-        public InventoryController(IInventoryManagre inventoryManager)
+        public InventoryController(IInventoryManager inventoryManager)
         {
             _inventoryManager = inventoryManager;
         }
@@ -23,7 +23,7 @@ namespace E_Commerce_System.Controllers
             var response = await _inventoryManager.GetAllAsync();
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
             return Ok(response);
         }
@@ -33,12 +33,19 @@ namespace E_Commerce_System.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest(new { message = "ID should be greater than zero" });
+              
+                return BadRequest(new GeneralRespons
+                {
+                    Success = false,
+                    Message = "ID should be greater than zero",
+                    StatusCode = 400
+                });
             }
+
             var response = await _inventoryManager.GetByIdAsync(id);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
             return Ok(response);
         }
@@ -48,12 +55,19 @@ namespace E_Commerce_System.Controllers
         {
             if (productId <= 0)
             {
-                return BadRequest(new { message = "Product ID should be greater than zero" });
+               
+                return BadRequest(new GeneralRespons
+                {
+                    Success = false,
+                    Message = "Product ID should be greater than zero",
+                    StatusCode = 400
+                });
             }
+
             var response = await _inventoryManager.GetByProductId(productId);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
             return Ok(response);
         }
@@ -65,10 +79,11 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var response = await _inventoryManager.AddAsync(model);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
 
             return CreatedAtAction(nameof(GetById), new { id = (response.Model as Inventory)?.Id }, response);
@@ -85,7 +100,7 @@ namespace E_Commerce_System.Controllers
             var response = await _inventoryManager.UpdateAsync(id, model);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
 
             return Ok(response);
@@ -97,7 +112,7 @@ namespace E_Commerce_System.Controllers
             var response = await _inventoryManager.DeleteAsync(id);
             if (!response.Success)
             {
-                return BadRequest(response);
+                return StatusCode(response.StatusCode, response);
             }
             return Ok(response);
         }

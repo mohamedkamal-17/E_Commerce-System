@@ -2,7 +2,6 @@
 using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.CategoryManger;
-using E_commerceManagementSystem.BLL.Manager.ProductManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +12,10 @@ namespace E_Commerce_System.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryManger _categoryManger;
+        private readonly ICategoryManager _categoryManger;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryManger categoryManger, IMapper mapper)
+        public CategoryController(ICategoryManager categoryManger, IMapper mapper)
         {
             _categoryManger = categoryManger;
             _mapper = mapper;
@@ -30,7 +29,7 @@ namespace E_Commerce_System.Controllers
             var response = await _categoryManger.GetAllAsync();
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
             return Ok(response);
         }
@@ -43,12 +42,19 @@ namespace E_Commerce_System.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest(new { message = "ID should be greater than zero." });
+               
+                return BadRequest(new GeneralRespons
+                {
+                    Success = false,
+                    Message = "ID should be greater than zero",
+                    StatusCode = 400
+                });
             }
+
             var response = await _categoryManger.GetByIdAsync(id);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
             return Ok(response);
         }
@@ -61,12 +67,19 @@ namespace E_Commerce_System.Controllers
         {
             if (string.IsNullOrEmpty(categoryName))
             {
-                return BadRequest(new { message = "Category name should not be null or empty." });
+               
+                return BadRequest(new GeneralRespons
+                {
+                    Success = false,
+                    Message = "Category name should not be null or empty",
+                    StatusCode = 400
+                } );
             }
+
             var response = await _categoryManger.GetByCategoryNameAsync(categoryName);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
             return Ok(response);
         }
@@ -80,13 +93,14 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var response = await _categoryManger.AddAsync(model);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = (response.Model as Product)?.Id }, response);
+            return CreatedAtAction(nameof(GetById), new { id = (response.Model as Category)?.Id }, response);
         }
 
         [HttpPut("{id}")]
@@ -103,7 +117,7 @@ namespace E_Commerce_System.Controllers
             var response = await _categoryManger.UpdateAsync(id, model);
             if (!response.Success)
             {
-                return NotFound(response);
+                return StatusCode(response.StatusCode, response);
             }
 
             return Ok(response);
@@ -118,7 +132,7 @@ namespace E_Commerce_System.Controllers
             var response = await _categoryManger.DeleteAsync(id);
             if (!response.Success)
             {
-                return BadRequest(response);
+                return StatusCode(response.StatusCode, response);
             }
             return NoContent(); // Return 204 No Content
         }

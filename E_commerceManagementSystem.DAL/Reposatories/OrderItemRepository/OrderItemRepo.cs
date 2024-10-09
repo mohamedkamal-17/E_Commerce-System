@@ -18,9 +18,6 @@ namespace E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository
             _context = context;
         }
 
-        public async Task<IQueryable<OrderItem>> GetByOrderIdAsync(int orderId)
-        {
-            return _context.OrderItems.AsNoTracking();
-        }
+       
     }
 }

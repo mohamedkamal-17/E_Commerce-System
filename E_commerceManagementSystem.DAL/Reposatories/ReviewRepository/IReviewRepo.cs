@@ -10,8 +10,5 @@ namespace E_commerceManagementSystem.DAL.Reposatories.ReviewRepository
 {
     public interface IReviewRepo : IRepository<Review>
     {
-        Task<IQueryable<Review>> GetByUserIdAsync(string userId);
-        Task<IQueryable<Review>> GetByProductIdAsync(int productid);
-
     }
 }

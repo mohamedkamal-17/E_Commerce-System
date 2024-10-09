@@ -24,7 +24,7 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public Inventory? Inventory { get; set; } // Navigation property
         public ICollection<Review> Reviews { get; set; } = new HashSet<Review>(); // Navigation property
 
-        public ICollection<WishList> WishList { get; set; } = new HashSet<WishList>();
+        public ICollection<WishListItems> WishList { get; set; } = new HashSet<WishListItems>();
 
     }
 }

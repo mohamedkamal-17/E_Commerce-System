@@ -14,10 +14,11 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 {
     public interface IAccountManager
     {
-        Task<GeneralRespons> RegisterAsync(UserRegisterDTO registerVM);
+        GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
+
+
+;        Task<GeneralRespons> RegisterAsync(UserRegisterDTO registerVM);
         Task<TokenRespons> LoginAsync(UserLoginDTO UserLoginDTO);
-        Task<UserRegisterDTO> CreateRoleAsync(UserRegisterDTO roleVM);
-        Task<UserRegisterDTO> AssignRoleToUserAsync(UserRegisterDTO roleToUserVM);
         Task LogOutAsync();
 
         Task<GeneralAccountResponse> SendOtpForPasswordReset(SendOtpRequestDto dto);

@@ -9,13 +9,13 @@ using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 namespace E_commerceManagementSystem.BLL.Manager.ShippingManger
 {
-    public interface IShippingManger:IManager<Shipping, ReadShippingDto, AddShippingDto, UpdateShippingDto>
+    public interface IShippingManager:IManager<Shipping, ReadShippingDto, AddShippingDto, UpdateShippingDto>
     {
 
         Task<GeneralRespons> GetByOrderIdAsync(int id);
-        Task<GeneralRespons> GetByTrackingNumber(int trackingNumber);
-        Task<GeneralRespons> GetByShippingDate(DateTime shippingDate);
-        Task<GeneralRespons> GetByShippingState(string statu);
+        Task<GeneralRespons> GetByTrackingNumberAsync(int trackingNumber);
+        Task<GeneralRespons> GetByShippingStateAsync(string shippingStatus);
+        Task<GeneralRespons> GetByShippingDateAsync(DateTime shippingDate);
 
     }
 }

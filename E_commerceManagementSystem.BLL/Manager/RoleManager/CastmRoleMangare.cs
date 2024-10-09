@@ -6,97 +6,84 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace E_commerceManagementSystem.BLL.Manager.Classes
 {
     public class CastmRoleMangare : IRoleMangare
     {
-        private readonly UserManager<ApplicationUser> _UserManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        private readonly RoleManager<IdentityRole> _RoleManager;
-
-        CastmRoleMangare(UserManager<ApplicationUser> userManager,
-
-            RoleManager<IdentityRole> roleManager)
+        public CastmRoleMangare(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _UserManager = userManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
 
-            _RoleManager = roleManager;
+        // Updated private CreateResponse method to include the 'Model' parameter
+        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
+        {
+            return new GeneralRespons
+            {
+                Success = success,
+                Model = model,  // Include the 'Model' here
+                Message = message,
+                StatusCode = statusCode,
+                Errors = errors ?? new List<string>()
+            };
         }
 
         public async Task<GeneralRespons> AssignRole([FromBody] AssignRoleDTO model)
         {
-            GeneralRespons respons = new GeneralRespons();
-
-            var user = await _UserManager.FindByIdAsync(model.UserId);
+            var user = await _userManager.FindByIdAsync(model.UserId);
             if (user != null)
             {
-                var role = await _RoleManager.RoleExistsAsync(model.RoleName);
-                if (!role)
+                var roleExists = await _roleManager.RoleExistsAsync(model.RoleName);
+                if (!roleExists)
                 {
-                    var result = await _UserManager.AddToRoleAsync(user, model.RoleName);
+                    var result = await _userManager.AddToRoleAsync(user, model.RoleName);
                     if (result.Succeeded)
                     {
-                        respons.Success = true;
-                        return respons;
+                        return CreateResponse(true, user, "Role assigned successfully.", 200); // Include user in the Model
                     }
-                }
-                else
-                {
-                    respons.Errors.Add("role orledy Exit");
-                    return respons;
+
+                    var errors = new List<string>();
+                    foreach (var error in result.Errors)
+                    {
+                        errors.Add(error.Description);
+                    }
+                    return CreateResponse(false, null, "Failed to assign role.", 500, errors);
                 }
 
-
+                return CreateResponse(false, null, "Role already exists.", 409);
             }
-            respons.Errors.Add("ther is no user with this id");
-            return respons;
 
-
-
+            return CreateResponse(false, null, "User not found.", 404);
         }
 
         public async Task<GeneralRespons> CreateRole([FromBody] RoleAddDTO roleAddDTO)
         {
-            GeneralRespons respons = new GeneralRespons();
-            var roleExists = await _RoleManager.RoleExistsAsync(roleAddDTO.RoleName);
+            var roleExists = await _roleManager.RoleExistsAsync(roleAddDTO.RoleName);
             if (roleExists)
             {
-                respons.Errors.Add("Role already exists.");
-                return respons;
-
+                return CreateResponse(false, null, "Role already exists.", 409);
             }
 
-            var result = await _RoleManager.CreateAsync(new IdentityRole(roleAddDTO.RoleName));
-
-            if (!result.Succeeded)
+            var result = await _roleManager.CreateAsync(new IdentityRole(roleAddDTO.RoleName));
+            if (result.Succeeded)
             {
-                foreach (var error in result.Errors)
-                {
-                    respons.Errors.Add(error.Description);
-                }
+                var createdRole = await _roleManager.FindByNameAsync(roleAddDTO.RoleName); // Fetch the created role to return in the response
+                return CreateResponse(true, createdRole, "Role created successfully.", 201); // Include created role in the Model
             }
-            respons.Success = true;
-            return respons;
+
+            var errors = new List<string>();
+            foreach (var error in result.Errors)
+            {
+                errors.Add(error.Description);
+            }
+
+            return CreateResponse(false, null, "Failed to create role.", 500, errors);
         }
-
-        //public Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //Task<IActionResult> IRoleMangare.AssignRole(AssignRoleDTO model)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //Task<IActionResult> IRoleMangare.CreateRole(RoleAddDTO roleAddDTO)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

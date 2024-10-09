@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Reposatories.CategoryRepository
 {
-    public interface ICategoryRepo:IRepository<Category>
+    public interface ICategoryRepo : IRepository<Category>
     {
     }
 }

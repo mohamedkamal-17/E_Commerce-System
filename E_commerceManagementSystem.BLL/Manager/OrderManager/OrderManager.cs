@@ -1,20 +1,16 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.Dto.OrderDto;
-using E_commerceManagementSystem.BLL.Dto.ProductDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
-using E_commerceManagementSystem.BLL.Manager.ProductManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
-using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
-using E_commerceManagementSystem.DAL.Reposatories.ReviewRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;    
+using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.OrderManager
 {
@@ -23,42 +19,44 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
         private readonly IOrderRepo _repository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+
         public OrderManager(IOrderRepo repository, IMapper mapper, UserManager<ApplicationUser> userManager)
             : base(repository, mapper)
         {
-            _repository =  repository;
+            _repository = repository;
             _userManager = userManager;
-            _mapper =   mapper;
+            _mapper = mapper;
         }
 
         public async Task<GeneralRespons> GetByUserIdAsync(string userId)
         {
-            var userExists = await _userManager.FindByIdAsync(userId);
-            if (userExists == null)
+            try
             {
-                return new GeneralRespons
+                var userExists = await _userManager.FindByIdAsync(userId);
+                if (userExists == null)
                 {
-                    Success = false,
-                    Message = "No user with this id"
-                };
-            }
-            var result = await _repository.GetByUserIdAsync(userId);
-            if(result == null)
-            {
-                return new GeneralRespons
-                {
-                    Success = false,
-                    Message = "this user has not any order"
-                };
+                    return CreateResponse(false, null, "No user with this ID", 404); // Not Found
+                }
 
+                var result = await _repository.GetByConditionAsync(or => or.UserId == userId)
+                                               .ProjectTo<ReadOrderDto>(_mapper.ConfigurationProvider)
+                                               .ToListAsync();
+
+                if (result == null || !result.Any())
+                {
+                    return CreateResponse(false, null, "This user has not placed any orders.", 204); // No Content
+                }
+
+                return CreateResponse(true, result, "Orders retrieved successfully.", 200); // OK
             }
-            var listOfResult = await result.ToListAsync();
-            var orderReadDto = _mapper.Map<ICollection<ReadOrderDto>>(listOfResult);
-            return new GeneralRespons
+            catch (Exception ex)
             {
-                Success = true,
-                Model = orderReadDto
-            };
+                var errorMessage = $"Error retrieving orders: {ex.Message}";
+                var errors = new List<string> { ex.Message };
+                return CreateResponse(false, null, errorMessage, 500, errors); // Internal Server Error
+            }
         }
+
+      
     }
 }

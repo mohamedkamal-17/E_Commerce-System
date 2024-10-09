@@ -1,4 +1,5 @@
-﻿using E_commerceManagementSystem.BLL.DTOs;
+﻿using Azure;
+using E_commerceManagementSystem.BLL.DTOs;
 using E_commerceManagementSystem.BLL.DTOs.AccountDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.AccountManager;
@@ -16,38 +17,48 @@ namespace E_Commerce_System.Controllers
         private readonly IAccountManager _accountManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountsController(IAccountManager accountManager,RoleManager<IdentityRole> roleManager)
+        public AccountsController(IAccountManager accountManager, RoleManager<IdentityRole> roleManager)
         {
             _accountManager = accountManager;
             _roleManager = roleManager;
         }
+
         [HttpPost("register")]
-        public async Task<IActionResult> RegistarAsync([FromBody]UserRegisterDTO UserRegisterDTO )
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRegisterDTO UserRegisterDTO)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                var response = _accountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
+                return BadRequest(response);
+            }
 
-            GeneralRespons result=await _accountManager.RegisterAsync(UserRegisterDTO);
+            GeneralRespons result = await _accountManager.RegisterAsync(UserRegisterDTO);
+
             if (!result.Success)
-                return BadRequest(result);
+                return StatusCode(result.StatusCode, result);
 
-            else
-                return Ok("User registered successfully!");
+            return Ok(result); // Now returning GeneralRespons directly
         }
 
         [HttpPost("login")]
-       
-        public async Task<IActionResult>LoginAsync([FromBody] UserLoginDTO UserLoginDTO)
+        public async Task<IActionResult> LoginAsync([FromBody] UserLoginDTO UserLoginDTO)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            TokenRespons result = await _accountManager.LoginAsync(UserLoginDTO);
-            if (result != null)
             {
-                return Ok(result);
+                var response = _accountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
+                return BadRequest(response);
             }
-                return BadRequest("User name or Password is not valid");
+
+            TokenRespons tokenResponse = await _accountManager.LoginAsync(UserLoginDTO);
+
+            if (tokenResponse != null)
+            {
+                var response = _accountManager.CreateResponse(true, tokenResponse, "Login successful", 200);
+                return Ok(response);
+            }
+
+            var failedResponse = _accountManager.CreateResponse(false, null, "Invalid username or password", 400);
+            return BadRequest(failedResponse);
         }
 
         [HttpPost("forgot-password")]

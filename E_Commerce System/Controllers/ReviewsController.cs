@@ -22,7 +22,7 @@ namespace E_Commerce_System.Controllers
             var result = await _reviewManager.GetAllAsync();
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
             return Ok(result.Model);
         }
@@ -33,7 +33,7 @@ namespace E_Commerce_System.Controllers
             var result = await _reviewManager.GetByIdAsync(id);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
             return Ok(result.Model);
         }
@@ -44,7 +44,7 @@ namespace E_Commerce_System.Controllers
             var result = await _reviewManager.GetByProductIdAsync(productId);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
             return Ok(result.Model);
         }
@@ -55,7 +55,7 @@ namespace E_Commerce_System.Controllers
             var result = await _reviewManager.GetByUserIdAsync(userId);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
             return Ok(result.Model);
         }
@@ -67,11 +67,13 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var result = await _reviewManager.AddAsync(addReviewDto);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
+
             return CreatedAtAction(nameof(GetByIdAsync), new { id = (result.Model as ReadReviewDto)?.Id }, result.Model); // Return 201 Created
         }
 
@@ -82,16 +84,19 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var reviewExists = await _reviewManager.GetByIdAsync(id);
             if (!reviewExists.Success)
             {
-                return NotFound(reviewExists.Message);
+                return StatusCode(reviewExists.StatusCode, reviewExists); // Return appropriate error code
             }
+
             var result = await _reviewManager.UpdateAsync(id, updateReviewDto);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
+
             return Ok(result.Model);
         }
 
@@ -101,7 +106,7 @@ namespace E_Commerce_System.Controllers
             var result = await _reviewManager.DeleteAsync(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
             return Ok(result.Model);
         }

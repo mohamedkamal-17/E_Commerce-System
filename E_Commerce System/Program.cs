@@ -1,7 +1,5 @@
 using E_commerceManagementSystem.DAL.Data.Dphelper;
 using E_commerceManagementSystem.DAL.Data.Models;
-using E_commerceManagementSystem.BLL.DTOs;
-
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +11,24 @@ using E_commerceManagementSystem.DAL.Repositories.Classes;
 using E_commerceManagementSystem.DAL.Reposatories.ReviewRepository;
 
 using E_commerceManagementSystem.BLL.Manager.ReviewManager;
-using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository;
 using E_commerceManagementSystem.BLL.Manager.OrderItemManager;
+using E_commerceManagementSystem.DAL.Reposatories.InventoryRepository;
+using E_commerceManagementSystem.BLL.Manager.InventoryManager;
+using E_commerceManagementSystem.DAL.Reposatories.ShippingRepository;
+using E_commerceManagementSystem.BLL.Manager.ShippingManger;
+using E_commerceManagementSystem.DAL.Reposatories.PaymebtRepository;
+using E_commerceManagementSystem.BLL.Manager.PaymentManager;
+using E_commerceManagementSystem.DAL.Reposatories.CategoryRepository;
+using E_commerceManagementSystem.BLL.Manager.CategoryManger;
+using E_commerceManagementSystem.DAL.Reposatories.WishlistRepsitory;
+using E_commerceManagementSystem.BLL.Manager.WishlistItemsManager;
+using E_commerceManagementSystem.BLL.Manager.WishlistManager;
+using E_commerceManagementSystem.DAL.Reposatories.WishListItemsRepository;
+using E_commerceManagementSystem.BLL.Manager.ShippingManager;
+using E_commerceManagementSystem.BLL.Manager.CategoryManager;
 using E_commerceManagementSystem.BLL.Manager.CartItemManager;
 using E_commerceManagementSystem.DAL.Reposatories.CartItemRepository;
 using E_commerceManagementSystem.BLL.Manager.CartManager;
@@ -41,7 +52,7 @@ namespace E_Commerce_System
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("E_Commerce_string"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -52,11 +63,14 @@ namespace E_Commerce_System
 
             builder.Services.AddControllers();
 
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
+
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddScoped<IAccountManager, AccountMangare>();
+            builder.Services.AddScoped<IAccountManager, AccountManager>();
 
 
-            builder.Services.AddScoped<IProductMangare,ProductManger>();
+            builder.Services.AddScoped<IProductMangare, ProductManager>();
             builder.Services.AddScoped<IProductRepo, ProductRepo>();
 
             builder.Services.AddScoped<IReviewManager, ReviewManager>();
@@ -67,6 +81,28 @@ namespace E_Commerce_System
 
             builder.Services.AddScoped<IOrderItemRepo, OrderItemRepo>();
             builder.Services.AddScoped<IOrderItemManager, OrderItemManager>();
+
+            builder.Services.AddScoped<IInventoryRepo, InventoryRepo>();
+            builder.Services.AddScoped<IInventoryManager, InventoryManager>();
+
+            builder.Services.AddScoped<IShippingRepo, ShippingRepo>();
+            builder.Services.AddScoped<IShippingManager, ShippingManager>();
+
+            builder.Services.AddScoped<IPaymentRepo, PaymentRepo>();
+            builder.Services.AddScoped<IPaymentManger, PaymentManager>();
+
+            builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+            builder.Services.AddScoped<ICategoryManager, CategoryManager>();
+
+            builder.Services.AddScoped<IWishlistRepo, WishlistRepo>();
+            builder.Services.AddScoped<IWishlistManager, WishlistManager>();
+
+
+            builder.Services.AddScoped<IWishListItemsRepo, WishListItemsRepo>();
+            builder.Services.AddScoped<IWishlistItemsManager, WishlistItemsManager>();
+
+
+
 
             builder.Services.AddScoped<ICartManager, CartManager>();
             builder.Services.AddScoped<ICartRepo, CartRepo>();

@@ -16,9 +16,6 @@ namespace E_commerceManagementSystem.DAL.Repositories.Classes
         {
 
         }
-        public Task<IEnumerable<Product>> GetByCategoryNameAsync()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

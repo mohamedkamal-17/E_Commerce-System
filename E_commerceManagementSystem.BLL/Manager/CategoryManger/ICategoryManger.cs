@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.CategoryManger
 {
-    public interface ICategoryManger: IManager<Category, ReadCategoryDto, AddCategoryDTO, UpdateCategoryDto>
+    public interface ICategoryManager: IManager<Category, ReadCategoryDto, AddCategoryDTO, UpdateCategoryDto>
     {
         Task<GeneralRespons> GetByCategoryNameAsync(string categoryName);
     }
