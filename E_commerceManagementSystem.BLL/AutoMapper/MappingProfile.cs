@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.Dto.InventoryDto;
+using E_commerceManagementSystem.BLL.Dto.CartDto;
 using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.Dto.OrederItemDto;
 using E_commerceManagementSystem.BLL.Dto.PaymentDto;
@@ -10,6 +11,13 @@ using E_commerceManagementSystem.BLL.Dto.ShippingDto;
 using E_commerceManagementSystem.BLL.Dto.WishlistDto;
 using E_commerceManagementSystem.BLL.Dto.WishListItemsDto;
 using E_commerceManagementSystem.DAL.Data.Models;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.IO.Pipelines;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Stripe;
 using Product = E_commerceManagementSystem.DAL.Data.Models.Product;
 using Review = E_commerceManagementSystem.DAL.Data.Models.Review;
@@ -69,6 +77,8 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<Review, AddReviewDto>().ReverseMap();
             #endregion
 
+            CreateMap<Cart, ReadCartDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
             #region Payment Mappings
             // Mapping from AddPaymentDto to Payment entity
             CreateMap<AddPaymentDto, Payment>()
@@ -80,6 +90,11 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // Set manually
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore()); // Set manually
 
+            CreateMap<Cart, UpdateCartDto>().ReverseMap()
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.Now));
+
+            CreateMap<Cart, AddCartDto>().ReverseMap()
+               .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.Now));
             // Mapping from PaymentIntent (Stripe response) to AddIntentPaymentResponseDto
             CreateMap<PaymentIntent, AddIntentPymentRsponsDto>()
                 .ForMember(dest => dest.PaymentIntentId, opt => opt.MapFrom(src => src.Id))

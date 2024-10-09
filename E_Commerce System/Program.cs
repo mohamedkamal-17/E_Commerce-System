@@ -29,6 +29,12 @@ using E_commerceManagementSystem.BLL.Manager.WishlistManager;
 using E_commerceManagementSystem.DAL.Reposatories.WishListItemsRepository;
 using E_commerceManagementSystem.BLL.Manager.ShippingManager;
 using E_commerceManagementSystem.BLL.Manager.CategoryManager;
+using E_commerceManagementSystem.BLL.Manager.CartItemManager;
+using E_commerceManagementSystem.DAL.Reposatories.CartItemRepository;
+using E_commerceManagementSystem.BLL.Manager.CartManager;
+using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
+using E_commerceManagementSystem.BLL.Manager.OtpManager;
+using E_commerceManagementSystem.BLL.Manager.EmailManager;
 
 
 namespace E_Commerce_System
@@ -88,6 +94,17 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IWishlistItemsManager, WishlistItemsManager>();
 
 
+
+
+            builder.Services.AddScoped<ICartManager, CartManager>();
+            builder.Services.AddScoped<ICartRepo, CartRepo>();
+
+            builder.Services.AddScoped<ICartItemManager, CartItemManager>();
+            builder.Services.AddScoped<ICartItemRepo, CartItemRepo>();
+
+            builder.Services.AddScoped<IOtpManager,OtpManager>();
+            builder.Services.AddScoped<IEmailManager, EmailManager>();
+            builder.Services.AddMemoryCache();
 
 
             builder.Services.AddAutoMapper(typeof(Program));
