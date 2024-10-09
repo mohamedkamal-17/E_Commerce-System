@@ -1,5 +1,4 @@
-﻿using Azure;
-using E_commerceManagementSystem.BLL.DTOs;
+﻿using E_commerceManagementSystem.BLL.DTOs;
 using E_commerceManagementSystem.BLL.DTOs.AccountDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.JwtTokenManager;
@@ -7,74 +6,79 @@ using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 {
-    public class AccountMangare : IAccountManager
+    public class AccountManager : IAccountManager
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signinManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtTokenService _jwtTokenService;
 
-        public AccountMangare(UserManager<ApplicationUser> userManager,
+        public AccountManager(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signinManager,
             RoleManager<IdentityRole> roleManager,
-            IJwtTokenService JwtTokenService)
+            IJwtTokenService jwtTokenService)
         {
             _userManager = userManager;
             _signinManager = signinManager;
             _roleManager = roleManager;
-            _jwtTokenService = JwtTokenService;
+            _jwtTokenService = jwtTokenService;
         }
 
-
-        public async Task<GeneralRespons> RegisterAsync(UserRegisterDTO UserRegister)
+        public GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
         {
+            return new GeneralRespons
+            {
+                Success = success,
+                Model = model,
+                Message = message,
+                StatusCode = statusCode,
+                Errors = errors ?? new List<string>()
+            };
+        }
 
-            ApplicationUser user = new ApplicationUser();
-            user.UserName = UserRegister.UserName;
-            user.Email = UserRegister.Email;
+        public async Task<GeneralRespons> RegisterAsync(UserRegisterDTO userRegister)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = userRegister.UserName,
+                Email = userRegister.Email
+            };
 
-            var Response = new GeneralRespons();
-            var result = await _userManager.CreateAsync(user, UserRegister.Password);
+            var response = new GeneralRespons();
+            var result = await _userManager.CreateAsync(user, userRegister.Password);
             if (result.Succeeded)
             {
-
-
-                Response.Success = true;
-                return Response;
+                return CreateResponse(true, null, "User registered successfully.", 201); // Created
             }
+
             foreach (var error in result.Errors)
             {
-                Response.Errors.Add(error.Description);
+                response.Errors.Add(error.Description);
             }
-            return Response;
+            return CreateResponse(false, null, "User registration failed.", 400, response.Errors); // Bad Request
         }
-        public async Task<TokenRespons> LoginAsync(UserLoginDTO loginDTO)
-        {
 
+        public async Task<TokenRespons?> LoginAsync(UserLoginDTO loginDTO)
+        {
             var user = await _userManager.FindByNameAsync(loginDTO.UserName);
 
             if (user != null)
             {
-                var result = await _signinManager.PasswordSignInAsync
-                                           (user, loginDTO.Password, false, false);
+                var result = await _signinManager.PasswordSignInAsync(user, loginDTO.Password, false, false);
                 if (result.Succeeded)
                 {
-                    var rols = await _userManager.GetRolesAsync(user);
-                    TokenRespons tokenRespons = _jwtTokenService.GenerateJwtToken(user, rols);
-
-                    return tokenRespons;
-
+                    var roles = await _userManager.GetRolesAsync(user);
+                    TokenRespons tokenResponse = _jwtTokenService.GenerateJwtToken(user, roles);
+                    return tokenResponse;
                 }
                 return null;
             }
 
-            return null;
+            return null; // User not found
         }
 
         public async Task LogOutAsync()
@@ -82,23 +86,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             await _signinManager.SignOutAsync();
         }
 
-
-
-
-        public Task<UserRegisterDTO> LoginAsync(UserRegisterDTO loginVM)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserRegisterDTO> CreateRoleAsync(UserRegisterDTO roleVM)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserRegisterDTO> AssignRoleToUserAsync(UserRegisterDTO roleToUserVM)
-        {
-            throw new NotImplementedException();
-        }
+        
+      
     }
-
 }

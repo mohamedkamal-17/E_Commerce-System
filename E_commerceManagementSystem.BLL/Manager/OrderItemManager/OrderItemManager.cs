@@ -5,12 +5,10 @@ using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
-using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.OrderItemManager
@@ -21,40 +19,42 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderItemManager
         private readonly IOrderRepo _orderRepo;
         private readonly IMapper _mapper;
 
-        public OrderItemManager(IOrderItemRepo repository, IMapper mapper, IOrderRepo orderRepo) : base(repository, mapper)
+        public OrderItemManager(IOrderItemRepo repository, IMapper mapper, IOrderRepo orderRepo)
+            : base(repository, mapper)
         {
             _orderItemRepo = repository;
             _orderRepo = orderRepo;
-            _mapper =   mapper;
+            _mapper = mapper;
         }
 
         public async Task<GeneralRespons> GetByOrderIdAsync(int orderId)
         {
-            var orderExists = await _orderRepo.GetByIdAsync(orderId);
-            if (orderExists == null)
+            try
             {
-                return new GeneralRespons
+                // Check if the order exists using GetByConditionAsync
+                var order = await _orderRepo.GetByIdAsync(orderId);
+                if (order == null)
                 {
-                    Success = false,
-                    Message = "No order with this Id"
-                };
-            }
-            var QueryorderItems = await _orderItemRepo.GetByOrderIdAsync(orderId);
-            if (QueryorderItems == null)
-            {
-                return new GeneralRespons
+                    return CreateResponse(false, null, "No order with this ID", 404); // Not Found
+                }
+
+                var orderItems = await _orderItemRepo.GetByConditionAsync(oi => oi.OrderId == orderId).ToListAsync();
+                if (!orderItems.Any()) // Check if there are any items
                 {
-                    Success = false,
-                    Message = "No Items in this Order"
-                };
+                    return CreateResponse(false, null, "No items in this order", 204); // No Content
+                }
+
+                var resultDto = _mapper.Map<List<ReadOrderItemDto>>(orderItems);
+                return CreateResponse(true, resultDto, "Order items retrieved successfully.", 200); // OK
             }
-            var orderItems = await QueryorderItems.ToListAsync();
-            var ResultDto = _mapper.Map<ICollection<ReadOrderItemDto>>(orderItems);
-            return new GeneralRespons
+            catch (Exception ex)
             {
-                Success = true,
-                Model = ResultDto
-            };
+                var errorMessage = $"Error retrieving order items: {ex.Message}";
+                var errors = new List<string> { ex.Message };
+                return CreateResponse(false, null, errorMessage, 500, errors); // Internal Server Error
+            }
         }
+
+       
     }
 }

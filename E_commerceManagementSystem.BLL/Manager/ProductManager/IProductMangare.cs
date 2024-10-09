@@ -17,7 +17,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
         Task<GeneralRespons> GetByProductNameAsync(string ProductName);
         Task<GeneralRespons> GetByPriceAsync(float price);
         Task<GeneralRespons> GetByPriceInRangeAsync(float highPrice, float lowPrice);
-        Task<GeneralRespons> GetByPraicelessthanAsync(float highPrice);
-        Task<GeneralRespons> GetByPraicelargthanAsync(float lowPrice);
+        Task<GeneralRespons> GetByPriceLessThanAsync(float highPrice);
+        Task<GeneralRespons> GetByPriceGreaterThanAsync(float lowPrice);
     }
 }

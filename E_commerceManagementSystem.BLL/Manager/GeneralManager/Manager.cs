@@ -4,6 +4,7 @@ using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Net; // Added for HTTP status codes
 using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
@@ -19,17 +20,18 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public Manager(IRepository<T> repository, IMapper mapper)
         {
-            _repository = repository;// ?? throw new ArgumentNullException(nameof(repository));
-            _mapper = mapper;//?? throw new ArgumentNullException(nameof(mapper));
+            _repository = repository;
+            _mapper = mapper;
         }
-
-        private GeneralRespons CreateResponse(bool success, object? model, string message, List<string>? errors = null)
+        
+        public GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
         {
             return new GeneralRespons
             {
                 Success = success,
                 Model = model,
                 Message = message,
+                StatusCode = statusCode, // Set StatusCode here
                 Errors = errors ?? new List<string>()
             };
         }
@@ -37,15 +39,15 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
         public async Task<GeneralRespons> GetAllAsync()
         {
             var queryableResult = await _repository.GetAllAsync();
-
             var resultList = await queryableResult.ToListAsync();
-            
+
             if (resultList != null && resultList.Count > 0)
             {
                 var dtoList = _mapper.Map<List<TReadDto>>(resultList);
-                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.");
+                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.",200);
             }
-            return CreateResponse(false, null, $"{typeof(T).Name}s not found.");
+
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
         }
 
         public async Task<GeneralRespons> GetByIdAsync(int id)
@@ -54,17 +56,17 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             if (result != null)
             {
                 var dto = _mapper.Map<TReadDto>(result);
-                return CreateResponse(true, dto, $"{typeof(T).Name} retrieved successfully.");
+                return CreateResponse(true, dto, $"{typeof(T).Name} retrieved successfully.",200);
             }
-            return CreateResponse(false, null, $"{typeof(T).Name} not found.");
+
+            return CreateResponse(false, null, $"{typeof(T).Name} not found.",404);
         }
 
-        // Method for adding an entity using TAddDto
-        public async Task<GeneralRespons> AddAsync(TAddDto addDto)
+        public virtual async Task<GeneralRespons> AddAsync(TAddDto addDto)
         {
             if (addDto == null)
             {
-                return CreateResponse(false, null, "Add DTO cannot be null.");
+                return CreateResponse(false, null, "Add DTO cannot be null.",400);
             }
 
             T entity = _mapper.Map<T>(addDto); // Map the AddDto to the entity
@@ -72,39 +74,37 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             try
             {
                 await _repository.AddAsync(entity);
-                return CreateResponse(true, entity, $"{typeof(T).Name} added successfully.");
+                return CreateResponse(true, entity, $"{typeof(T).Name} added successfully.", 201);
             }
             catch (Exception ex)
             {
-                return CreateResponse(false, null, $"Error adding {typeof(T).Name}: {ex.Message}", new List<string> { ex.Message });
+                return CreateResponse(false, null, $"Error adding {typeof(T).Name}: {ex.Message}",500, new List<string> { ex.Message });
             }
         }
 
-        // Method for updating an entity using TUpdateDto
         public async Task<GeneralRespons> UpdateAsync(int id, TUpdateDto updateDto)
         {
             if (updateDto == null)
             {
-                return CreateResponse(false, null, "Update DTO cannot be null.");
+                return CreateResponse(false, null, "Update DTO cannot be null.", 400);
             }
 
             T entity = _mapper.Map<T>(updateDto); // Map the UpdateDto to the entity
 
             try
             {
-                // Optionally, check if the entity exists before updating
                 var existingEntity = await _repository.GetByIdAsync(id);
                 if (existingEntity == null)
                 {
-                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found.");
+                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found.", 404);
                 }
 
                 await _repository.UpdateAsync(entity);
-                return CreateResponse(true, entity, $"{typeof(T).Name} updated successfully.");
+                return CreateResponse(true, entity, $"{typeof(T).Name} updated successfully.",200);
             }
             catch (Exception ex)
             {
-                return CreateResponse(false, null, $"Error updating {typeof(T).Name}: {ex.Message}", new List<string> { ex.Message });
+                return CreateResponse(false, null, $"Error updating {typeof(T).Name}: {ex.Message}", 500, new List<string> { ex.Message });
             }
         }
 
@@ -115,15 +115,15 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
                 var entity = await _repository.GetByIdAsync(id);
                 if (entity == null)
                 {
-                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.");
+                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.",404);
                 }
 
                 await _repository.DeleteAsync(entity);
-                return CreateResponse(true, null, $"{typeof(T).Name} deleted successfully.");
+                return CreateResponse(true, null, $"{typeof(T).Name} deleted successfully.", 200);
             }
             catch (Exception ex)
             {
-                return CreateResponse(false, null, $"Error deleting {typeof(T).Name}: {ex.Message}", new List<string> { ex.Message });
+                return CreateResponse(false, null, $"Error deleting {typeof(T).Name}: {ex.Message}",500, new List<string> { ex.Message });
             }
         }
     }

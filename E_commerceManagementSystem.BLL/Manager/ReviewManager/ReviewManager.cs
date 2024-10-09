@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.Dto.ReviewDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
-using E_commerceManagementSystem.BLL.Manager.ProductManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
 using E_commerceManagementSystem.DAL.Reposatories.ReviewRepository;
-using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
@@ -20,90 +19,88 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
     public class ReviewManager : Manager<Review, ReadReviewDto, AddReviewDto, UpdateReviewDto>, IReviewManager
     {
         private readonly IReviewRepo _reviewRepo;
+        private readonly IMapper _mapper;
         private readonly IProductRepo _productRepo;
         private readonly UserManager<ApplicationUser> _userManager;
+
         public ReviewManager(IReviewRepo repository, IMapper mapper, IProductRepo productRepo, UserManager<ApplicationUser> userManager)
             : base(repository, mapper)
         {
             _reviewRepo = repository;
+            _mapper = mapper;
             _productRepo = productRepo;
             _userManager = userManager;
         }
 
-        public async Task<GeneralRespons> GetByProductIdAsync(int productid)
+        // Updated CreateResponse to include HTTP status code
+        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
         {
-            var productExists = await _productRepo.GetByIdAsync(productid);
-            if(productExists == null)
-            {
-                return new GeneralRespons
-                {
-                    Success = false,
-                    Message = "No Product with this id"
-                };
-            }
-            var review = await _reviewRepo.GetByProductIdAsync(productid);
-            if(await review.CountAsync() == 0)
-            {
-                return new GeneralRespons
-                {
-                    Success = false,
-                    Message = "No reviews for this product"
-                };
-            }
-            var reviews = await review.ToListAsync();
-
-            var reviewDtos = reviews.Select(r => new ReadReviewDto
-            {
-                ProductName = r.Product.ProductName,
-                UserName = r.User.UserName,
-                Rating = r.Rating,
-                ReviewText = r.ReviewText,
-                CreatedDate = r.CreatedDate
-            }).ToList();
-
             return new GeneralRespons
             {
-                Success = true,
-                Model = reviewDtos
+                Success = success,
+                Model = model,  // Include the model (data) in the response
+                Message = message,
+                Errors = errors ?? new List<string>(),
+                StatusCode = statusCode  // Add status code to the response
             };
+        }
+
+        public async Task<GeneralRespons> GetByProductIdAsync(int productId)
+        {
+            try
+            {
+                // Check if the product exists
+                var productExists = await _productRepo.GetByIdAsync(productId);
+                if (productExists == null)
+                {
+                    return CreateResponse(false, null, "No Product with this ID", 404);
+                }
+
+                // Get reviews for the product
+                var reviewDtos = await _reviewRepo.GetByConditionAsync(re => re.ProductId == productId)
+                                                  .ProjectTo<ReadReviewDto>(_mapper.ConfigurationProvider)
+                                                  .ToListAsync();
+
+                if (!reviewDtos.Any())
+                {
+                    return CreateResponse(false, null, "No reviews for this product", 404);
+                }
+
+                return CreateResponse(true, reviewDtos, "Reviews retrieved successfully",200);
+            }
+            catch (Exception ex)
+            {
+                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message });
+            }
         }
 
         public async Task<GeneralRespons> GetByUserIdAsync(string userId)
         {
-            var userExists = await _userManager.FindByIdAsync(userId);
-            if (userExists == null)
+            try
             {
-                return new GeneralRespons
+                // Check if the user exists
+                var userExists = await _userManager.FindByIdAsync(userId);
+                if (userExists == null)
                 {
-                    Success = false,
-                    Message = "No user with this id"
-                };
-            }
-            var review = await _reviewRepo.GetByUserIdAsync(userId);
-            if (await review.CountAsync() == 0)
-            {
-                return new GeneralRespons
+                    return CreateResponse(false, null, "No user with this ID", 404);
+                }
+
+                // Retrieve reviews for the user
+                var reviewDtos = await _reviewRepo.GetByConditionAsync(r => r.UserId == userId)
+                                                  .ProjectTo<ReadReviewDto>(_mapper.ConfigurationProvider)
+                                                  .ToListAsync();
+
+                if (!reviewDtos.Any())
                 {
-                    Success = false,
-                    Message = "this user have not any reviews"
-                };
+                    return CreateResponse(false, null, "This user has not written any reviews", 404);
+                }
+
+                return CreateResponse(true, reviewDtos, "Reviews retrieved successfully", 200);
             }
-            var reviews = await review.ToListAsync();
-
-            var reviewDtos = reviews.Select(r => new ReadReviewDto
+            catch (Exception ex)
             {
-                ProductName = r.Product.ProductName,
-                UserName = r.User.UserName,
-                Rating = r.Rating,
-                ReviewText = r.ReviewText,
-                CreatedDate = r.CreatedDate
-            }).ToList();
-
-            return new GeneralRespons
-            {
-                Success = true,
-                Model = reviewDtos
-            };
+                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message });
+            }
         }
     }
 }

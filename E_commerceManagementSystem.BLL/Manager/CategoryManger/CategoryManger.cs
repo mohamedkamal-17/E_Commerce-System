@@ -1,57 +1,60 @@
 ﻿using AutoMapper;
 using E_commerceManagementSystem.BLL.Dto.CategoryDto;
-using E_commerceManagementSystem.BLL.Dto.ProductDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.BLL.Manager.CategoryManger;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.CategoryRepository;
-using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager.CategoryManger
+namespace E_commerceManagementSystem.BLL.Manager.CategoryManager
 {
-    public class CategoryManger:Manager<Category, ReadCategoryDto, AddCategoryDTO, UpdateCategoryDto>, ICategoryManger
-      
+    public class CategoryManager : Manager<Category, ReadCategoryDto, AddCategoryDTO, UpdateCategoryDto>, ICategoryManager
     {
         private readonly ICategoryRepo _repository;
         private readonly IMapper _mapper;
 
-        public CategoryManger(ICategoryRepo repository,IMapper mapper):base(repository, mapper)
+        public CategoryManager(ICategoryRepo repository, IMapper mapper)
+            : base(repository, mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-        private GeneralRespons CreateResponse(bool success, object? model, string message, List<string>? errors = null)
+        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
         {
             return new GeneralRespons
             {
                 Success = success,
                 Model = model,
                 Message = message,
+                StatusCode = statusCode, // Set StatusCode here
                 Errors = errors ?? new List<string>()
             };
         }
-        public async Task< GeneralRespons> GetByCategoryNameAsync(string categoryName )
+
+        public async Task<GeneralRespons> GetByCategoryNameAsync(string categoryName)
         {
-            var queryableResult = await _repository.GetAllAsync();
-            var categoriesLisr=await queryableResult.Where(co=>co.Name== categoryName).ToListAsync();
-            var Categor= categoriesLisr.FirstOrDefault();
-            if (Categor ==null)
+            try
             {
-                ReadCategoryDto readDtos = _mapper.Map<ReadCategoryDto>(Categor);
+                var category = await _repository.GetByConditionAsync(c => c.Name == categoryName)
+                                                                    .FirstOrDefaultAsync();
 
-                return CreateResponse(true, readDtos, "Category retrieved successfully by price.");
+                if (category == null)
+                {
+                    return CreateResponse(false, null, "No category found for the given name.", 404); // Not Found
+                }
+
+                var readDto = _mapper.Map<ReadCategoryDto>(category);
+                return CreateResponse(true, readDto, "Category retrieved successfully by name.", 200); // OK
             }
-            return CreateResponse(false, null, "No Category found for the given price.");
-
-
-
+            catch (Exception ex)
+            {
+                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message }); // Internal Server Error
+            }
         }
     }
 }
