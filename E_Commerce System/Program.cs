@@ -43,8 +43,13 @@ namespace E_Commerce_System
             builder.Services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("E_Commerce_string"));
             });
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                            .AddEntityFrameworkStores<ApplicationDbContext>();
+                            .AddEntityFrameworkStores<ApplicationDbContext>()
+                            .AddDefaultTokenProviders();
+            
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
