@@ -10,6 +10,6 @@ namespace E_commerceManagementSystem.DAL.Reposatories.CartItemRepository
 {
     public interface ICartItemRepo : IRepository<CartItem> 
     {
-        Task<IQueryable<CartItem>> GetByCartIdAsync(int cartId);
+        //Task<IQueryable<CartItem>> GetByCartIdAsync(int cartId);
     }
 }

@@ -10,7 +10,7 @@ namespace E_commerceManagementSystem.DAL.Reposatories.CartRepository
 {
     public interface ICartRepo : IRepository<Cart>
     {
-        Task<Cart> GetByUserIdAsync(string userId);
+        //Task<Cart> GetByUserIdAsync(string userId);
     }
 
 

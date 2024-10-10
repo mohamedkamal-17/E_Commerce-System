@@ -19,9 +19,9 @@ namespace E_commerceManagementSystem.DAL.Reposatories.CartItemRepository
             _context = context;
         }
 
-        public async Task<IQueryable<CartItem>> GetByCartIdAsync(int cartId)
-        {
-            return _context.CartItems.Where(x => x.CartID == cartId).AsNoTracking();
-        }
+        //public async Task<IQueryable<CartItem>> GetByCartIdAsync(int cartId)
+        //{
+        //    return _context.CartItems.Where(x => x.CartID == cartId).AsNoTracking();
+        //}
     }
 }
