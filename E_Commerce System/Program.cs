@@ -35,6 +35,9 @@ using E_commerceManagementSystem.BLL.Manager.CartManager;
 using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 using E_commerceManagementSystem.BLL.Manager.OtpManager;
 using E_commerceManagementSystem.BLL.Manager.EmailManager;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 namespace E_Commerce_System
@@ -48,9 +51,6 @@ namespace E_Commerce_System
             // Add services to the container.
 
 
-
-
-
             builder.Services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });
@@ -58,8 +58,26 @@ namespace E_Commerce_System
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                             .AddEntityFrameworkStores<ApplicationDbContext>()
                             .AddDefaultTokenProviders();
-            
-            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(option =>
+            {
+                option.SaveToken = true;
+                option.RequireHttpsMetadata = false;
+                option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = "https://localhost:7131/",
+                    ValidateAudience = true,
+                    ValidAudience = "https://localhost:7131/",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("y9XQ!@324fkpq34Vn04i5#W6$%fTgQwErTgBhYtNmQqPzXqFjKl09"))
+                };
+            });
 
             builder.Services.AddControllers();
 
@@ -133,6 +151,7 @@ namespace E_Commerce_System
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
