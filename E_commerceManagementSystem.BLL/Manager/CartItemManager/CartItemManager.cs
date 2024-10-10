@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using E_commerceManagementSystem.BLL.Dto.CartDto;
 using E_commerceManagementSystem.BLL.Dto.CartItemDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
@@ -6,6 +7,7 @@ using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.CartItemRepository;
 using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,29 +34,26 @@ namespace E_commerceManagementSystem.BLL.Manager.CartItemManager
             var cartExists = await _cartRepo.GetByIdAsync(cartId);
             if (cartExists == null)
             {
-                return new GeneralRespons
-                {
-                    Success = false,
-                    Message = "no cart with this id"
-                };
+                return CreateResponse(false, null, "No cart with this id.", 404); // Not Found
             }
-
-            var cartItems = await _cartItemrepository.GetByCartIdAsync(cartId);
-            if (cartItems == null)
+            try
             {
-                return new GeneralRespons
+                var cartItems = await _cartItemrepository.GetByConditionAsync(c => c.CartID == cartId).ToListAsync();
+                //var cartItems = await _cartItemrepository.GetByCartIdAsync(cartId);
+                if (cartItems == null)
                 {
-                    Success = false,
-                    Message = "this cart has not any items yet"
-                };
-            }
+                    return CreateResponse(false, null, "this cart has not any items", 404); // Not Found
+                }
 
-            var cartItemDto = _mapper.Map<ICollection<ReadCartItemDto>>(cartItems);
-            return new GeneralRespons
+                var readDto = _mapper.Map<ICollection<ReadCartItemDto>>(cartItems);
+                return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
+
+            }
+            catch (Exception ex)
             {
-                Success = true,
-                Model = cartItemDto
-            };
+                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message }); // Internal Server Error
+            }
         }
+
     }
 }

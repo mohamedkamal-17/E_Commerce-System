@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using E_commerceManagementSystem.BLL.Dto.CartDto;
+using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,29 +34,26 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
             var userExists = await _userManager.FindByIdAsync(userId);
             if (userExists == null)
             {
-                return new GeneralRespons
-                {
-                    Success = false,
-                    Message = "No user with this id"
-                };
+                return CreateResponse(false, null, "No user with this id.", 404); // Not Found
             }
 
-            var cart = await _repository.GetByUserIdAsync(userId);
-            if(cart == null)
+            try
             {
-                return new GeneralRespons
+                var cart = await _repository.GetByConditionAsync(x => x.UserId == userId).FirstOrDefaultAsync();
+
+                //   var cart = await _repository.GetByUserIdAsync(userId);
+                if (cart == null)
                 {
-                    Success = false,
-                    Message = "user has not cart"
-                };
+                    return CreateResponse(false, null, "No cart found for the given name.", 404); // Not Found
+                }
+                var readDto = _mapper.Map<ReadCartDto>(cart);
+                return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
             }
-            
-            
-            return new GeneralRespons
+            catch (Exception ex)
             {
-                Success = true,
-                Model = _mapper.Map<ReadCartDto>(cart),
-            };
+                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message }); // Internal Server Error
+            }
+
         }
     }
 }

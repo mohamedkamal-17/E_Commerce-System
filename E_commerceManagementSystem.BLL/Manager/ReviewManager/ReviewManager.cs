@@ -32,19 +32,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
             _userManager = userManager;
         }
 
-        // Updated CreateResponse to include HTTP status code
-        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
-        {
-            return new GeneralRespons
-            {
-                Success = success,
-                Model = model,  // Include the model (data) in the response
-                Message = message,
-                Errors = errors ?? new List<string>(),
-                StatusCode = statusCode  // Add status code to the response
-            };
-        }
-
+      
         public async Task<GeneralRespons> GetByProductIdAsync(int productId)
         {
             try

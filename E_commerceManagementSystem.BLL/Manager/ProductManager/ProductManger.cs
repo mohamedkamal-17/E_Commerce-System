@@ -26,18 +26,6 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
             _mapper = mapper;
         }
 
-        // CreateResponse method to include status code
-        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
-        {
-            return new GeneralRespons
-            {
-                Success = success,
-                Model = model,
-                Message = message,
-                Errors = errors ?? new List<string>(),
-                StatusCode = statusCode // Add status code property
-            };
-        }
 
         public async Task<GeneralRespons> GetByPriceAsync(float price)
         {

@@ -125,18 +125,7 @@ namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
             }
         }
 
-        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
-        {
-            return new GeneralRespons
-            {
-                Success = success,
-                Model = model,
-                Message = message,
-                StatusCode = statusCode,
-                Errors = errors ?? new List<string>()
-            };
-        }
-
+       
         private async Task<PaymentIntent> ConfirmPaymentIntentAsync(string paymentIntentId)
         {
             var service = new PaymentIntentService();

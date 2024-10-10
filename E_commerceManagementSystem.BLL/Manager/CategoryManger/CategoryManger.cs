@@ -24,18 +24,6 @@ namespace E_commerceManagementSystem.BLL.Manager.CategoryManager
             _mapper = mapper;
         }
 
-        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
-        {
-            return new GeneralRespons
-            {
-                Success = success,
-                Model = model,
-                Message = message,
-                StatusCode = statusCode, // Set StatusCode here
-                Errors = errors ?? new List<string>()
-            };
-        }
-
         public async Task<GeneralRespons> GetByCategoryNameAsync(string categoryName)
         {
             try

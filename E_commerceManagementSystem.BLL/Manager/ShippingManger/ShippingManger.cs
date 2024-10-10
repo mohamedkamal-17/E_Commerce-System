@@ -28,17 +28,6 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManager
             _mapper = mapper;
         }
 
-        private GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
-        {
-            return new GeneralRespons
-            {
-                Success = success,
-                Model = model,
-                Message = message,
-                StatusCode = statusCode, // Add StatusCode here
-                Errors = errors ?? new List<string>()
-            };
-        }
 
         public async Task<GeneralRespons> GetByOrderIdAsync(int id)
         {
