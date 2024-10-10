@@ -61,18 +61,36 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 
         public async Task<GeneralRespons> RegisterAsync(UserRegisterDTO userRegister)
         {
+
+            //var userExists = await _userManager.FindByEmailAsync(userRegister.Email);
+            //if(userExists )
             var user = new ApplicationUser
             {
                 UserName = userRegister.UserName,
                 Email = userRegister.Email
             };
 
+            
+
             var response = new GeneralRespons();
             var result = await _userManager.CreateAsync(user, userRegister.Password);
+
             if (result.Succeeded)
             {
+                var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
+                if (!roleResult.Succeeded)
+                {
+                    foreach (var error in roleResult.Errors)
+                    {
+                        response.Errors.Add(error.Description);
+                    }
+                    return CreateResponse(false, null, "Failed to assign role to the user.", 400, response.Errors);
+                }
+
                 return CreateResponse(true, null, "User registered successfully.", 201); // Created
             }
+
 
             // Removed extra Response variable
             foreach (var error in result.Errors)
