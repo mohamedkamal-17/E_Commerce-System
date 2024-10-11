@@ -61,18 +61,26 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 
         public async Task<GeneralRespons> RegisterAsync(UserRegisterDTO userRegister)
         {
+            var response = new GeneralRespons();
 
-            //var userExists = await _userManager.FindByEmailAsync(userRegister.Email);
-            //if(userExists )
+            var userExists = await _userManager.FindByEmailAsync(userRegister.Email);
+            if (userExists != null)
+            {
+                return CreateResponse(false, null, "this email already exists.", 400, response.Errors);
+            }
+
+            var existingUser = await _userManager.FindByNameAsync(userRegister.UserName);
+            if (existingUser != null)
+            {
+                return CreateResponse(false, null, "this user name already exists, please enter another name", 400, response.Errors);
+
+            }
             var user = new ApplicationUser
             {
                 UserName = userRegister.UserName,
                 Email = userRegister.Email
             };
 
-            
-
-            var response = new GeneralRespons();
             var result = await _userManager.CreateAsync(user, userRegister.Password);
 
             if (result.Succeeded)
@@ -236,29 +244,6 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             return generalAccountResponse;
         }
 
-        /*private GeneralAccountResponse GeneralToken(IList<Claim> claims)
-        {
-            var securityKeyOfString = _configuration.GetSection("Key").Value;
-            var securityKeyOfBytes = Encoding.ASCII.GetBytes(securityKeyOfString);
-            var securityKey = new SymmetricSecurityKey(securityKeyOfBytes);
-
-            SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var expireDate = DateTime.Now.AddDays(2);
-            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
-                claims: claims,
-                expires: expireDate,
-                signingCredentials: signingCredentials
-                );
-
-            JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-            var token = jwtSecurityTokenHandler.WriteToken(jwtSecurityToken);
-
-            return new GeneralAccountResponse
-            {
-                Token = token,
-                ExpireDate = expireDate
-            };
-        }*/
+     
     }
 }
