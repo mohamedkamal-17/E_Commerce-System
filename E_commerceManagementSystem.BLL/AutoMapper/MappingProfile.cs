@@ -55,7 +55,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.OrderItems.Sum(ci => ci.Quantity * ci.Product.Price)));
 
             CreateMap<Order, AddOrderDto>().ReverseMap();
-            CreateMap<Order, UpdateOrderDto>().ReverseMap();
+            CreateMap<UpdateOrderDto, Order>().ReverseMap();
             #endregion
 
             #region OrderItem Mappings

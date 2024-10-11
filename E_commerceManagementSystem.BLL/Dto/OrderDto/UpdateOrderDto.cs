@@ -12,7 +12,5 @@ namespace E_commerceManagementSystem.BLL.Dto.OrderDto
         public string Address { get; set; }
         public string Status { get; set; }
       
-        public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
-
     }
 }

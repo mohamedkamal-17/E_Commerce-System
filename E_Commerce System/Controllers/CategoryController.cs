@@ -93,6 +93,8 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(ModelState);
             }
+            //------------------- here we will check if category with the same name or not ------------
+            //var categoryExists = await _categoryManger()
 
             var response = await _categoryManger.AddAsync(model);
             if (!response.Success)
@@ -100,7 +102,8 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(response.StatusCode, response);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = (response.Model as Category)?.Id }, response);
+            return Ok(response);
+         //  return CreatedAtAction(nameof(GetById), new { id = (response.Model as Category)?.Id }, response);
         }
 
         [HttpPut("{id}")]
@@ -134,7 +137,7 @@ namespace E_Commerce_System.Controllers
             {
                 return StatusCode(response.StatusCode, response);
             }
-            return NoContent(); // Return 204 No Content
+            return Ok(response.Message); 
         }
     }
 }
