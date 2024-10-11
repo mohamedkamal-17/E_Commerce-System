@@ -78,7 +78,12 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             #endregion
 
             CreateMap<Cart, ReadCartDto>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id));
+            
+
+            CreateMap<Cart, AddCartDto>()
+                    .ForMember(dest => dest.AddCartItemsDto, opt => opt.MapFrom(src => src.CartItems));
             #region Payment Mappings
             // Mapping from AddPaymentDto to Payment entity
             CreateMap<AddPaymentDto, Payment>()
