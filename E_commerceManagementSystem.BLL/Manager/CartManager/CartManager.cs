@@ -30,14 +30,7 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
             _userManager = userManager;
         }
 
-        public async Task<GeneralRespons> GetAllWithUsers()
-        {
-            var qResult = await _repository.GetAllAsync();
-
-            var result =await qResult.Include(u => u.User).Include(c=>c.CartItems).ToListAsync();
-            var readDto = _mapper.Map<List<ReadCartDto>>(result);
-            return CreateResponse(true, readDto, "cart retrieved successfully", 200);
-        }
+     
 
         public async Task<GeneralRespons> GetByUserIdAsync(string userId)
         {
