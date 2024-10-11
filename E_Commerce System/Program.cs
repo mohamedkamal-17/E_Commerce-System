@@ -38,6 +38,7 @@ using E_commerceManagementSystem.BLL.Manager.EmailManager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using E_commerceManagementSystem.BLL.AutoMapper;
 
 
 namespace E_Commerce_System
@@ -55,9 +56,19 @@ namespace E_Commerce_System
                 options.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                            .AddEntityFrameworkStores<ApplicationDbContext>()
-                            .AddDefaultTokenProviders();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.User.AllowedUserNameCharacters =
+                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._ ";
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireDigit = false;         
+                options.Password.RequireLowercase = false;     
+                options.Password.RequireUppercase = false;      
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 4;            
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(options =>
             {
@@ -133,7 +144,7 @@ namespace E_Commerce_System
             builder.Services.AddMemoryCache();
 
 
-            builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             // register for the service 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
