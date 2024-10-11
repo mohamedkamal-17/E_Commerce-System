@@ -5,6 +5,7 @@ using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net; // Added for HTTP status codes
 using System.Threading.Tasks;
 
@@ -45,7 +46,26 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             if (resultList != null && resultList.Count > 0)
             {
                 var dtoList = _mapper.Map<List<TReadDto>>(resultList);
-                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.",200);
+                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.", 200);
+            }
+
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
+        }
+
+        public async Task<GeneralRespons> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = await _repository.GetAllAsync();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            var resultList = await query.ToListAsync();
+
+            if (resultList != null && resultList.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<TReadDto>>(resultList);
+                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.", 200);
             }
 
             return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
