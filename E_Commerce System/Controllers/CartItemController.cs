@@ -31,9 +31,9 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(int Id)
         {
-            var result = await _cartItemManager.GetByIdAsync(id);
+            var result = await _cartItemManager.GetByIdAsync(Id);
             if (!result.Success)
             {
                 return NotFound(result.Message);
@@ -42,7 +42,7 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpGet("CartId/{cartId}")]
-        public async Task<IActionResult> GetByUserAsync(int cartId)
+        public async Task<IActionResult> GetByCartAsync(int cartId)
         {
             var result = await _cartItemManager.GetByCartIdAsync(cartId);
             if (!result.Success)
@@ -60,29 +60,36 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var cartItemExists = await _cartItemManager.GetByCartIdAndProductIdAsync(dto.CartID, dto.ProductId);
+            if (!cartItemExists.Success)
+            {
+                return NotFound(cartItemExists.Message);
+
+            }
             var response = await _cartItemManager.AddAsync(dto);
             if (!response.Success)
             {
                 return NotFound(response.Message);
             }
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as Cart)?.Id }, response); // Return 201 Created
+            return Ok(response);
+            //return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as Cart)?.Id }, response); // Return 201 Created
         }
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateCartItemDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
+      
             var response = await _cartItemManager.UpdateAsync(id, dto);
             if (!response.Success)
             {
                 return NotFound(response.Message);
             }
 
-            return Ok(response.Model);
+            return Ok(response.Message);
         }
 
         [HttpDelete("{id}")]
@@ -94,7 +101,7 @@ namespace E_Commerce_System.Controllers
             {
                 return BadRequest(resppnse.Message);
             }
-            return Ok(resppnse.Model);
+            return Ok(resppnse.Message);
         }
     }
 }

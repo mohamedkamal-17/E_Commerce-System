@@ -22,7 +22,7 @@ namespace E_Commerce_System.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var result = await _cartManager.GetAllWithIncludesAsync(u => u.User, c => c.CartItems);
+            var result = await _cartManager.GetAllAsync();
             if (!result.Success)
             {
                 return NotFound(result.Message);
@@ -41,7 +41,7 @@ namespace E_Commerce_System.Controllers
             return Ok(result.Model);
         }
 
-        [HttpGet("UserId/{Id}")]
+        [HttpGet("UserId/{userId}")]
         public async Task<IActionResult> GetByUserAsync(string userId)
         {
             var result = await _cartManager.GetByUserIdAsync(userId);
@@ -56,9 +56,16 @@ namespace E_Commerce_System.Controllers
         public async Task<ActionResult<GeneralRespons>> AddAsync(AddCartDto dto)
         {
 
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            var cartExists = await _cartManager.GetByUserIdAsync(dto.UserId);
+            if(cartExists.Success)
+            {
+                return BadRequest("this user has already cart");
             }
             var response = await _cartManager.AddAsync(dto);
             if (!response.Success)
@@ -66,24 +73,25 @@ namespace E_Commerce_System.Controllers
                 return NotFound(response.Message);
             }
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as Cart)?.Id }, response); // Return 201 Created
-        }
-        [HttpPut("{id}")]
-        public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateCartDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = await _cartManager.UpdateAsync(id, dto);
-            if (!response.Success)
-            {
-                return NotFound(response.Message);
-            }
-
             return Ok(response.Model);
+           //return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as Cart)?.Id }, response); // Return 201 Created
         }
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateCartDto dto)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var response = await _cartManager.UpdateAsync(id, dto);
+        //    if (!response.Success)
+        //    {
+        //        return NotFound(response.Message);
+        //    }
+
+        //    return Ok(response.Model);
+        //}
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<GeneralRespons>> Delete(int id)
@@ -92,11 +100,9 @@ namespace E_Commerce_System.Controllers
             var resppnse = await _cartManager.DeleteAsync(id);
             if (!resppnse.Success)
             {
-                return BadRequest(resppnse.Message);
+                return NotFound(resppnse.Message);
             }
-            return Ok(resppnse.Model);
+            return Ok(resppnse.Message);
         }
-
-
     }
 }
