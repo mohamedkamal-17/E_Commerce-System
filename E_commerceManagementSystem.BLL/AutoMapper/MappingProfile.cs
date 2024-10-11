@@ -22,6 +22,7 @@ using Stripe;
 using Product = E_commerceManagementSystem.DAL.Data.Models.Product;
 using Review = E_commerceManagementSystem.DAL.Data.Models.Review;
 using Shipping = E_commerceManagementSystem.DAL.Data.Models.Shipping;
+using E_commerceManagementSystem.BLL.Dto.CartItemDto;
 
 namespace E_commerceManagementSystem.BLL.AutoMapper
 {
@@ -77,13 +78,21 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<Review, AddReviewDto>().ReverseMap();
             #endregion
 
+            CreateMap<CartItem, ReadCartItemDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.Id));
+
+            CreateMap<CartItem, AddCartItemDto>().ReverseMap();
+            CreateMap<CartItem, UpdateCartItemDto>().ReverseMap();
+
+
+
             CreateMap<Cart, ReadCartDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id));
-            
 
-            CreateMap<Cart, AddCartDto>()
-                    .ForMember(dest => dest.AddCartItemsDto, opt => opt.MapFrom(src => src.CartItems));
+            CreateMap<Cart, AddCartDto>();
+
             #region Payment Mappings
             // Mapping from AddPaymentDto to Payment entity
             CreateMap<AddPaymentDto, Payment>()
