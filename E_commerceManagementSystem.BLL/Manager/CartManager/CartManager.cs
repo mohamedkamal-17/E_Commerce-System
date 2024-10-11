@@ -6,6 +6,7 @@ using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -27,6 +28,15 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
+        }
+
+        public async Task<GeneralRespons> GetAllWithUsers()
+        {
+            var qResult = await _repository.GetAllAsync();
+
+            var result =await qResult.Include(u => u.User).Include(c=>c.CartItems).ToListAsync();
+            var readDto = _mapper.Map<List<ReadCartDto>>(result);
+            return CreateResponse(true, readDto, "cart retrieved successfully", 200);
         }
 
         public async Task<GeneralRespons> GetByUserIdAsync(string userId)
