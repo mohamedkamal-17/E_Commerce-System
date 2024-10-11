@@ -10,6 +10,8 @@ namespace E_commerceManagementSystem.DAL.Repositories.Interfaces
     public interface IRepository<T> where T : class
     {
         Task<IQueryable<T>> GetAllAsync();
+        Task<IQueryable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
+
         IQueryable<T> GetByConditionAsync(Expression<Func<T, bool>> expression);
         Task<T> GetByIdAsync(int id);
         Task AddAsync(T entity);

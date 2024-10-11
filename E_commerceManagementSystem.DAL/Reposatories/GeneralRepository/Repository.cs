@@ -26,6 +26,17 @@ namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
             return  _dbSet.AsNoTracking();
         }
 
+        public async Task<IQueryable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet.AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return query;
+        }
+
         public async Task<T> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
