@@ -30,7 +30,41 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
             _userManager = userManager;
         }
 
-     
+        public override async Task<GeneralRespons> GetAllAsync()
+        {
+            // Include the navigation properties you need
+            var queryableResult = await _repository.GetAllWithIncludesAsync(u=>u.User);
+
+            // Execute the query and get the result with product 
+            var resultList = await queryableResult.Include(c => c.CartItems).ThenInclude(p => p.Product).ToListAsync();
+            
+            if (resultList != null && resultList.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ReadCartDto>>(resultList);
+                return CreateResponse(true, dtoList, "Carts retrieved successfully.", 200);
+            }
+
+            return CreateResponse(false, null, "Carts not found.", 404);
+        }
+
+        public async override Task<GeneralRespons> GetByIdAsync(int id)
+        {
+            var queryableResult = await _repository.GetAllWithIncludesAsync(u => u.User);
+            var result = await queryableResult
+                .Include(c=>c.CartItems)
+                .ThenInclude(p=>p.Product)
+                .SingleOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+
+            if (result != null)
+            {
+                var dto = _mapper.Map<ReadCartDto>(result);
+                return CreateResponse(true, dto, $"{typeof(Cart).Name} retrieved successfully.", 200);
+            }
+
+            return CreateResponse(false, null, $"no cart with this id.", 404);
+
+        }
+
 
         public async Task<GeneralRespons> GetByUserIdAsync(string userId)
         {
@@ -42,7 +76,10 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
 
             try
             {
-                var cart = await _repository.GetByConditionAsync(x => x.UserId == userId).FirstOrDefaultAsync();
+                var cart = await _repository.GetByConditionAsync(x => x.UserId == userId)
+                    .Include(c=>c.CartItems)
+                    .ThenInclude(p=>p.Product)
+                    .FirstOrDefaultAsync();
 
                 //   var cart = await _repository.GetByUserIdAsync(userId);
                 if (cart == null)

@@ -38,7 +38,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             };
         }
 
-        public async Task<GeneralRespons> GetAllAsync()
+        public virtual async Task<GeneralRespons> GetAllAsync()
         {
             var queryableResult = await _repository.GetAllAsync();
             var resultList = await queryableResult.ToListAsync();
@@ -52,26 +52,8 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
         }
 
-        public async Task<GeneralRespons> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
-        {
-            IQueryable<T> query = await _repository.GetAllAsync();
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
-
-            var resultList = await query.ToListAsync();
-
-            if (resultList != null && resultList.Count > 0)
-            {
-                var dtoList = _mapper.Map<List<TReadDto>>(resultList);
-                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.", 200);
-            }
-
-            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
-        }
-
-        public async Task<GeneralRespons> GetByIdAsync(int id)
+       
+        public virtual async Task<GeneralRespons> GetByIdAsync(int id)
         {
             var result = await _repository.GetByIdAsync(id);
             if (result != null)
@@ -90,12 +72,14 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
                 return CreateResponse(false, null, "Add DTO cannot be null.",400);
             }
 
+
             T entity = _mapper.Map<T>(addDto); // Map the AddDto to the entity
 
             try
             {
                 await _repository.AddAsync(entity);
-                return CreateResponse(true, entity, $"{typeof(T).Name} added successfully.", 201);
+                var readDto = _mapper.Map<TReadDto>(entity);
+                return CreateResponse(true, readDto, $"{typeof(T).Name} added successfully.", 201);
             }
             catch (Exception ex)
             {
@@ -110,18 +94,19 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
                 return CreateResponse(false, null, "Update DTO cannot be null.", 400);
             }
 
-            T entity = _mapper.Map<T>(updateDto); // Map the UpdateDto to the entity
+            var existingEntity = await _repository.GetByIdAsync(id);
+            if (existingEntity == null)
+            {
+                return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found.", 404);
+            }
+
+            _mapper.Map(updateDto, existingEntity);
 
             try
             {
-                var existingEntity = await _repository.GetByIdAsync(id);
-                if (existingEntity == null)
-                {
-                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found.", 404);
-                }
 
-                await _repository.UpdateAsync(entity);
-                return CreateResponse(true, entity, $"{typeof(T).Name} updated successfully.",200);
+                await _repository.UpdateAsync(existingEntity);
+                return CreateResponse(true, existingEntity, $"{typeof(T).Name} updated successfully.",200);
             }
             catch (Exception ex)
             {
