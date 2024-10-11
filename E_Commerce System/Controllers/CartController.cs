@@ -22,7 +22,7 @@ namespace E_Commerce_System.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var result = await _cartManager.GetAllAsync();
+            var result = await _cartManager.GetAllWithUsers();
             if (!result.Success)
             {
                 return NotFound(result.Message);
