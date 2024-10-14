@@ -28,83 +28,47 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManager
             _mapper = mapper;
         }
 
+        public override async Task<GeneralRespons> GetAllAsync()
+        {
+            return await base.GetAll(order => order.User);
 
+
+        }
+        public override async Task<GeneralRespons> GetByIdAsync(int id)
+        {
+            return await base.GetAllByConditionAndIncludes(order => order.Id == id, ve => ve.User);
+
+
+
+        }
         public async Task<GeneralRespons> GetByOrderIdAsync(int id)
         {
-            return await GetByConditionAsync(
-                order => order.Id == id,
-                $"{typeof(Shipping).Name} retrieved successfully",
-                $"{typeof(Shipping).Name} not retrieved successfully",
-                "Not found Order With This Id",
-                (int)HttpStatusCode.OK, // Success
-                (int)HttpStatusCode.NotFound // Not Found
-            );
+            return await base.GetAllByConditionAndIncludes(order => order.OrderId == id, order=>order.User);
+          
         }
 
         public async Task<GeneralRespons> GetByShippingStateAsync(string shippingStatus)
         {
-            return await GetByConditionAsync(
-                order => order.ShippingStatus == shippingStatus,
-                $"{typeof(Shipping).Name} retrieved successfully",
-                $"{typeof(Shipping).Name} not retrieved successfully",
-                "Not found Order With This Shipping Status",
-                (int)HttpStatusCode.OK, // Success
-                (int)HttpStatusCode.NotFound // Not Found
-            );
+            return await base.GetAllByConditionAndIncludes(order => order.ShippingStatus == shippingStatus, order => order.User);
+           
         }
 
         public async Task<GeneralRespons> GetByShippingDateAsync(DateTime shippingDate)
         {
-            return await GetByConditionAsync(
-                order => order.ShippedDate == shippingDate,
-                $"{typeof(Shipping).Name} retrieved successfully",
-                $"{typeof(Shipping).Name} not retrieved successfully",
-                "Not found Order With This Shipping Date",
-                (int)HttpStatusCode.OK, // Success
-                (int)HttpStatusCode.NotFound // Not Found
-            );
+            return await base.GetAllByConditionAndIncludes(order => order.ShippedDate == shippingDate, order => order.User);
+           
         }
 
-        public async Task<GeneralRespons> GetByTrackingNumberAsync(int trackingNumber)
+        public async Task<GeneralRespons> GetByTrackingNumberAsync(string trackingNumber)
         {
-            return await GetByConditionAsync(
-                order => order.TrackingNumber == trackingNumber,
-                $"{typeof(Shipping).Name} retrieved successfully",
-                $"{typeof(Shipping).Name} not retrieved successfully",
-                "Not found Order With This Tracking Number",
-                (int)HttpStatusCode.OK, // Success
-                (int)HttpStatusCode.NotFound // Not Found
-            );
+            return await base.GetAllByConditionAndIncludes(order => order.TrackingNumber == trackingNumber, order => order.User);
+
+
         }
+     
 
-        private async Task<GeneralRespons> GetByConditionAsync(
-            Expression< Func<Shipping, bool>> predicate,
-            string successMessage,
-            string failureMessage,
-            string notFoundError,
-            int successStatusCode,
-            int notFoundStatusCode
-        )
-        {
-            try
-            {
-                var shippingDtos = await _repository.GetByConditionAsync(predicate)
-                    .ProjectTo<ReadShippingDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
-
-                // Use ProjectTo to map from the queryable to ReadShippingDto
-                if (shippingDtos.Any())
-                {
-                    // Return success response if any shipping DTOs were found
-                    return CreateResponse(true, shippingDtos, successMessage, successStatusCode);
-                }
-
-                return CreateResponse(false, null, failureMessage, notFoundStatusCode, new List<string> { notFoundError });
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"Server-side Error: {ex.Message}", (int)HttpStatusCode.InternalServerError, new List<string> { ex.Message });
-            }
-        }
     }
-}
+
+
+    }
+

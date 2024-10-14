@@ -27,34 +27,17 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
             _userManager = userManager;
             _mapper = mapper;
         }
-
+        public override async Task<GeneralRespons> GetAllAsync()
+        {
+            return await base.GetAll(o => o.OrderItems, o => o.User);
+        }
         public async Task<GeneralRespons> GetByUserIdAsync(string userId)
         {
-            try
-            {
-                var userExists = await _userManager.FindByIdAsync(userId);
-                if (userExists == null)
-                {
-                    return CreateResponse(false, null, "No user with this ID", 404); // Not Found
-                }
 
-                var result = await _repository.GetByConditionAsync(or => or.UserId == userId)
-                                               .ProjectTo<ReadOrderDto>(_mapper.ConfigurationProvider)
-                                               .ToListAsync();
+            return await base.GetAllByConditionAndIncludes(o => o.UserId == userId, o => o.OrderItems, o => o.User);
+                                               
 
-                if (result == null || !result.Any())
-                {
-                    return CreateResponse(false, null, "This user has not placed any orders.", 204); // No Content
-                }
-
-                return CreateResponse(true, result, "Orders retrieved successfully.", 200); // OK
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = $"Error retrieving orders: {ex.Message}";
-                var errors = new List<string> { ex.Message };
-                return CreateResponse(false, null, errorMessage, 500, errors); // Internal Server Error
-            }
+             
         }
 
       

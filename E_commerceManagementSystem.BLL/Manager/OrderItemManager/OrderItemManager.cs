@@ -26,11 +26,18 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderItemManager
             _orderRepo = orderRepo;
             _mapper = mapper;
         }
+        public override async Task<GeneralRespons> GetAllAsync()
+        {
+            return await base.GetAll(orit=>orit.Product);
+        }
+        public override async Task<GeneralRespons> GetByIdAsync(int id)
+        {
+            return await base.GetAllByConditionAndIncludes(orit=>orit.Id==id, orit => orit.Product);
+        }
 
         public async Task<GeneralRespons> GetByOrderIdAsync(int orderId)
         {
-            try
-            {
+           
                 // Check if the order exists using GetByConditionAsync
                 var order = await _orderRepo.GetByIdAsync(orderId);
                 if (order == null)
@@ -38,21 +45,9 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderItemManager
                     return CreateResponse(false, null, "No order with this ID", 404); // Not Found
                 }
 
-                var orderItems = await _orderItemRepo.GetByConditionAsync(oi => oi.OrderId == orderId).ToListAsync();
-                if (!orderItems.Any()) // Check if there are any items
-                {
-                    return CreateResponse(false, null, "No items in this order", 204); // No Content
-                }
+                return await base.GetAll(oi => oi.OrderId == orderId);
+               
 
-                var resultDto = _mapper.Map<List<ReadOrderItemDto>>(orderItems);
-                return CreateResponse(true, resultDto, "Order items retrieved successfully.", 200); // OK
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = $"Error retrieving order items: {ex.Message}";
-                var errors = new List<string> { ex.Message };
-                return CreateResponse(false, null, errorMessage, 500, errors); // Internal Server Error
-            }
         }
 
        

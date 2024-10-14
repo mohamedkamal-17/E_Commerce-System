@@ -13,6 +13,7 @@ namespace E_commerceManagementSystem.BLL.Manager.CartItemManager
     public interface ICartItemManager : IManager<CartItem, ReadCartItemDto, AddCartItemDto, UpdateCartItemDto>
     {
         Task<GeneralRespons> GetByCartIdAsync(int cartId);
-        Task<GeneralRespons> GetByCartIdAndProductIdAsync(int cartId, int productId);
+        //Task<GeneralRespons> GetByCartIdAndProductIdAsync(int cartId, int productId);
+        Task<GeneralRespons> ValidInput(int cartId, int productId);
     }
 }

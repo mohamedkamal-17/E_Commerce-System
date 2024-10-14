@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,16 +33,25 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
 
         public override async Task<GeneralRespons> GetAllAsync()
         {
-            // Include the navigation properties you need
-            var queryableResult = await _repository.GetAllWithIncludesAsync(u=>u.User);
+          //  return await base.GetAll(u => u.User, c => c.CartItems, c => c.CartItems.Select(p => p.Product));
+          //  Include the navigation properties you need
+            var resultList =await  _repository.GetAll(u => u.User, c => c.CartItems)
+    .Include(c => c.CartItems)
+    .ThenInclude(ci => ci.Product)
+    .ToListAsync();
 
             // Execute the query and get the result with product 
-            var resultList = await queryableResult.Include(c => c.CartItems).ThenInclude(p => p.Product).ToListAsync();
-            
+            //var resultList = await queryableResult.Include(c => c.CartItems).ThenInclude(p => p.Product).ToListAsync();
+
             if (resultList != null && resultList.Count > 0)
             {
-                var dtoList = _mapper.Map<List<ReadCartDto>>(resultList);
-                return CreateResponse(true, dtoList, "Carts retrieved successfully.", 200);
+              //  var dtoList = _mapper.Map<List<ReadCartDto>>(resultList);
+                return CreateResponse(true, resultList, "Carts retrieved successfully.", 204);
+            }
+            if (resultList != null && resultList.Count == 0)
+            {
+               
+                return CreateResponse(true, null, "Carts retrieved successfully,but no cart exest", 200);
             }
 
             return CreateResponse(false, null, "Carts not found.", 404);
@@ -49,19 +59,29 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
 
         public async override Task<GeneralRespons> GetByIdAsync(int id)
         {
-            var queryableResult = await _repository.GetAllWithIncludesAsync(u => u.User);
-            var result = await queryableResult
-                .Include(c=>c.CartItems)
-                .ThenInclude(p=>p.Product)
-                .SingleOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
-
-            if (result != null)
+            var idExsist= _repository.GetAll().Any(c=>c.Id==id);
+           if(idExsist)
             {
-                var dto = _mapper.Map<ReadCartDto>(result);
-                return CreateResponse(true, dto, $"{typeof(Cart).Name} retrieved successfully.", 200);
-            }
 
-            return CreateResponse(false, null, $"no cart with this id.", 404);
+
+             var cart = await _repository.GetAll(c=>c.Id==id,u => u.User, c => c.CartItems)
+                                                 .Include(c => c.CartItems)
+                                                 .ThenInclude(ci => ci.Product)
+                                                 .FirstOrDefaultAsync();
+
+                return CreateResponse(true, _mapper.Map<ReadCartDto>(cart), $"{typeof(Cart).Name} retrieved successfully.", 200);
+
+            }else return CreateResponse(false, null, $"no cart with this id.", 404);
+            //var queryableResult =  _repository.GetAll(u => u.User, c => c.CartItems, c => c.CartItems.Select(p => p.Product));
+            //var result =await queryableResult.FirstOrDefaultAsync();
+
+            //if (result != null)
+            //{
+            //    var dto = _mapper.Map<ReadCartDto>(result);
+            //    
+            //}
+
+            //
 
         }
 
@@ -76,18 +96,22 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
 
             try
             {
-                var cart = await _repository.GetByConditionAsync(x => x.UserId == userId)
-                    .Include(c=>c.CartItems)
-                    .ThenInclude(p=>p.Product)
-                    .FirstOrDefaultAsync();
 
-                //   var cart = await _repository.GetByUserIdAsync(userId);
-                if (cart == null)
-                {
-                    return CreateResponse(false, null, "No cart found for the given name.", 404); // Not Found
-                }
-                var readDto = _mapper.Map<ReadCartDto>(cart);
-                return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
+                return await base.GetAllByConditionAndIncludes(x => x.UserId == userId, c => c.CartItems, c => c.CartItems.Select(p => p.Product));
+
+                //    var cart = await _repository.GetByConditionAsync(x => x.UserId == userId)
+                //        .Include(c=>c.CartItems)
+                //        .ThenInclude(p=>p.Product)
+                //        .FirstOrDefaultAsync();
+
+                //    //   var cart = await _repository.GetByUserIdAsync(userId);
+                //    if (cart == null)
+                //    {
+                //        return CreateResponse(false, null, "No cart found for the given name.", 404); // Not Found
+                //    }
+                //    var readDto = _mapper.Map<ReadCartDto>(cart);
+                //    return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
+                //}
             }
             catch (Exception ex)
             {

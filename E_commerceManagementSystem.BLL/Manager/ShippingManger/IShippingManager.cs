@@ -11,9 +11,9 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManger
 {
     public interface IShippingManager:IManager<Shipping, ReadShippingDto, AddShippingDto, UpdateShippingDto>
     {
-
+       
         Task<GeneralRespons> GetByOrderIdAsync(int id);
-        Task<GeneralRespons> GetByTrackingNumberAsync(int trackingNumber);
+        Task<GeneralRespons> GetByTrackingNumberAsync(string trackingNumber);
         Task<GeneralRespons> GetByShippingStateAsync(string shippingStatus);
         Task<GeneralRespons> GetByShippingDateAsync(DateTime shippingDate);
 
