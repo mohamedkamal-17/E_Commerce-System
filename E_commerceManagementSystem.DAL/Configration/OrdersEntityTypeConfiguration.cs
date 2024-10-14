@@ -21,10 +21,10 @@ namespace E_commerceManagementSystem.DAL.Configration
                 .HasForeignKey(c => c.UserId);
              
 
-            // one to one relation between orders and payments
-               builder.HasOne(a => a.Payment)
-              .WithOne(ab => ab.Orders)
-              .HasForeignKey<Payment>(ab => ab.OrderId);
+            //// one to one relation between orders and payments
+            //   builder.HasOne(a => a.Payment)
+            //  .WithOne(ab => ab.Orders)
+            //  .HasForeignKey<Payment>(ab => ab.OrderId);
 
         }
     }

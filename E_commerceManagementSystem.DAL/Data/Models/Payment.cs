@@ -19,7 +19,5 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public string? PaymentMethod { get; set; }
         public string   Status{ get; set; }
         public string Currency { get; set; }  
-        public int OrderId { get; set; }          //Foreign Key  // one to one reltion
-        public Order Orders { get; set; } // Navigation prop
     }
 }

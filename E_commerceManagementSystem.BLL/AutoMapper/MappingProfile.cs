@@ -111,7 +111,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<AddPaymentDto, Payment>()
                 .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
                 .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Currency))
-                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
+               // .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
                 .ForMember(dest => dest.Status, opt => opt.Ignore()) // Status will be set after payment intent creation
                 .ForMember(dest => dest.PaymentIntentId, opt => opt.Ignore()) // PaymentIntentId comes from Stripe response
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // Set manually
