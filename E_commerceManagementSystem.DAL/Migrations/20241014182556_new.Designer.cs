@@ -4,6 +4,7 @@ using E_commerceManagementSystem.DAL.Data.Dphelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerceManagementSystem.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241014182556_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,8 +258,6 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PaymentId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
@@ -315,6 +316,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PaymentIntentId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -333,6 +337,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -702,19 +709,11 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Order", b =>
                 {
-                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("E_commerceManagementSystem.DAL.Data.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Payment");
 
                     b.Navigation("User");
                 });
@@ -736,6 +735,17 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Payment", b =>
+                {
+                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Order", "Orders")
+                        .WithOne("Payment")
+                        .HasForeignKey("E_commerceManagementSystem.DAL.Data.Models.Payment", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Product", b =>
@@ -896,6 +906,8 @@ namespace E_commerceManagementSystem.DAL.Migrations
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+
+                    b.Navigation("Payment");
 
                     b.Navigation("Shipping");
                 });
