@@ -76,11 +76,6 @@ namespace E_Commerce_System.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> UpdateAsync(int id, [FromBody] UpdateReviewDto updateReviewDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var reviewExists = await _reviewManager.GetByIdAsync(id);
             if (!reviewExists.Success)
             {

@@ -57,13 +57,6 @@ namespace E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> AddAsync(AddCartDto dto)
         {
-
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var cartExists = await _cartManager.GetByUserIdAsync(dto.UserId);
             if(cartExists.Success)
             {
@@ -80,8 +73,6 @@ namespace E_Commerce_System.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateCartDto dto)
         {
-          
-
             var response = await _cartManager.UpdateAsync(id, dto);
             if (!response.Success)
             {
@@ -94,7 +85,6 @@ namespace E_Commerce_System.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<GeneralRespons>> Delete(int id)
         {
-
             var respnse = await _cartManager.DeleteAsync(id);
             if (!respnse.Success)
             {

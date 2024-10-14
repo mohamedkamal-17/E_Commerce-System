@@ -90,9 +90,6 @@ namespace E_Commerce_System.Controllers
         public async Task<ActionResult<GeneralRespons>> Create(AddCategoryDTO model)
         {
            
-            {
-                return BadRequest(ModelState);
-            }
             //------------------- here we will check if category with the same name or not ------------
             //var categoryExists = await _categoryManger()
 

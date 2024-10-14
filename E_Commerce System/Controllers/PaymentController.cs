@@ -20,11 +20,6 @@ namespace E_Commerce_System.Controllers
         [HttpPost("process")]
         public async Task<IActionResult> ProcessPayment([FromBody] AddPaymentDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _paymentManager.ProcessPaymentAsync(dto);
 
             if (response.Success)

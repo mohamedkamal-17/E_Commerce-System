@@ -47,7 +47,7 @@ namespace E_Commerce_System.Controllers
             return HandleResponse(response);
         }
 
-        [HttpGet("by-UserID/{userId}")]
+        [HttpGet("UserID/{userId}")]
         public async Task<ActionResult<GeneralRespons>> GetByUserIDAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))

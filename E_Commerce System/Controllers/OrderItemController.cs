@@ -57,11 +57,6 @@ namespace E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> AddAsync(AddOrderItemDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _orderItemManager.AddAsync(dto);
             if (!response.Success)
             {
@@ -75,11 +70,6 @@ namespace E_Commerce_System.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateOrderItemDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _orderItemManager.UpdateAsync(id, dto);
             if (!response.Success)
             {

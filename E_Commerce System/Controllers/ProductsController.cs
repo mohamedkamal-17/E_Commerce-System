@@ -114,11 +114,6 @@ namespace E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> Add([FromBody] AddProductDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _productManager.AddAsync(model);
             if (!response.Success)
             {
@@ -131,11 +126,6 @@ namespace E_Commerce_System.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateProductDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _productManager.UpdateAsync(id, model);
             if (!response.Success)
             {
