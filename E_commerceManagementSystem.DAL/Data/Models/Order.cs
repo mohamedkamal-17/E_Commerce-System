@@ -8,11 +8,14 @@ namespace E_commerceManagementSystem.DAL.Data.Models
 {
     public class Order
     {
+        public bool IsDeleted { get; set; } = false;
+
         public int Id { get; set; }
-        public string PaymentIntentId { get; set; }
+        public string? PaymentIntentId { get; set; }
         public string UserId { get; set; } //Foreign Key Referencing ApplicationUser 
         public string Status { get; set; } =  "Pending";
-        public double? TotalPrice { get; set; }
+        public double? TotalPrice { get; set; } 
+     
         public string? Address { get; set; }
         public DateTime? ShippingDate { get; set; }  = DateTime.Now;
         public DateTime? ArrivalDate { get; set; } = DateTime.Now.AddDays(10);

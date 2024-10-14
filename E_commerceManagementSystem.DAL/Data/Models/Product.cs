@@ -8,6 +8,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
 {
     public class Product
     {
+        public bool IsDeleted { get; set; } = false;
+
         public int Id { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }

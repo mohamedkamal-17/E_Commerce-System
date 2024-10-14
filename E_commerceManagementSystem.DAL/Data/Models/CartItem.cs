@@ -15,6 +15,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
 
         public int CartID { get; set; }
         public Cart Cart { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
 
     }
 }
