@@ -92,11 +92,6 @@ namespace E_Commerce_System.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateInventoryDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _inventoryManager.UpdateAsync(id, model);
             if (!response.Success)
             {

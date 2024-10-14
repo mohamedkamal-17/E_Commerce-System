@@ -89,10 +89,6 @@ namespace E_Commerce_System.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // 400 Bad Request
         public async Task<ActionResult<GeneralRespons>> Create(AddCategoryDTO model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             //------------------- here we will check if category with the same name or not ------------
             //var categoryExists = await _categoryManger()
 
@@ -112,11 +108,6 @@ namespace E_Commerce_System.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)] // 404 Not Found
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateCategoryDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _categoryManger.UpdateAsync(id, model);
             if (!response.Success)
             {

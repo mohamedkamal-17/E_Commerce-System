@@ -56,12 +56,6 @@ namespace E_Commerce_System.Controllers
         public async Task<ActionResult<GeneralRespons>> AddAsync(AddCartDto dto)
         {
 
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var cartExists = await _cartManager.GetByUserIdAsync(dto.UserId);
             if(cartExists.Success)
             {
