@@ -24,7 +24,7 @@ namespace E_Commerce_System.Controllers
             {
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
-            return Ok(result.Model);
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")] // Route constraint to ensure id is an int
@@ -35,7 +35,7 @@ namespace E_Commerce_System.Controllers
             {
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
-            return Ok(result.Model);
+            return Ok(result);
         }
 
         [HttpGet("product/{productId:int}")] // Changed for clarity and to avoid conflicts
@@ -46,7 +46,7 @@ namespace E_Commerce_System.Controllers
             {
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
-            return Ok(result.Model);
+            return Ok(result);
         }
 
         [HttpGet("user/{userId}")] // Changed for clarity and to avoid conflicts
@@ -57,24 +57,20 @@ namespace E_Commerce_System.Controllers
             {
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
-            return Ok(result.Model);
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> AddAsync([FromBody] AddReviewDto addReviewDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+          
             var result = await _reviewManager.AddAsync(addReviewDto);
             if (!result.Success)
             {
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = (result.Model as ReadReviewDto)?.Id }, result.Model); // Return 201 Created
+            return Created(); // Return 201 Created
         }
 
         [HttpPut("{id:int}")]
@@ -97,7 +93,7 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
 
-            return Ok(result.Model);
+            return Ok(result);
         }
 
         [HttpDelete("{id:int}")]
@@ -108,7 +104,7 @@ namespace E_Commerce_System.Controllers
             {
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
-            return Ok(result.Model);
+            return Ok(result);
         }
     }
 }

@@ -89,10 +89,7 @@ namespace E_Commerce_System.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // 400 Bad Request
         public async Task<ActionResult<GeneralRespons>> Create(AddCategoryDTO model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+           
             //------------------- here we will check if category with the same name or not ------------
             //var categoryExists = await _categoryManger()
 
@@ -103,7 +100,6 @@ namespace E_Commerce_System.Controllers
             }
 
             return Ok(response);
-         //  return CreatedAtAction(nameof(GetById), new { id = (response.Model as Category)?.Id }, response);
         }
 
         [HttpPut("{id}")]

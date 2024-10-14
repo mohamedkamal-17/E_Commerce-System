@@ -23,7 +23,7 @@ namespace E_Commerce_System.Controllers
         [HttpGet]
         public async Task<ActionResult<GeneralRespons>> GetAll()
         {
-            var response = await _productManager.GetAllAsync();
+            var response = await _productManager.GetAllProducts();
             if (!response.Success)
             {
                 return StatusCode(response.StatusCode, response); // Return appropriate error code

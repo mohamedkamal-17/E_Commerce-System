@@ -26,11 +26,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] UserRegisterDTO UserRegisterDTO)
        {
-            if (!ModelState.IsValid)
-            {
-                var response = _accountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
-                return BadRequest(response);
-            }
+           
 
 
                 GeneralRespons result = await _accountManager.RegisterAsync(UserRegisterDTO);
@@ -44,12 +40,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] UserLoginDTO UserLoginDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                var response = _accountManager.CreateResponse(false, null, "Invalid model state", 400, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
-                return BadRequest(response);
-            }
-
+           
             TokenRespons tokenResponse = await _accountManager.LoginAsync(UserLoginDTO);
 
             if (tokenResponse != null)
@@ -65,10 +56,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] SendOtpRequestDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { ModelState, StatusCode = 400 });
-            }
+           
             var response = await _accountManager.SendOtpForPasswordReset(dto);
             if (!response.IsSucceeded)
             {
@@ -80,10 +68,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost("verify-otp")]
         public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpRequestDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { ModelState, StatusCode = 400 });
-            }
+            
 
             var response = await _accountManager.VerifyOtp(dto);
             if (!response.IsSucceeded)
@@ -96,10 +81,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPasswordWithOtp([FromBody] ResetPasswordRequestDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { ModelState, StatusCode = 400 });
-            }
+        
 
             var response = await _accountManager.ResetPasswordWithOtp(dto);
             if (!response.IsSucceeded)

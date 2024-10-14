@@ -37,9 +37,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<GeneralRespons>> CreateRoleAsync([FromBody] RoleAddDTO model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(new GeneralRespons { Success = false, Message = "Invalid model state." });
-
+          
             var roleExists = await _roleManager.RoleExistsAsync(model.RoleName);
             if (roleExists)
                 return BadRequest(new GeneralRespons { Success = false, Message = "Role already exists." });
@@ -76,9 +74,7 @@ namespace E_Commerce_System.Controllers
         [HttpPut("update")]
         public async Task<ActionResult<GeneralRespons>> UpdateRoleAsync([FromBody] UpdateRoleDTO model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(new GeneralRespons { Success = false, Message = "Invalid model state." });
-
+         
             var role = await _roleManager.FindByIdAsync(model.RoleId);
             if (role == null)
                 return NotFound(new GeneralRespons { Success = false, Message = "Role not found." });

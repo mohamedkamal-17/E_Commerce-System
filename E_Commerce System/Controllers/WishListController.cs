@@ -61,11 +61,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> CreateAsync([FromBody] AddWishlistDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+          
             var response = await _wishlistManager.AddAsync(model);
             if (!response.Success)
             {
@@ -78,10 +74,7 @@ namespace E_Commerce_System.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> UpdateAsync(int id, [FromBody] UpdateWishlistDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        
 
             var response = await _wishlistManager.UpdateAsync(id, model);
             return HandleResponse(response);

@@ -65,9 +65,9 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpGet("tracking/{trackingNumber:int}")]
-        public async Task<ActionResult<GeneralRespons>> GetByTrackingNumberAsync(int trackingNumber)
+        public async Task<ActionResult<GeneralRespons>> GetByTrackingNumberAsync(string trackingNumber)
         {
-            if (trackingNumber <= 0)
+            if (trackingNumber ==null)
             {
                 return BadRequest(new GeneralRespons { Success = false, Message = "Tracking number should be greater than zero." });
             }
@@ -89,10 +89,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> CreateAsync([FromBody] AddShippingDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+           
 
             var response = await _shippingManager.AddAsync(model);
             if (!response.Success)
@@ -106,10 +103,7 @@ namespace E_Commerce_System.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> UpdateAsync(int id, [FromBody] UpdateShippingDto model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+
 
             var response = await _shippingManager.UpdateAsync(id, model);
             return HandleResponse(response);
