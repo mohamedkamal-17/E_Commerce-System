@@ -14,8 +14,9 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public DateTime? UpdatedAt { get; set; }
 
         public double TotalAmount { get; set; }
-       
-        public string PaymentMethod { get; set; }
+        public bool IsDeleted { get; set; }=false;
+
+        public string? PaymentMethod { get; set; }
         public string   Status{ get; set; }
         public string Currency { get; set; }  
         public int OrderId { get; set; }          //Foreign Key  // one to one reltion

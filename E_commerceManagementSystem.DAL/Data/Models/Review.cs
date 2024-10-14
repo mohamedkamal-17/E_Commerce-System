@@ -8,6 +8,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
 {
     public class Review
     {
+        public bool IsDeleted { get; set; } = false;
+
         public int Id { get; set; } // (Primary Key) 
         public int Rating { get; set; } // (1-5) Scale
         public string ReviewText { get; set; }

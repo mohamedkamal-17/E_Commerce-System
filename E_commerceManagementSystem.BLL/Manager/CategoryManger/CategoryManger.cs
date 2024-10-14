@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.CategoryManger;
@@ -26,23 +27,10 @@ namespace E_commerceManagementSystem.BLL.Manager.CategoryManager
 
         public async Task<GeneralRespons> GetByCategoryNameAsync(string categoryName)
         {
-            try
-            {
-                var category = await _repository.GetByConditionAsync(c => c.Name == categoryName)
-                                                                    .FirstOrDefaultAsync();
-
-                if (category == null)
-                {
-                    return CreateResponse(false, null, "No category found for the given name.", 404); // Not Found
-                }
-
-                var readDto = _mapper.Map<ReadCategoryDto>(category);
-                return CreateResponse(true, readDto, "Category retrieved successfully by name.", 200); // OK
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message }); // Internal Server Error
-            }
+          
+               return await base.GetAll(c => c.Name == categoryName);
+               
+           
         }
     }
 }

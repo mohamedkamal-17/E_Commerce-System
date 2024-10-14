@@ -16,8 +16,12 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
     {
         Task<GeneralRespons> GetAllAsync();
-       // Task<GeneralRespons> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
-
+        // Task<GeneralRespons> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
+        Task<GeneralRespons> GetAll();
+        Task<GeneralRespons> GetAll(Expression<Func<T, bool>> condition);
+        Task<GeneralRespons> GetAll(params Expression<Func<T, object>>[] includes);
+        Task<GeneralRespons> GetAllByConditionAndIncludes(Expression<Func<T, bool>> condition,
+            params Expression<Func<T, object>>[] includes);
         Task<GeneralRespons> GetByIdAsync(int id);
         Task<GeneralRespons> AddAsync(TAddDto dto);
         Task<GeneralRespons> UpdateAsync(int id ,TUpdateDto dto);

@@ -32,63 +32,40 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
             _userManager = userManager;
         }
 
-      
+        
+        public override async Task<GeneralRespons> GetAllAsync()
+        {
+            return await base.GetAll(ve => ve.User, Version => Version.Product);
+
+
+        }
+        public override async Task<GeneralRespons> GetByIdAsync(int id)
+        {
+            return await base.GetAllByConditionAndIncludes(ve =>ve.Id== id, ve => ve.User, Version => Version.Product);
+            
+
+
+        }
+
         public async Task<GeneralRespons> GetByProductIdAsync(int productId)
         {
-            try
-            {
-                // Check if the product exists
-                var productExists = await _productRepo.GetByIdAsync(productId);
-                if (productExists == null)
-                {
-                    return CreateResponse(false, null, "No Product with this ID", 404);
-                }
 
-                // Get reviews for the product
-                var reviewDtos = await _reviewRepo.GetByConditionAsync(re => re.ProductId == productId)
-                                                  .ProjectTo<ReadReviewDto>(_mapper.ConfigurationProvider)
-                                                  .ToListAsync();
+            // Check if the product exists
+            return await base.GetAllByConditionAndIncludes(ve => ve.ProductId == productId, ve => ve.User, Version => Version.Product);
 
-                if (!reviewDtos.Any())
-                {
-                    return CreateResponse(false, null, "No reviews for this product", 404);
-                }
 
-                return CreateResponse(true, reviewDtos, "Reviews retrieved successfully",200);
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message });
-            }
         }
 
         public async Task<GeneralRespons> GetByUserIdAsync(string userId)
         {
-            try
-            {
-                // Check if the user exists
-                var userExists = await _userManager.FindByIdAsync(userId);
-                if (userExists == null)
-                {
-                    return CreateResponse(false, null, "No user with this ID", 404);
-                }
 
-                // Retrieve reviews for the user
-                var reviewDtos = await _reviewRepo.GetByConditionAsync(r => r.UserId == userId)
-                                                  .ProjectTo<ReadReviewDto>(_mapper.ConfigurationProvider)
-                                                  .ToListAsync();
+            // Check if the user exists
+            return await base.GetAllByConditionAndIncludes(ve => ve.UserId == userId, ve => ve.User, Version => Version.Product);
 
-                if (!reviewDtos.Any())
-                {
-                    return CreateResponse(false, null, "This user has not written any reviews", 404);
-                }
 
-                return CreateResponse(true, reviewDtos, "Reviews retrieved successfully", 200);
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message });
-            }
+
+
+
         }
     }
 }

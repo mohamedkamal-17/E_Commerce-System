@@ -145,6 +145,16 @@ namespace E_Commerce_System
 
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
+             void ConfigureServices(IServiceCollection services)
+            {
+                services.AddControllers()
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                        options.JsonSerializerOptions.WriteIndented = true; // Optional: for better readability
+                    });
+            }
+
 
             // register for the service 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

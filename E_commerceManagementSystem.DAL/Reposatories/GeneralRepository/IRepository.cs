@@ -12,6 +12,14 @@ namespace E_commerceManagementSystem.DAL.Repositories.Interfaces
         Task<IQueryable<T>> GetAllAsync();
         Task<IQueryable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
 
+        IQueryable<T> GetAll();
+        IQueryable<T> GetAll(Expression<Func<T, bool>> condition);
+        IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes);
+        IQueryable<T> GetAll(Expression<Func<T, bool>> condition,
+            params Expression<Func<T, object>>[] includes);
+
+
+
         IQueryable<T> GetByConditionAsync(Expression<Func<T, bool>> expression);
         Task<T> GetByIdAsync(int id);
         Task AddAsync(T entity);

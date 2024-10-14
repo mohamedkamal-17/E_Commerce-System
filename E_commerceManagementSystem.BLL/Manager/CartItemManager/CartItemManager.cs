@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.Dto.CartDto;
 using E_commerceManagementSystem.BLL.Dto.CartItemDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
@@ -9,10 +10,13 @@ using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 using E_commerceManagementSystem.DAL.Reposatories.GeneralRepository;
 using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,55 +38,40 @@ namespace E_commerceManagementSystem.BLL.Manager.CartItemManager
         public async override Task<GeneralRespons> GetAllAsync()
         {
             // Include the navigation properties you need
-            var queryableResult = await _cartItemrepository.GetAllWithIncludesAsync(u => u.Product);
-
-            // Execute the query and get the result with product 
-            var resultList = await queryableResult.Include(p=>p.Product).ToListAsync();
-
-            if (resultList != null && resultList.Count > 0)
-            {
-                var dtoList = _mapper.Map<List<ReadCartItemDto>>(resultList);
-                return CreateResponse(true, dtoList, "Cart Items retrieved successfully.", 200);
-            }
-
-            return CreateResponse(false, null, "Cart Items not found.", 404);
+            return await base.GetAll(p => p.Product);
         }
         
 
         public async override Task<GeneralRespons> GetByIdAsync(int id)
+
         {
-            var queryableResult = await _cartItemrepository.GetAllWithIncludesAsync(p=>p.Product);
-            var result = await queryableResult
-                .SingleOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+            // return await base.GetAllByConditionAndIncludes(e => e.Id == id, p => p.Product);
+            
+            var result = await _cartItemrepository.GetAll(e => e.Id == id, p => p.Product)
+      .AsNoTracking()
+      .ProjectTo<ReadCartItemDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+      
+            if (result != null )
+                return CreateResponse(true, result, $"{typeof(CartItemManager).Name}s retrieved successfully.", 200);
 
-            if (result != null)
-            {
-                var dto = _mapper.Map<ReadCartItemDto>(result);
-                return CreateResponse(true, dto, $"{typeof(Cart).Name} retrieved successfully.", 200);
-            }
+            return CreateResponse(false, null, $"{typeof(CartItemManager).Name}s not found.", 404);
 
-            return CreateResponse(false, null, $"no cart item with this id.", 404);
+
+
         }
 
         public async Task<GeneralRespons> GetByCartIdAsync(int cartId)
         {
-            var cartExists = await _cartRepo.GetByIdAsync(cartId);
-            if (cartExists == null)
+            var cartExists =  _cartRepo.GetAll().Any(c => c.Id == cartId);
+            if (!cartExists )
             {
                 return CreateResponse(false, null, "No cart with this id.", 404); // Not Found
             }
             try
             {
-                var cartItems = await _cartItemrepository.GetByConditionAsync(c => c.CartID == cartId)
-                    .Include(p=>p.Product).ToListAsync();
-                //var cartItems = await _cartItemrepository.GetByCartIdAsync(cartId);
-                if (cartItems == null)
-                {
-                    return CreateResponse(false, null, "this cart has not any items", 404); // Not Found
-                }
+                return await base.GetAllByConditionAndIncludes(c => c.CartID == cartId, p => p.Product);
 
-                var readDto = _mapper.Map<ICollection<ReadCartItemDto>>(cartItems);
-                return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
+               
 
             }
             catch (Exception ex)
@@ -91,38 +80,65 @@ namespace E_commerceManagementSystem.BLL.Manager.CartItemManager
             }
         }
 
-        public async Task<GeneralRespons> GetByCartIdAndProductIdAsync(int cartId, int productId)
+        public async Task<bool> CheckCartExistsAsync(int cartId)
         {
-            var cartExists = await GetByCartIdAsync(cartId);
-            if (!cartExists.Success)
-            {
-                return cartExists;
-            }
+            return await _cartRepo.GetAll().AnyAsync(c => c.Id == cartId);
+        }
+        
+public async Task<bool> CheckProductExistsAsync(int productId)
+{
+    return await _productRepo.GetAll().AnyAsync(p => p.Id == productId);
+}
 
-            var productExists = await _productRepo.GetByIdAsync(productId);
-            if (productExists == null)
+        public async Task<GeneralRespons> ValidInput(int cartId, int productId)
+        {
+
+            var cartExists = await CheckCartExistsAsync(cartId);
+            if (!cartExists)
             {
                 return CreateResponse(false, null, "No cart with this id.", 404); // Not Found
             }
 
-            try
+            var productExists = await CheckProductExistsAsync(productId);
+            if (!productExists)
             {
-                var cartItemExists = await _cartItemrepository.GetByConditionAsync(c => c.CartID == cartId && c.Product.Id == productId)
-                    .Include(p => p.Product).FirstOrDefaultAsync();
-                if (cartItemExists != null)
-                {
-                    return CreateResponse(false, null, "this cart item already exists", 404);
-                }
+                return CreateResponse(false, null, "No product with this id.", 404);
+            }
 
-                var readDto = _mapper.Map<ReadCartItemDto>(cartItemExists);
-                return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
+           var result= await base.GetAllByConditionAndIncludes(c => c.CartID == cartId && c.Product.Id == productId, p => p.Product);
+
+            if(result.Success)
+            {
+                return CreateResponse(false, null, "this Product Exist in this cart.", 400);
 
             }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message }); // Internal Server Error
-            }
+            return CreateResponse(true, result.Model, "valid dto", 200);
+
         }
+        //public async Task<GeneralRespons> GetByCartIdAndProductIdAsync(int cartId, int productId)
+        //{
+           
+
+        //    try
+        //    {
+
+        //        return await base.GetAllByConditionAndIncludes(c => c.CartID == cartId && c.Product.Id == productId, p => p.Product);
+        //        //var cartItemExists = await _cartItemrepository.GetByConditionAsync(c => c.CartID == cartId && c.Product.Id == productId)
+        //        //    .Include(p => p.Product).FirstOrDefaultAsync();
+        //        //if (cartItemExists != null)
+        //        //{
+        //        //    return CreateResponse(false, null, "this cart item already exists", 404);
+        //        //}
+
+        //        //var readDto = _mapper.Map<ReadCartItemDto>(cartItemExists);
+        //        //return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message }); // Internal Server Error
+        //    }
+        //}
 
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
 using Microsoft.Extensions.Configuration;
+using Order = E_commerceManagementSystem.DAL.Data.Models.Order;
 
 namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
 {
@@ -35,9 +36,15 @@ namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
         public async Task<GeneralRespons> ProcessPaymentAsync(AddPaymentDto dto)
         {
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
+            var order = await _orderRepo.GetByIdAsync(dto.OrderId);
+            if (order == null)
+            {
+                return CreateResponse(false, null, "No order exists with this ID", 400);
+            }
 
             try
             {
+                dto.TotalAmount = (decimal)order.TotalPrice;
                 var intent = await CreatePaymentIntentAsync(dto);
                 var payment = _mapper.Map<Payment>(dto);
                 payment.PaymentIntentId = intent.Id;
@@ -64,7 +71,7 @@ namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
             {
                 // Confirm the payment intent
                 var intent = await ConfirmPaymentIntentAsync(paymentIntentId);
-                if (intent != null && intent.Status == "succeeded") // assuming 'succeeded' is the successful status
+                if (intent != null && intent.Status == "succeeded") // Check if payment succeeded
                 {
                     // Update the payment status in the system
                     await UpdatePaymentStatusAsync(paymentIntentId, intent);
@@ -97,11 +104,11 @@ namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
         {
             var options = new PaymentIntentCreateOptions
             {
-                Amount = (long)(dto.TotalAmount * 100),
+                Amount = (long)(dto.TotalAmount * 100), // Convert to cents
                 Currency = dto.Currency,
                 PaymentMethod = dto.PaymentMethodId,
-                ConfirmationMethod = "manual",
-                Confirm = false,
+                ConfirmationMethod = "automatic", // Set to automatic confirmation
+                Confirm = true, // Confirm immediately upon creation
             };
 
             var service = new PaymentIntentService();
@@ -120,16 +127,15 @@ namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
             {
                 order.PaymentId = payment.Id;
                 order.PaymentIntentId = intent.Id;
-                order.Status = "Pending";
+                order.Status = "Pending"; // Set order status to Pending
                 await _orderRepo.UpdateAsync(order);
             }
         }
 
-       
         private async Task<PaymentIntent> ConfirmPaymentIntentAsync(string paymentIntentId)
         {
             var service = new PaymentIntentService();
-            return await service.ConfirmAsync(paymentIntentId);
+            return await service.ConfirmAsync(paymentIntentId); // Confirm the payment intent
         }
 
         private async Task UpdatePaymentStatusAsync(string paymentIntentId, PaymentIntent intent)
@@ -139,8 +145,8 @@ namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
                                              .FirstOrDefaultAsync();
             if (payment != null)
             {
-                payment.Status = intent.Status;
-                payment.UpdatedAt = DateTime.UtcNow;
+                payment.Status = intent.Status; // Update payment status
+                payment.UpdatedAt = DateTime.UtcNow; // Update timestamp
                 await _paymentRepo.SaveChangesAsync();
             }
         }
@@ -153,7 +159,7 @@ namespace E_commerceManagementSystem.BLL.Manager.PaymentManager
             if (ordersResult.Any())
             {
                 var order = ordersResult.First();
-                order.Status = intent.Status == "succeeded" ? "Paid" : "Payment Failed";
+                order.Status = intent.Status == "succeeded" ? "Paid" : "Payment Failed"; // Update order status
                 await _orderRepo.SaveChangesAsync();
             }
         }

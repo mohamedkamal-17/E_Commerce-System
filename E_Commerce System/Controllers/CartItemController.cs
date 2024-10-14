@@ -56,16 +56,18 @@ namespace E_Commerce_System.Controllers
         public async Task<ActionResult<GeneralRespons>> AddAsync(AddCartItemDto dto)
         {
 
-            var cartItemExists = await _cartItemManager.GetByCartIdAndProductIdAsync(dto.CartID, dto.ProductId);
+           
+            var cartItemExists = await _cartItemManager.ValidInput(dto.CartID, dto.ProductId);
             if (!cartItemExists.Success)
             {
-                return NotFound(cartItemExists.Message);
+                return StatusCode(cartItemExists.StatusCode, cartItemExists);
 
             }
+
             var response = await _cartItemManager.AddAsync(dto);
             if (!response.Success)
             {
-                return NotFound(response.Message);
+                return StatusCode(response.StatusCode,response);
             }
 
             return Ok(response);

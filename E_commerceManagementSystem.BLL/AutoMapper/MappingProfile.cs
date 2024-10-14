@@ -50,12 +50,24 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
 
             #region Order Mappings
             // Map from Order to ReadOrderDto
-            CreateMap<Order, ReadOrderDto>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
-                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.OrderItems.Sum(ci => ci.Quantity * ci.Product.Price)));
+            CreateMap<AddOrderDto, Order>()
+            .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems)) // Map OrderItems
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "Pending")) // Set default status
+            .ForMember(dest => dest.ShippingDate, opt => opt.MapFrom(src => DateTime.Now)) // Default ShippingDate
+            .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(src => DateTime.Now.AddDays(10))) // Default ArrivalDate
+            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src =>
+                src.OrderItems != null
+                ? src.OrderItems.Sum(item => item.Price * item.Quantity)
+                : 0));
 
-            CreateMap<Order, AddOrderDto>().ReverseMap();
-            CreateMap<UpdateOrderDto, Order>().ReverseMap();
+            // Mapping from Order to ReadOrderDto
+            CreateMap<Order, ReadOrderDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : string.Empty)) // Map the user's name
+              ; // Compute TotalPrice from OrderItems
+
+
+
+            CreateMap<UpdateOrderDto, Order>();
             #endregion
 
             #region OrderItem Mappings
@@ -65,6 +77,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
                 .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Product.Price))
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.Product.Price));
 
+         
             CreateMap<OrderItem, AddOrderItemDto>().ReverseMap();
             CreateMap<OrderItem, UpdateOrderItemDto>().ReverseMap();
             #endregion
@@ -128,14 +141,18 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             // Mapping from Shipping to ReadShippingDto
             CreateMap<Shipping, ReadShippingDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId));
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
+                  .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName)).ReverseMap();
 
             // Mapping from AddShippingDto to Shipping
             CreateMap<AddShippingDto, Shipping>()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore()) // Set UserId in controller
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src=>src.UserId)) // Set UserId in controller
                 .ForMember(dest => dest.ShippingStatus, opt => opt.MapFrom(_ => "Pending")) // Default status
-                .ForMember(dest => dest.ShippedDate, opt => opt.Ignore()) // Not provided during addition
-                .ForMember(dest => dest.ExpectedDeliveryDate, opt => opt.Ignore()) // Not provided during addition
+                //.ForMember(dest => dest.ShippedDate, opt => opt.MapFrom(_=>DateTime.Now)) 
+                //.ForMember(dest => dest.ExpectedDeliveryDate, opt => opt.MapFrom(_ => DateTime.Now.AddDays(10)))
+                //.ForMember(dest => dest.TrackingNumber, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
+                //.ForMember(dest => dest.ShippingCost, opt => opt.MapFrom(_ => 60m))
+
                 .ReverseMap();
 
             // Mapping from UpdateShippingDto to Shipping

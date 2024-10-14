@@ -28,6 +28,7 @@ namespace E_commerceManagementSystem.BLL.Manager.WishlistManager
 
         public async Task<GeneralRespons> GetByUserID(string userId)
         {
+            return await base.GetAllByConditionAndIncludes(wish => wish.UserId == userId, wish => wish.User);
             try
             {
                 // Fetch the wish lists for the specified userId

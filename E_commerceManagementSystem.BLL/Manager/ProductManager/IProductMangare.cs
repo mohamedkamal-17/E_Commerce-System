@@ -12,7 +12,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
     public interface IProductMangare : IManager<Product, ReadProductDto, AddProductDto,UpdateProductDto>
     {
-       
+        Task<GeneralRespons> GetAllProducts();
         Task<GeneralRespons> GetByCategoryNameAsync(string categoryName);
         Task<GeneralRespons> GetByProductNameAsync(string ProductName);
         Task<GeneralRespons> GetByPriceAsync(float price);

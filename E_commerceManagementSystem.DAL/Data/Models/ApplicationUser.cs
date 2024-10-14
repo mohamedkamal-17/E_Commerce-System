@@ -14,6 +14,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public DateTime? CreatedAt { get; set; }
         public DateTime?UpdatedAt { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
         public ICollection<Order>?  Orders { get; set; } // Nvigation prop
         public Cart? ShoppingCart { get; set; }  // Nvigation prop
         public ICollection<Review>? Reviews { get; set; } // Nvigation prop

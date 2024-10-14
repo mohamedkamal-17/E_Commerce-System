@@ -14,6 +14,7 @@ namespace E_commerceManagementSystem.BLL.Dto.OrderDto
         public string Address { get; set; }
         public double TotalAmount {  get; set; }
         public string Status { get; set; } = "Pending";
-        public int PaymentId { get; set; }  
+        
+        public List<AddOrderItemDto> OrderItems { get; set; }
     }
 }
