@@ -1,4 +1,5 @@
-﻿using E_commerceManagementSystem.DAL.Data.Models;
+﻿using E_commerceManagementSystem.BLL.Dto.OrederItemDto;
+using E_commerceManagementSystem.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace E_commerceManagementSystem.BLL.Dto.OrderDto
         public string Address { get; set; }
         public DateTime? ShippingDate { get; set; } 
         public DateTime? ArrivalDate { get; set; }
+        public List<ReadOrderItemDto> OrderItems { get; set; }
 
     }
 }
