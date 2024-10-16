@@ -1,12 +1,14 @@
 ﻿using E_commerceManagementSystem.BLL.Dto.PaymentDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.PaymentManager;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentManger _paymentManager;

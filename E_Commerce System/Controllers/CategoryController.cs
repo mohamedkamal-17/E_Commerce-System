@@ -3,11 +3,13 @@ using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.CategoryManger;
 using E_commerceManagementSystem.DAL.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_System.Controllers
 {
+    [Authorize(Roles = "Admin,User")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -84,6 +86,7 @@ namespace E_Commerce_System.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(typeof(GeneralRespons), StatusCodes.Status201Created)] // 201 Created
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // 400 Bad Request
@@ -103,6 +106,7 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(GeneralRespons), StatusCodes.Status200OK)] // 200 OK
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // 400 Bad Request
         [ProducesResponseType(StatusCodes.Status404NotFound)] // 404 Not Found
@@ -117,6 +121,7 @@ namespace E_Commerce_System.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)] // 204 No Content
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // 400 Bad Request

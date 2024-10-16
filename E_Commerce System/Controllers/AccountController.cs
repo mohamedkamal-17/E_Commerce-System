@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using E_commerceManagementSystem.BLL.Dtos.OtpDto.OtpDto;
 using E_commerceManagementSystem.BLL.Dtos.OtpDto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_System.Controllers
 {
@@ -38,11 +39,11 @@ namespace E_Commerce_System.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] UserLoginDTO UserLoginDTO)
         {
-            TokenRespons tokenResponse = await _accountManager.LoginAsync(UserLoginDTO);
+            var Response = await _accountManager.LoginAsync(UserLoginDTO);
 
-            if (tokenResponse != null)
+            if (Response != null)
             {
-                var response = _accountManager.CreateResponse(true, tokenResponse, "Login successful", 200);
+                var response = _accountManager.CreateResponse(true, Response, "Login successful", 200);
                 return Ok(response);
             }
 
@@ -52,6 +53,7 @@ namespace E_Commerce_System.Controllers
 
 
         [HttpPost("forgot-password")]
+
         public async Task<IActionResult> ForgotPassword([FromBody] SendOtpRequestDto dto)
         {
            

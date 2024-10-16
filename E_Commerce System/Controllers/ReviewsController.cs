@@ -1,12 +1,14 @@
 ﻿using E_commerceManagementSystem.BLL.Dto.ReviewDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.ReviewManager;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewManager _reviewManager;
@@ -70,7 +72,7 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(result.StatusCode, result); // Return appropriate error code
             }
 
-            return Created(); // Return 201 Created
+            return Ok(result.Message); 
         }
 
         [HttpPut("{id:int}")]

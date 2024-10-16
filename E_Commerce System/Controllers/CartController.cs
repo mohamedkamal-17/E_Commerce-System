@@ -5,6 +5,7 @@ using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.CartManager;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,8 @@ namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
+
     public class CartController : ControllerBase
     {
         private readonly ICartManager _cartManager;
@@ -33,9 +36,9 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(int Id)
         {
-            var result = await _cartManager.GetByIdAsync(id);
+            var result = await _cartManager.GetByIdAsync(Id);
             if (!result.Success)
             {
                 return StatusCode(result.StatusCode, result);
@@ -81,6 +84,7 @@ namespace E_Commerce_System.Controllers
 
             return Ok(response);
         }
+        
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<GeneralRespons>> Delete(int id)

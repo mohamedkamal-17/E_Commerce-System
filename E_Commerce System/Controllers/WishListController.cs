@@ -3,12 +3,14 @@ using E_commerceManagementSystem.BLL.Dto.WishlistDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.WishlistManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class WishListController : ControllerBase
     {
         private readonly IWishlistManager _wishlistManager;

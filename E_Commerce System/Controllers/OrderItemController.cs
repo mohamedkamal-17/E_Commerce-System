@@ -2,6 +2,7 @@
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.OrderItemManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,7 @@ namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class OrderItemController : ControllerBase
     {
         private readonly IOrderItemManager _orderItemManager;
@@ -54,31 +56,31 @@ namespace E_Commerce_System.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<GeneralRespons>> AddAsync(AddOrderItemDto dto)
-        {
-            var response = await _orderItemManager.AddAsync(dto);
-            if (!response.Success)
-            {
-                // Check status code in response and return appropriate result
-                return StatusCode(response.StatusCode, response);
-            }
+        //[HttpPost]
+        //public async Task<ActionResult<GeneralRespons>> AddAsync(AddOrderItemDto dto)
+        //{
+        //    var response = await _orderItemManager.AddAsync(dto);
+        //    if (!response.Success)
+        //    {
+        //        // Check status code in response and return appropriate result
+        //        return StatusCode(response.StatusCode, response);
+        //    }
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as OrderItem)?.Id }, response); // Return 201 Created
-        }
+        //    return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as OrderItem)?.Id }, response); // Return 201 Created
+        //}
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateOrderItemDto dto)
-        {
-            var response = await _orderItemManager.UpdateAsync(id, dto);
-            if (!response.Success)
-            {
-                // Check status code in response and return appropriate result
-                return StatusCode(response.StatusCode, response);
-            }
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateOrderItemDto dto)
+        //{
+        //    var response = await _orderItemManager.UpdateAsync(id, dto);
+        //    if (!response.Success)
+        //    {
+        //        // Check status code in response and return appropriate result
+        //        return StatusCode(response.StatusCode, response);
+        //    }
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<GeneralRespons>> Delete(int id)

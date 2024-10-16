@@ -3,12 +3,14 @@ using E_commerceManagementSystem.BLL.Dto.ProductDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.ProductManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductMangare _productManager; // Corrected naming
@@ -112,6 +114,7 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GeneralRespons>> Add([FromBody] AddProductDto model)
         {
             var response = await _productManager.AddAsync(model);
@@ -120,10 +123,11 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = (response.Model as Product)?.Id }, response);
+            return Ok(response);
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateProductDto model)
         {
             var response = await _productManager.UpdateAsync(id, model);
@@ -136,6 +140,7 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GeneralRespons>> Delete(int id)
         {
             var response = await _productManager.DeleteAsync(id);

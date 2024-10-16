@@ -3,6 +3,7 @@ using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -10,6 +11,7 @@ namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class OrderController : ControllerBase
     {
         private readonly IOrderManager _orderManager;
@@ -67,10 +69,11 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(response.StatusCode, response);
             }
 
-            return Created();
+            return Ok(response);
         }
 
         [HttpPut("{id}")]
+
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateOrderDto dto)
         {
            
@@ -82,7 +85,7 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(response.StatusCode, response);
             }
 
-            return Ok(response);
+            return Ok(response.Message);
         }
 
         [HttpDelete("{id}")]
@@ -95,7 +98,7 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(response.StatusCode, response);
             }
 
-            return Ok(response);
+            return Ok(response.Message);
         }
     }
 }
