@@ -18,9 +18,10 @@ namespace E_commerceManagementSystem.DAL.Reposatories.CartRepository
             _context = context;
         }
 
-        //public async Task<Cart> GetByUserIdAsync(string userId)
-        //{
-        //   return await _context.Carts.FindAsync(userId);
-        //}
+        public async Task RemoveCartItemsAsync(IEnumerable<CartItem> cartItems)
+        {
+            _context.CartItems.RemoveRange(cartItems); 
+            await _context.SaveChangesAsync(); 
+        }
     }
 }
