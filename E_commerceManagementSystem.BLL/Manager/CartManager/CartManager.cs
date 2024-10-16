@@ -35,18 +35,20 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
         {
           //  return await base.GetAll(u => u.User, c => c.CartItems, c => c.CartItems.Select(p => p.Product));
           //  Include the navigation properties you need
-            var resultList =await  _repository.GetAll(u => u.User, c => c.CartItems)
-    .Include(c => c.CartItems)
-    .ThenInclude(ci => ci.Product)
-    .ToListAsync();
+            var resultList =await  _repository.GetAll(u => u.User)
+                        .Include(c => c.CartItems)
+                        .ThenInclude(ci => ci.Product)
+                        .ToListAsync();
 
             // Execute the query and get the result with product 
             //var resultList = await queryableResult.Include(c => c.CartItems).ThenInclude(p => p.Product).ToListAsync();
 
             if (resultList != null && resultList.Count > 0)
             {
-              //  var dtoList = _mapper.Map<List<ReadCartDto>>(resultList);
-                return CreateResponse(true, resultList, "Carts retrieved successfully.", 204);
+
+
+               var dtoList = _mapper.Map<List<ReadCartDto>>(resultList);
+                return CreateResponse(true, dtoList, "Carts retrieved successfully.", 204);
             }
             if (resultList != null && resultList.Count == 0)
             {
@@ -60,11 +62,9 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
         public async override Task<GeneralRespons> GetByIdAsync(int id)
         {
             var idExsist= _repository.GetAll().Any(c=>c.Id==id);
-           if(idExsist)
+            if(idExsist)
             {
-
-
-             var cart = await _repository.GetAll(c=>c.Id==id,u => u.User, c => c.CartItems)
+             var cart = await _repository.GetAll(c=>c.Id==id, u => u.User)
                                                  .Include(c => c.CartItems)
                                                  .ThenInclude(ci => ci.Product)
                                                  .FirstOrDefaultAsync();
@@ -97,27 +97,33 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
             try
             {
 
-                return await base.GetAllByConditionAndIncludes(x => x.UserId == userId, c => c.CartItems, c => c.CartItems.Select(p => p.Product));
+                //return await base.GetAllByConditionAndIncludes(
+                //        x => x.UserId == userId,
+                //        c => c.CartItems, // Include CartItems
+                //        c => c.CartItems.Select(x => x.Product)
+                //     );
 
-                //    var cart = await _repository.GetByConditionAsync(x => x.UserId == userId)
-                //        .Include(c=>c.CartItems)
-                //        .ThenInclude(p=>p.Product)
-                //        .FirstOrDefaultAsync();
+                var cart = await _repository.GetByConditionAsync(x => x.UserId == userId)
+                    .Include(c => c.CartItems)
+                    .ThenInclude(p => p.Product)
+                    .FirstOrDefaultAsync();
 
-                //    //   var cart = await _repository.GetByUserIdAsync(userId);
-                //    if (cart == null)
-                //    {
-                //        return CreateResponse(false, null, "No cart found for the given name.", 404); // Not Found
-                //    }
-                //    var readDto = _mapper.Map<ReadCartDto>(cart);
-                //    return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
-                //}
+                //   var cart = await _repository.GetByUserIdAsync(userId);
+                if (cart == null)
+                {
+                    return CreateResponse(false, null, "No cart found for the given name.", 404); // Not Found
+                }
+                var readDto = _mapper.Map<ReadCartDto>(cart);
+                return CreateResponse(true, readDto, "cart retrieved successfully", 200); // OK
             }
             catch (Exception ex)
             {
                 return CreateResponse(false, null, $"An error occurred while processing your request: {ex.Message}. Please try again later.", 500, new List<string> { ex.Message }); // Internal Server Error
             }
-
+        }
+        public async Task RemoveCartItems(IEnumerable<CartItem> cartItems)
+        {
+            await _repository.RemoveCartItemsAsync(cartItems);
         }
     }
 }

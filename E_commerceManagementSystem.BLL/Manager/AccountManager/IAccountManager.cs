@@ -18,7 +18,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 
 
 ;        Task<GeneralRespons> RegisterAsync(UserRegisterDTO registerVM);
-        Task<TokenRespons> LoginAsync(UserLoginDTO UserLoginDTO);
+        Task<GeneralAccountResponse> LoginAsync(UserLoginDTO UserLoginDTO);
         Task LogOutAsync();
 
         Task<GeneralAccountResponse> SendOtpForPasswordReset(SendOtpRequestDto dto);

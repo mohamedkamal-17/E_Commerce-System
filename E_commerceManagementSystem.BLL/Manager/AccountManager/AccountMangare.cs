@@ -85,6 +85,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 
             if (result.Succeeded)
             {
+
                 var roleResult = await _userManager.AddToRoleAsync(user, "User");
 
                 if (!roleResult.Succeeded)
@@ -108,18 +109,24 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             return CreateResponse(false, null, "User registration failed.", 400, response.Errors); // Bad Request
         }
 
-        public async Task<TokenRespons?> LoginAsync(UserLoginDTO loginDTO)
+        public async Task<GeneralAccountResponse?> LoginAsync(UserLoginDTO loginDTO)
         {
-            var user = await _userManager.FindByNameAsync(loginDTO.UserName);
-
+            var user = await _userManager.FindByEmailAsync(loginDTO.Email);
+            
             if (user != null)
             {
                 var result = await _signinManager.PasswordSignInAsync(user, loginDTO.Password, false, false);
                 if (result.Succeeded)
                 {
-                    var roles = await _userManager.GetRolesAsync(user);
+                    var roles = (await _userManager.GetRolesAsync(user)).ToList();
                     TokenRespons tokenResponse = _jwtTokenService.GenerateJwtToken(user, roles);
-                    return tokenResponse;
+                    return new GeneralAccountResponse
+                    {
+                        Role = roles,
+                        Token = tokenResponse.Token,
+                        ExpireDate = tokenResponse.Exp,
+                        Email = user.Email,
+                    };
                 }
                 return null;
             }

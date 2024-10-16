@@ -13,5 +13,6 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
     public interface ICartManager : IManager<Cart,ReadCartDto,AddCartDto,UpdateCartDto>
     {
         Task<GeneralRespons> GetByUserIdAsync(string userId);
+        Task RemoveCartItems(IEnumerable<CartItem> cartItems);
     }
 }

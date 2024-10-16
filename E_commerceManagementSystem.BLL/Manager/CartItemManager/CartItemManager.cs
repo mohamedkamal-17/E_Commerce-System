@@ -70,9 +70,6 @@ namespace E_commerceManagementSystem.BLL.Manager.CartItemManager
             try
             {
                 return await base.GetAllByConditionAndIncludes(c => c.CartID == cartId, p => p.Product);
-
-               
-
             }
             catch (Exception ex)
             {

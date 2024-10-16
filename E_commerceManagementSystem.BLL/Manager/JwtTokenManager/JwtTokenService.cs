@@ -42,7 +42,7 @@ namespace E_commerceManagementSystem.BLL.Manager.JwtTokenManager
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.Now.AddDays(10),
                 signingCredentials: creds);
             TokenRespons tokenRespons = new TokenRespons();
 
