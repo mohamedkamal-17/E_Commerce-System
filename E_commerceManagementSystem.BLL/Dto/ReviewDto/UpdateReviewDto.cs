@@ -9,7 +9,6 @@ namespace E_commerceManagementSystem.BLL.Dto.ReviewDto
 {
     public class UpdateReviewDto
     {
-        public int Id { get; set; } 
         public int Rating { get; set; } 
         public string ReviewText { get; set; }
         public int ProductId { get; set; } 

@@ -10,11 +10,9 @@ namespace E_commerceManagementSystem.BLL.Dto.OrderDto
 {
     public class AddOrderDto
     {
-        public string UserId { get; set; }
-        public string Address { get; set; }
-        public double TotalAmount {  get; set; }
-        public string Status { get; set; } = "Pending";
-        
-        public List<AddOrderItemDto> OrderItems { get; set; }
+        public int CartId { get; set; }
+        public string Address { get; set; } 
+        public int PaymentId { get; set; }
+
     }
 }
