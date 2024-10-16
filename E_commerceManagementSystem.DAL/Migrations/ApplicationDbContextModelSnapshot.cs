@@ -122,7 +122,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.CartItem", b =>
@@ -151,7 +151,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Category", b =>
@@ -179,7 +179,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Inventory", b =>
@@ -213,7 +213,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("Inventory");
+                    b.ToTable("Inventory", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Order", b =>
@@ -259,7 +259,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.OrderItem", b =>
@@ -294,7 +294,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Payment", b =>
@@ -334,7 +334,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Product", b =>
@@ -381,7 +381,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Review", b =>
@@ -418,7 +418,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Shipping", b =>
@@ -467,7 +467,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Shipping");
+                    b.ToTable("Shipping", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishList", b =>
@@ -492,7 +492,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WishLists");
+                    b.ToTable("WishLists", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishListItems", b =>
@@ -523,7 +523,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("WishListId");
 
-                    b.ToTable("WishListItems");
+                    b.ToTable("WishListItems", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
