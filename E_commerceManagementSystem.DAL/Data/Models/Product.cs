@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Data.Models
@@ -9,7 +10,6 @@ namespace E_commerceManagementSystem.DAL.Data.Models
     public class Product
     {
         public bool IsDeleted { get; set; } = false;
-
         public int Id { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }
@@ -21,6 +21,8 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public int? CategoryId { get; set; } // Foreign Key
         public Category? Category{ get; set; } // Navigation property
         public ICollection<OrderItem> OrderItems { get; set; } = new HashSet<OrderItem>();// Navigation property
+
+        [JsonIgnore]
         public ICollection<CartItem> CartItem { get; set; } = new HashSet<CartItem>();// Navigation property
         public int? InventoryId { get; set; }
         public Inventory? Inventory { get; set; } // Navigation property

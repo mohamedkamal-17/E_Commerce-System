@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Data.Models
@@ -14,6 +15,7 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public virtual Product Product { get; set; }
 
         public int CartID { get; set; }
+        [JsonIgnore]
         public Cart Cart { get; set; }
         public bool IsDeleted { get; set; } = false;
 
