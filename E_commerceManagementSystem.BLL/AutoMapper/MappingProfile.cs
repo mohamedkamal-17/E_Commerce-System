@@ -50,21 +50,16 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
 
             #region Order Mappings
             // Map from Order to ReadOrderDto
-            CreateMap<AddOrderDto, Order>()
-            .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems)) // Map OrderItems
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "Pending")) // Set default status
-            .ForMember(dest => dest.ShippingDate, opt => opt.MapFrom(src => DateTime.Now)) // Default ShippingDate
-            .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(src => DateTime.Now.AddDays(10))) // Default ArrivalDate
-            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src =>
-                src.OrderItems != null
-                ? src.OrderItems.Sum(item => item.Price * item.Quantity)
-                : 0));
+            //CreateMap<AddOrderDto, Order>()
+            //.ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems)) // Map OrderItems
+            //.ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(src => DateTime.Now.AddDays(10))) // Default ArrivalDate
+            //.ForMember(dest => dest.TotalPrice, opt =>
+            //opt.MapFrom(src => src.OrderItems.Sum(ci => ci.Product.Price * ci.Quantity)));
 
             // Mapping from Order to ReadOrderDto
             CreateMap<Order, ReadOrderDto>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : string.Empty)) // Map the user's name
-              ; // Compute TotalPrice from OrderItems
-
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : string.Empty));
+               // Compute TotalPrice from OrderItems
 
 
             CreateMap<UpdateOrderDto, Order>();
@@ -72,14 +67,26 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
 
             #region OrderItem Mappings
             // Map from OrderItem to ReadOrderItemDto
+            CreateMap<CartItem, OrderItem>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+           .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
+           .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+           .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Product.Price)) 
+           .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.Product.Price));
+
+
+
             CreateMap<OrderItem, ReadOrderItemDto>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
                 .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Product.Price))
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.Product.Price));
 
-         
-            CreateMap<OrderItem, AddOrderItemDto>().ReverseMap();
-            CreateMap<OrderItem, UpdateOrderItemDto>().ReverseMap();
+
+       
+            // CreateMap<OrderItem, AddOrderItemDto>().ReverseMap();
+//            CreateMap<OrderItem, UpdateOrderItemDto>().ReverseMap()
+//                    .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.ProductName))
+//;
             #endregion
 
             #region Review Mappings
