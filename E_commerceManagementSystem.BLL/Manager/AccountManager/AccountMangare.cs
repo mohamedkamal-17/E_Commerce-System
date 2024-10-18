@@ -126,6 +126,8 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                         Token = tokenResponse.Token,
                         ExpireDate = tokenResponse.Exp,
                         Email = user.Email,
+                        Id = user.Id,
+                        UserName = user.UserName
                     };
                 }
                 return null;
