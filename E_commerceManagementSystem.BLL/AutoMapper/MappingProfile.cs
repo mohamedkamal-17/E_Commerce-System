@@ -98,6 +98,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<Review, AddReviewDto>().ReverseMap();
             #endregion
 
+            
             CreateMap<CartItem, ReadCartItemDto>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.Id));
