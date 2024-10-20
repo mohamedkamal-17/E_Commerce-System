@@ -4,6 +4,7 @@ using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using E_commerceManagementSystem.DAL.Reposatories.CartItemRepository;
 using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -21,14 +22,16 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
     public class CartManager : Manager<Cart, ReadCartDto, AddCartDto, UpdateCartDto>, ICartManager
     {
         private readonly ICartRepo _repository;
+        private readonly ICartItemRepo _cartItemRepo;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public CartManager(ICartRepo repository, IMapper mapper, UserManager<ApplicationUser> userManager) : base(repository, mapper)
+        public CartManager(ICartRepo repository, IMapper mapper, UserManager<ApplicationUser> userManager, ICartItemRepo cartItemRepo) : base(repository, mapper)
         {
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
+            _cartItemRepo = cartItemRepo;
         }
 
         public override async Task<GeneralRespons> GetAllAsync()
@@ -125,5 +128,28 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
         {
             await _repository.RemoveCartItemsAsync(cartItems);
         }
+
+        //public async Task<GeneralRespons> UpdateCartItemsInCart(int id, List<UpdateCartItemsInCartDto> cartItemsInCart) 
+        //{
+        //    var idExsist =  _repository.GetAll().Any(c => c.Id == id);
+        //    if (!idExsist)
+        //    {
+        //        return CreateResponse(false, null, $"no cart with this id.", 404);
+        //    }
+
+        //    var cartitems = _mapper.Map<List<CartItem>>(cartItemsInCart);
+
+        //    foreach (var cartItem in cartitems)
+        //    {
+        //        await _cartItemRepo.UpdateAsync(cartItem);
+        //    }
+
+        //    var cart = await _repository.GetAll(c => c.Id == id, u => u.User)
+        //                                            .Include(c => c.CartItems)
+        //                                            .ThenInclude(ci => ci.Product)
+        //                                            .FirstOrDefaultAsync();
+
+        //    return CreateResponse(true, _mapper.Map<ReadCartDto>(cart), $"{typeof(Cart).Name} retrieved successfully.", 200);
+        //}
     }
 }

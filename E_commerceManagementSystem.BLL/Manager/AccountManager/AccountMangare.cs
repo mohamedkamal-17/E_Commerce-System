@@ -14,6 +14,11 @@ using E_commerceManagementSystem.BLL.Dtos.OtpDto.OtpDto;
 using E_commerceManagementSystem.BLL.Dtos.OtpDto;
 using E_commerceManagementSystem.BLL.Manager.EmailManager;
 using E_commerceManagementSystem.BLL.Manager.OtpManager;
+using E_commerceManagementSystem.BLL.Manager.CartManager;
+using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
+using E_commerceManagementSystem.BLL.Dto.CartDto;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 {
@@ -27,7 +32,8 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
         private readonly IOtpManager _otpManager;
         private readonly IMemoryCache _cache;
         private readonly IEmailManager _emailManager;
-
+        private readonly ICartRepo _cartRepo;
+        private readonly IMapper _mapper;
         public AccountManager(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signinManager,
             RoleManager<IdentityRole> roleManager,
@@ -35,7 +41,9 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             IConfiguration configuration,
             IOtpManager otpManager,
             IMemoryCache cache,
-            IEmailManager emailManager)
+            IEmailManager emailManager,
+            ICartRepo cartRepo,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signinManager = signinManager;
@@ -45,6 +53,8 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             _otpManager = otpManager;
             _cache = cache;
             _emailManager = emailManager;
+            _cartRepo = cartRepo;
+            _mapper = mapper;
         }
 
         public GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
@@ -97,6 +107,23 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                     return CreateResponse(false, null, "Failed to assign role to the user.", 400, response.Errors);
                 }
 
+                //add cart to user when he register to app
+                var addCartDto = new AddCartDto
+                {
+                    UserId = user.Id
+                };
+
+                var cart = _mapper.Map<Cart>(addCartDto); // Map the AddCartDto to the entity
+
+                try
+                {
+                    await _cartRepo.AddAsync(cart);
+                }
+                catch (Exception ex)
+                {
+                    return CreateResponse(false, null, $"Error adding {typeof(Cart).Name}: {ex.Message}", 500, new List<string> { ex.InnerException.ToString() });
+                }
+
                 return CreateResponse(true, null, "User registered successfully.", 201); // Created
             }
 
@@ -120,6 +147,10 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                 {
                     var roles = (await _userManager.GetRolesAsync(user)).ToList();
                     TokenRespons tokenResponse = _jwtTokenService.GenerateJwtToken(user, roles);
+
+
+                    var cart = _cartRepo.GetAll(x => x.UserId == user.Id).ToList().FirstOrDefault();
+
                     return new GeneralAccountResponse
                     {
                         Role = roles,
@@ -127,7 +158,8 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                         ExpireDate = tokenResponse.Exp,
                         Email = user.Email,
                         Id = user.Id,
-                        UserName = user.UserName
+                        UserName = user.UserName,
+                        CartId = cart.Id
                     };
                 }
                 return null;

@@ -89,7 +89,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             }
         }
 
-        public async Task<GeneralRespons> UpdateAsync(int id, TUpdateDto updateDto)
+        public virtual async Task<GeneralRespons> UpdateAsync(int id, TUpdateDto updateDto)
         {
             if (updateDto == null)
             {

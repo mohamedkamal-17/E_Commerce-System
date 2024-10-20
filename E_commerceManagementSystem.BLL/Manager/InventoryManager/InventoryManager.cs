@@ -28,10 +28,7 @@ namespace E_commerceManagementSystem.BLL.Manager.InventoryManager
 
         public async Task<GeneralRespons> GetByProductId(int productId)
         {
-          
-                return  await base.GetAll(inv => inv.ProductId == productId);
-                  
-           
+            return await base.GetAll(inv => inv.ProductId == productId);
         }
     }
 }

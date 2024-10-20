@@ -52,9 +52,9 @@ namespace E_commerceManagementSystem.BLL.Manager.CartItemManager
       .ProjectTo<ReadCartItemDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
       
             if (result != null )
-                return CreateResponse(true, result, $"{typeof(CartItemManager).Name}s retrieved successfully.", 200);
+                return CreateResponse(true, result, $"{typeof(CartItem).Name}s retrieved successfully.", 200);
 
-            return CreateResponse(false, null, $"{typeof(CartItemManager).Name}s not found.", 404);
+            return CreateResponse(false, null, $"{typeof(CartItem).Name} not found.", 404);
 
 
 
@@ -82,10 +82,10 @@ namespace E_commerceManagementSystem.BLL.Manager.CartItemManager
             return await _cartRepo.GetAll().AnyAsync(c => c.Id == cartId);
         }
         
-public async Task<bool> CheckProductExistsAsync(int productId)
-{
-    return await _productRepo.GetAll().AnyAsync(p => p.Id == productId);
-}
+        public async Task<bool> CheckProductExistsAsync(int productId)
+        {
+            return await _productRepo.GetAll().AnyAsync(p => p.Id == productId);
+        }
 
         public async Task<GeneralRespons> ValidInput(int cartId, int productId)
         {

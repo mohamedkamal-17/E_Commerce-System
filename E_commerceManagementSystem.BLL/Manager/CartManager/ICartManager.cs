@@ -14,5 +14,6 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
     {
         Task<GeneralRespons> GetByUserIdAsync(string userId);
         Task RemoveCartItems(IEnumerable<CartItem> cartItems);
+      //  Task<GeneralRespons> UpdateCartItemsInCart(int id, List<UpdateCartItemsInCartDto> cartItemsInCart);
     }
 }
