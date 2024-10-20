@@ -1,4 +1,5 @@
-﻿using E_commerceManagementSystem.DAL.Data.Models;
+﻿using E_commerceManagementSystem.BLL.Dto.CartItemDto;
+using E_commerceManagementSystem.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ namespace E_commerceManagementSystem.BLL.Dto.CartDto
 {
     public class UpdateCartDto
     {
-
-     //public ICollection<UpdateCartDto> CartItems { get; set; } 
+     //public ICollection<UpdateCartItemsInCartDto> UpdateCartItemsInCartDto { get; set; } 
     }
 }

@@ -16,6 +16,6 @@ namespace E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto
         public string? Id { get; set; }
         public string? Email { get; set; }
         public string? UserName { get; set; }
-
+        public int? CartId { get; set; }
     }
 }
