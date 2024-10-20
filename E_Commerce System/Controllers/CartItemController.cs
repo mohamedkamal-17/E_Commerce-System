@@ -27,7 +27,7 @@ namespace E_Commerce_System.Controllers
             var result = await _cartItemManager.GetAllAsync();
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return NotFound(result);
             }
             return Ok(result.Model);
         }
@@ -38,7 +38,7 @@ namespace E_Commerce_System.Controllers
             var result = await _cartItemManager.GetByIdAsync(Id);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return NotFound(result);
             }
             return Ok(result.Model);
         }
@@ -49,10 +49,12 @@ namespace E_Commerce_System.Controllers
             var result = await _cartItemManager.GetByCartIdAsync(cartId);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return NotFound(result);
             }
             return Ok(result.Model);
         }
+
+
 
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> AddAsync(AddCartItemDto dto)

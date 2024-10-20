@@ -123,7 +123,7 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(response.StatusCode, response); // Return appropriate error code
             }
 
-            return Ok(response);
+            return Ok(new { response.Message, response.Model });
         }
 
         [HttpPut("{id:int}")]

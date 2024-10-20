@@ -24,6 +24,7 @@ namespace E_Commerce_System.Controllers
             _cartManager = cartManager;
         }
 
+
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -57,45 +58,17 @@ namespace E_Commerce_System.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<GeneralRespons>> AddAsync(AddCartDto dto)
-        {
-            var cartExists = await _cartManager.GetByUserIdAsync(dto.UserId);
-            if(cartExists.Success)
-            {
-                return BadRequest("this user has already cart");
-            }
-            var response = await _cartManager.AddAsync(dto);
-            if (!response.Success)
-            {
-                return StatusCode(response.StatusCode, response);
-            }
-            return Ok(response);
-            //return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as Cart)?.Id }, response); // Return 201 Created
-        }
-        [HttpPut("{id}")]
-        public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateCartDto dto)
-        {
-            var response = await _cartManager.UpdateAsync(id, dto);
-            if (!response.Success)
-            {
-                return StatusCode(response.StatusCode, response);
-            }
+        //[HttpPut("{Id}")]
+        //public async Task<IActionResult> UpdateCartItems(int Id,List<UpdateCartItemsInCartDto> cartItemsDto)
+        //{
+        //    var result = await _cartManager.UpdateCartItemsInCart(Id, cartItemsDto);
 
-            return Ok(response);
-        }
-        
+        //    if (!result.Success)
+        //    {
+        //        return StatusCode(result.StatusCode, result);
+        //    }
+        //    return Ok(result);
+        //}
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<GeneralRespons>> Delete(int id)
-        {
-            var respnse = await _cartManager.DeleteAsync(id);
-            if (!respnse.Success)
-            {
-                return StatusCode(respnse.StatusCode, respnse);
-            }
-
-            return Ok(respnse);
-        }
     }
 }
