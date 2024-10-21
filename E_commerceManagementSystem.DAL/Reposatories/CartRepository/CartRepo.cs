@@ -21,7 +21,7 @@ namespace E_commerceManagementSystem.DAL.Reposatories.CartRepository
         public async Task RemoveCartItemsAsync(IEnumerable<CartItem> cartItems)
         {
             _context.CartItems.RemoveRange(cartItems); 
-            await _context.SaveChangesAsync(); 
+           // await _context.SaveChangesAsync(); 
         }
     }
 }
