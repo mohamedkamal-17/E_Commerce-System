@@ -123,6 +123,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                 {
                     return CreateResponse(false, null, $"Error adding {typeof(Cart).Name}: {ex.Message}", 500, new List<string> { ex.InnerException.ToString() });
                 }
+                await _cartRepo.SaveChangesAsync();
 
                 return CreateResponse(true, null, "User registered successfully.", 201); // Created
             }

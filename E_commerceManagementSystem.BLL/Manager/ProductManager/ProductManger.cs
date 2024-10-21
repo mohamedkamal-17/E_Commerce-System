@@ -95,6 +95,9 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 
             await _inventoryRepository.AddAsync(inventory);
 
+            //save one time after all changes (add product and add inventory)
+            await _repository.SaveChangesAsync();
+
             var ReadProduct = _mapper.Map<ReadProductDto>(product);
             return new GeneralRespons {Model = ReadProduct, Success = true, Message = "Product created successfully." };
         }

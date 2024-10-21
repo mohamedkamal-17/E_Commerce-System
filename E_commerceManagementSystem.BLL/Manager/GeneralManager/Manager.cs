@@ -80,6 +80,9 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             try
             {
                 await _repository.AddAsync(entity);
+
+                //save one time after all changes
+                await _repository.SaveChangesAsync();
                 var readDto = _mapper.Map<TReadDto>(entity);
                 return CreateResponse(true, readDto, $"{typeof(T).Name} added successfully.", 201);
             }
@@ -108,6 +111,8 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             {
 
                 await _repository.UpdateAsync(existingEntity);
+                //save one time after all changes
+                await _repository.SaveChangesAsync();
                 //var updatedReadDto =);
                 return CreateResponse(true, _mapper.Map<TReadDto>(existingEntity), $"{typeof(T).Name} updated successfully.",200);
             }
@@ -128,6 +133,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
                 }
 
                 await _repository.DeleteAsync(entity);
+                await _repository.SaveChangesAsync();
                 return CreateResponse(true, null, $"{typeof(T).Name} deleted successfully.", 200);
             }
             catch (Exception ex)

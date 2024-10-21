@@ -127,6 +127,8 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
         public async Task RemoveCartItems(IEnumerable<CartItem> cartItems)
         {
             await _repository.RemoveCartItemsAsync(cartItems);
+            //save one time after all changes
+            await _repository.SaveChangesAsync();
         }
 
         //public async Task<GeneralRespons> UpdateCartItemsInCart(int id, List<UpdateCartItemsInCartDto> cartItemsInCart) 

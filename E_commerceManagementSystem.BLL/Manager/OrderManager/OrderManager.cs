@@ -128,7 +128,10 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
                 }
                 var readOrderDto = _mapper.Map<ReadOrderDto>(order);
 
-               await _cartRepo.RemoveCartItemsAsync(cart.CartItems);
+                await _cartRepo.RemoveCartItemsAsync(cart.CartItems);
+
+                //save one time after all changes
+                await _repository.SaveChangesAsync();
                 return CreateResponse(true, readOrderDto, "Order added successfully", 201);
             }
             catch (Exception ex)
