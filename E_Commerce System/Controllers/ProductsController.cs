@@ -10,7 +10,7 @@ namespace E_Commerce_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin,User")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductMangare _productManager; // Corrected naming
@@ -114,7 +114,7 @@ namespace E_Commerce_System.Controllers
         }
 
         [HttpPost]
-      //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GeneralRespons>> Add([FromBody] AddProductDto model)
         {
             var response = await _productManager.AddAsync(model);
