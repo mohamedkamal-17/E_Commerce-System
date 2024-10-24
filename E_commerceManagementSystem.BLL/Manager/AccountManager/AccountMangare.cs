@@ -115,14 +115,9 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 
                 var cart = _mapper.Map<Cart>(addCartDto); // Map the AddCartDto to the entity
 
-                try
-                {
-                    await _cartRepo.AddAsync(cart);
-                }
-                catch (Exception ex)
-                {
-                    return CreateResponse(false, null, $"Error adding {typeof(Cart).Name}: {ex.Message}", 500, new List<string> { ex.InnerException.ToString() });
-                }
+                await _cartRepo.AddAsync(cart);
+                
+                
                 await _cartRepo.SaveChangesAsync();
 
                 return CreateResponse(true, null, "User registered successfully.", 201); // Created

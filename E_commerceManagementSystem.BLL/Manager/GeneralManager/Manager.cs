@@ -73,23 +73,15 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public virtual async Task<GeneralRespons> AddAsync(TAddDto addDto)
         {
-          
-
             T entity = _mapper.Map<T>(addDto); // Map the AddDto to the entity
 
-            try
-            {
-                await _repository.AddAsync(entity);
+            await _repository.AddAsync(entity);
 
-                //save one time after all changes
-                await _repository.SaveChangesAsync();
-                var readDto = _mapper.Map<TReadDto>(entity);
-                return CreateResponse(true, readDto, $"{typeof(T).Name} added successfully.", 201);
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"Error adding {typeof(T).Name}: {ex.Message}",500, new List<string> { ex.InnerException.ToString() });
-            }
+            //save one time after all changes
+            await _repository.SaveChangesAsync();
+            var readDto = _mapper.Map<TReadDto>(entity);
+            return CreateResponse(true, readDto, $"{typeof(T).Name} added successfully.", 201);
+          
         }
 
         public virtual async Task<GeneralRespons> UpdateAsync(int id, TUpdateDto updateDto)
@@ -107,39 +99,25 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
             _mapper.Map(updateDto, existingEntity);
 
-            try
-            {
-
-                await _repository.UpdateAsync(existingEntity);
-                //save one time after all changes
-                await _repository.SaveChangesAsync();
-                //var updatedReadDto =);
-                return CreateResponse(true, _mapper.Map<TReadDto>(existingEntity), $"{typeof(T).Name} updated successfully.",200);
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"Error updating {typeof(T).Name}: {ex.Message}", 500, new List<string> { ex.Message });
-            }
+            await _repository.UpdateAsync(existingEntity);
+            //save one time after all changes
+            await _repository.SaveChangesAsync();
+            //var updatedReadDto =);
+            return CreateResponse(true, _mapper.Map<TReadDto>(existingEntity), $"{typeof(T).Name} updated successfully.", 200);
+            
         }
 
         public async Task<GeneralRespons> DeleteAsync(int id)
         {
-            try
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
             {
-                var entity = await _repository.GetByIdAsync(id);
-                if (entity == null)
-                {
-                    return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.",404);
-                }
+                return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.",404);
+            }
 
-                await _repository.DeleteAsync(entity);
-                await _repository.SaveChangesAsync();
-                return CreateResponse(true, null, $"{typeof(T).Name} deleted successfully.", 200);
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"Error deleting {typeof(T).Name}: {ex.Message}",500, new List<string> { ex.Message });
-            }
+            await _repository.DeleteAsync(entity);
+            await _repository.SaveChangesAsync();
+            return CreateResponse(true, null, $"{typeof(T).Name} deleted successfully.", 200);
         }
 
         public async Task<GeneralRespons> GetAll()

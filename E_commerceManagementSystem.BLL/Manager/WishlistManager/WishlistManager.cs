@@ -29,30 +29,22 @@ namespace E_commerceManagementSystem.BLL.Manager.WishlistManager
         public async Task<GeneralRespons> GetByUserID(string userId)
         {
             return await base.GetAllByConditionAndIncludes(wish => wish.UserId == userId, wish => wish.User);
-            try
-            {
-                // Fetch the wish lists for the specified userId
-                var wishLists = await _wishlistRepo.GetByConditionAsync(wish => wish.UserId == userId)
-                    .ProjectTo<ReadWishlistDto>(_mapper.ConfigurationProvider) // Assuming you have AutoMapper configured
-                    .ToListAsync(); // Use ToListAsync to execute the query asynchronously
+           
+            // Fetch the wish lists for the specified userId
+            var wishLists = await _wishlistRepo.GetByConditionAsync(wish => wish.UserId == userId)
+                .ProjectTo<ReadWishlistDto>(_mapper.ConfigurationProvider) // Assuming you have AutoMapper configured
+                .ToListAsync(); // Use ToListAsync to execute the query asynchronously
 
-                // Check if the wishLists is null or empty
-                if (wishLists == null || wishLists.Count() == 0)
-                {
-                    return CreateResponse(false, null, "No wish lists found for the specified user.",
-                        (int)HttpStatusCode.NotFound); // 404 Not Found
-                }
-
-                return CreateResponse(true, wishLists, "Wish lists retrieved successfully.",
-                    (int)HttpStatusCode.OK); // 200 OK
-            }
-            catch (Exception ex)
+            // Check if the wishLists is null or empty
+            if (wishLists == null || wishLists.Count() == 0)
             {
-                // Log the exception (you may want to use a logging framework here)
-                // For simplicity, we're just returning a message
-                return CreateResponse(false, null, $"An error occurred: {ex.Message}",
-                    (int)HttpStatusCode.InternalServerError, new List<string> { ex.Message }); // 500 Internal Server Error
+                return CreateResponse(false, null, "No wish lists found for the specified user.",
+                    (int)HttpStatusCode.NotFound); // 404 Not Found
             }
+
+            return CreateResponse(true, wishLists, "Wish lists retrieved successfully.",
+                (int)HttpStatusCode.OK); // 200 OK
+            
         }
     }
 }

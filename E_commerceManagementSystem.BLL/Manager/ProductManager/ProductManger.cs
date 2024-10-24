@@ -62,9 +62,6 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
             return await base.GetAll(p => p.Price < highPrice, p => p.Category);
 
         }
-
-
-
         public async Task<GeneralRespons> GetByCategoryNameAsync(string categoryName)
         {
             return await base.GetAllByConditionAndIncludes(p => p.Category.Name == categoryName, p => p.Category);

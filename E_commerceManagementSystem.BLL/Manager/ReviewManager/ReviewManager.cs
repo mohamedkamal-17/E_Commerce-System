@@ -61,11 +61,6 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
 
             // Check if the user exists
             return await base.GetAllByConditionAndIncludes(ve => ve.UserId == userId, ve => ve.User, Version => Version.Product);
-
-
-
-
-
         }
     }
 }

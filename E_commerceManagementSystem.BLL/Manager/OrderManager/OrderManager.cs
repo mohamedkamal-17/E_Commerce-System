@@ -114,30 +114,24 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
                 OrderItems = _mapper.Map<List<OrderItem>>(cart.CartItems) 
             };
 
-            try
-            {
-                await _repository.AddAsync(order);
+            await _repository.AddAsync(order);
 
-                foreach(var cartItem in cart.CartItems)
+            foreach(var cartItem in cart.CartItems)
+            {
+                if (inventoryDict.TryGetValue(cartItem.ProductId, out var inventory))
                 {
-                    if (inventoryDict.TryGetValue(cartItem.ProductId, out var inventory))
-                    {
-                        inventory.StockQuantity -= cartItem.Quantity;
-                        await _inventoryRepo.UpdateAsync(inventory); 
-                    }
+                    inventory.StockQuantity -= cartItem.Quantity;
+                    await _inventoryRepo.UpdateAsync(inventory); 
                 }
-                var readOrderDto = _mapper.Map<ReadOrderDto>(order);
-
-                await _cartRepo.RemoveCartItemsAsync(cart.CartItems);
-
-                //save one time after all changes
-                await _repository.SaveChangesAsync();
-                return CreateResponse(true, readOrderDto, "Order added successfully", 201);
             }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"Error adding order: {ex.Message}", 500, new List<string> { ex.InnerException?.ToString() });
-            }
+            var readOrderDto = _mapper.Map<ReadOrderDto>(order);
+
+            await _cartRepo.RemoveCartItemsAsync(cart.CartItems);
+
+            //save one time after all changes
+            await _repository.SaveChangesAsync();
+            return CreateResponse(true, readOrderDto, "Order added successfully", 201);
+
         }
     }
 }
