@@ -78,8 +78,8 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
         public override async Task<GeneralRespons> AddAsync(AddProductDto productDto)
         {
             var product = _mapper.Map<Product>(productDto);
-
             await _repository.AddAsync(product);
+            await _repository.SaveChangesAsync();
 
             var inventory = new Inventory
             {
