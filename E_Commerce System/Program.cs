@@ -40,6 +40,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using E_commerceManagementSystem.BLL.AutoMapper;
 using Microsoft.OpenApi.Models;
+using E_commerceManagementSystem.BLL;
 
 
 namespace E_Commerce_System
@@ -131,9 +132,6 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IWishListItemsRepo, WishListItemsRepo>();
             builder.Services.AddScoped<IWishlistItemsManager, WishlistItemsManager>();
 
-
-
-
             builder.Services.AddScoped<ICartManager, CartManager>();
             builder.Services.AddScoped<ICartRepo, CartRepo>();
 
@@ -204,8 +202,11 @@ namespace E_Commerce_System
 
             app.UseHttpsRedirection();
 
+
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<ExceptionMiddleWare>();
 
 
             app.MapControllers();
