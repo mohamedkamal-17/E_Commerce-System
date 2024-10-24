@@ -202,11 +202,11 @@ namespace E_Commerce_System
 
             app.UseHttpsRedirection();
 
+            app.UseMiddleware<ExceptionMiddleWare>();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<ExceptionMiddleWare>();
 
 
             app.MapControllers();
