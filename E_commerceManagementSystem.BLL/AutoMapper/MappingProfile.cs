@@ -58,8 +58,10 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
 
             // Mapping from Order to ReadOrderDto
             CreateMap<Order, ReadOrderDto>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : string.Empty));
-               // Compute TotalPrice from OrderItems
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : string.Empty))
+                           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+;
+            // Compute TotalPrice from OrderItems
 
 
             CreateMap<UpdateOrderDto, Order>();
