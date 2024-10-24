@@ -84,7 +84,7 @@ namespace E_Commerce_System.Controllers
                 return StatusCode(response.StatusCode, response);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = (response.Model as Inventory)?.Id }, response);
+            return Ok(response);
         }
 
         [HttpPut("{id:int}")]

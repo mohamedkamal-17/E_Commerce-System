@@ -88,19 +88,19 @@ namespace E_Commerce_System.Controllers
             return HandleResponse(response);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<GeneralRespons>> CreateAsync([FromBody] AddShippingDto model)
-        {
-           
+        //[HttpPost]
+        //public async Task<ActionResult<GeneralRespons>> CreateAsync([FromBody] AddShippingDto model)
+        //{
 
-            var response = await _shippingManager.AddAsync(model);
-            if (!response.Success)
-            {
-                return StatusCode((int)response.StatusCode, response);
-            }
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = (response.Model as ReadShippingDto)?.Id }, response);
-        }
+        //    var response = await _shippingManager.AddAsync(model);
+        //    if (!response.Success)
+        //    {
+        //        return StatusCode((int)response.StatusCode, response);
+        //    }
+
+        //    return Ok(response);
+        //}
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralRespons>> UpdateAsync(int id, [FromBody] UpdateShippingDto model)
