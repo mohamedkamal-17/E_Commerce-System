@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace E_commerceManagementSystem.DAL.Repositories.Interfaces
 {
     public interface IRepository<T> where T : class
     {
         Task<IQueryable<T>> GetAllAsync();
-        Task<IQueryable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes);
+
 
         IQueryable<T> GetAll();
         IQueryable<T> GetAll(Expression<Func<T, bool>> condition);

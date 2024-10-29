@@ -5,11 +5,6 @@ using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.OrderItemManager
 {
@@ -28,28 +23,28 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderItemManager
         }
         public override async Task<GeneralRespons> GetAllAsync()
         {
-            return await base.GetAll(orit=>orit.Product);
+            return await base.GetAll(orit => orit.Product);
         }
         public override async Task<GeneralRespons> GetByIdAsync(int id)
         {
-            return await base.GetAllByConditionAndIncludes(orit=>orit.Id==id, orit => orit.Product);
+            return await base.GetAllByConditionAndIncludes(orit => orit.Id == id, orit => orit.Product);
         }
 
         public async Task<GeneralRespons> GetByOrderIdAsync(int orderId)
         {
-           
-                // Check if the order exists using GetByConditionAsync
-                var order = await _orderRepo.GetByIdAsync(orderId);
-                if (order == null)
-                {
-                    return CreateResponse(false, null, "No order with this ID", 404); // Not Found
-                }
 
-                return await base.GetAll(oi => oi.OrderId == orderId);
-               
+            // Check if the order exists using GetByConditionAsync
+            var order = await _orderRepo.GetByIdAsync(orderId);
+            if (order == null)
+            {
+                return CreateResponse(false, null, "No order with this ID", 404); // Not Found
+            }
+
+            return await base.GetAll(oi => oi.OrderId == orderId);
+
 
         }
 
-       
+
     }
 }

@@ -1,24 +1,18 @@
-﻿using E_commerceManagementSystem.BLL.DTOs;
+﻿using AutoMapper;
+using E_commerceManagementSystem.BLL.Dto.CartDto;
+using E_commerceManagementSystem.BLL.Dtos.OtpDto;
+using E_commerceManagementSystem.BLL.Dtos.OtpDto.OtpDto;
+using E_commerceManagementSystem.BLL.DTOs;
 using E_commerceManagementSystem.BLL.DTOs.AccountDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
+using E_commerceManagementSystem.BLL.Manager.EmailManager;
 using E_commerceManagementSystem.BLL.Manager.JwtTokenManager;
+using E_commerceManagementSystem.BLL.Manager.OtpManager;
 using E_commerceManagementSystem.DAL.Data.Models;
+using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq; // Added for LINQ
-using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using E_commerceManagementSystem.BLL.Dtos.OtpDto.OtpDto;
-using E_commerceManagementSystem.BLL.Dtos.OtpDto;
-using E_commerceManagementSystem.BLL.Manager.EmailManager;
-using E_commerceManagementSystem.BLL.Manager.OtpManager;
-using E_commerceManagementSystem.BLL.Manager.CartManager;
-using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
-using E_commerceManagementSystem.BLL.Dto.CartDto;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 namespace E_commerceManagementSystem.BLL.Manager.AccountManager
 {
@@ -116,8 +110,8 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
                 var cart = _mapper.Map<Cart>(addCartDto); // Map the AddCartDto to the entity
 
                 await _cartRepo.AddAsync(cart);
-                
-                
+
+
                 await _cartRepo.SaveChangesAsync();
 
                 return CreateResponse(true, null, "User registered successfully.", 201); // Created
@@ -135,7 +129,7 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
         public async Task<GeneralAccountResponse?> LoginAsync(UserLoginDTO loginDTO)
         {
             var user = await _userManager.FindByEmailAsync(loginDTO.Email);
-            
+
             if (user != null)
             {
                 var result = await _signinManager.PasswordSignInAsync(user, loginDTO.Password, false, false);
@@ -281,6 +275,6 @@ namespace E_commerceManagementSystem.BLL.Manager.AccountManager
             return generalAccountResponse;
         }
 
-     
+
     }
 }

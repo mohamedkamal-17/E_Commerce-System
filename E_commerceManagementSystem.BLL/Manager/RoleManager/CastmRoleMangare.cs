@@ -4,9 +4,6 @@ using E_commerceManagementSystem.BLL.Manager.RoleManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.Classes
 {

@@ -4,15 +4,11 @@ using E_commerceManagementSystem.BLL.Dto.PaymentDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
-using E_commerceManagementSystem.DAL.Reposatories.PaymebtRepository;
-using Stripe;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
+using E_commerceManagementSystem.DAL.Reposatories.PaymebtRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Stripe;
 using Order = E_commerceManagementSystem.DAL.Data.Models.Order;
 
 namespace E_commerceManagementSystem.BLL.Manager.PaymentManager

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace E_commerceManagementSystem.DAL.Data.Models
+﻿namespace E_commerceManagementSystem.DAL.Data.Models
 {
     public class Order
     {
@@ -12,10 +6,10 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public int Id { get; set; }
         public string? PaymentIntentId { get; set; }
         public string UserId { get; set; } //Foreign Key Referencing ApplicationUser 
-        public string Status { get; set; } =  "Pending";
-        public double? TotalPrice { get; set; } 
+        public string Status { get; set; } = "Pending";
+        public double? TotalPrice { get; set; }
         public string? Address { get; set; }
-        public DateTime? ShippingDate { get; set; }  = DateTime.Now;
+        public DateTime? ShippingDate { get; set; } = DateTime.Now;
         public DateTime? ArrivalDate { get; set; } = DateTime.Now.AddDays(10);
         public int PaymentId { get; set; }
         public virtual ApplicationUser? User { get; set; } // Navigation prop

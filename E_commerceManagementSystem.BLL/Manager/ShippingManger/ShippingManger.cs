@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using E_commerceManagementSystem.BLL.Dto.ShippingDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
+using E_commerceManagementSystem.BLL.Manager.ShippingManger;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.ShippingRepository;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using E_commerceManagementSystem.BLL.Manager.ShippingManger;
-using System.Linq.Expressions;
-using AutoMapper.QueryableExtensions; // Added for HTTP status codes
 
 namespace E_commerceManagementSystem.BLL.Manager.ShippingManager
 {
@@ -43,20 +35,20 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManager
         }
         public async Task<GeneralRespons> GetByOrderIdAsync(int id)
         {
-            return await base.GetAllByConditionAndIncludes(order => order.OrderId == id, order=>order.User);
-          
+            return await base.GetAllByConditionAndIncludes(order => order.OrderId == id, order => order.User);
+
         }
 
         public async Task<GeneralRespons> GetByShippingStateAsync(string shippingStatus)
         {
             return await base.GetAllByConditionAndIncludes(order => order.ShippingStatus == shippingStatus, order => order.User);
-           
+
         }
 
         public async Task<GeneralRespons> GetByShippingDateAsync(DateTime shippingDate)
         {
             return await base.GetAllByConditionAndIncludes(order => order.ShippedDate == shippingDate, order => order.User);
-           
+
         }
 
         public async Task<GeneralRespons> GetByTrackingNumberAsync(string trackingNumber)
@@ -65,10 +57,10 @@ namespace E_commerceManagementSystem.BLL.Manager.ShippingManager
 
 
         }
-     
-
-    }
 
 
     }
+
+
+}
 

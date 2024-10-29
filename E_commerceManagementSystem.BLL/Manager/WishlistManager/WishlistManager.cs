@@ -6,11 +6,7 @@ using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.WishlistRepsitory;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net; // Added for HTTP status codes
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.WishlistManager
 {
@@ -29,7 +25,7 @@ namespace E_commerceManagementSystem.BLL.Manager.WishlistManager
         public async Task<GeneralRespons> GetByUserID(string userId)
         {
             return await base.GetAllByConditionAndIncludes(wish => wish.UserId == userId, wish => wish.User);
-           
+
             // Fetch the wish lists for the specified userId
             var wishLists = await _wishlistRepo.GetByConditionAsync(wish => wish.UserId == userId)
                 .ProjectTo<ReadWishlistDto>(_mapper.ConfigurationProvider) // Assuming you have AutoMapper configured
@@ -44,7 +40,7 @@ namespace E_commerceManagementSystem.BLL.Manager.WishlistManager
 
             return CreateResponse(true, wishLists, "Wish lists retrieved successfully.",
                 (int)HttpStatusCode.OK); // 200 OK
-            
+
         }
     }
 }

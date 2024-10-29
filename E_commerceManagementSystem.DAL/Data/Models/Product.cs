@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace E_commerceManagementSystem.DAL.Data.Models
 {
@@ -19,7 +14,7 @@ namespace E_commerceManagementSystem.DAL.Data.Models
         public DateTime? CreatedAt { get; set; }// = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public int? CategoryId { get; set; } // Foreign Key
-        public Category? Category{ get; set; } // Navigation property
+        public Category? Category { get; set; } // Navigation property
         public ICollection<OrderItem> OrderItems { get; set; } = new HashSet<OrderItem>();// Navigation property
 
         [JsonIgnore]

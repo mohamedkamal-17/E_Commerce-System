@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.CategoryManger;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.CategoryRepository;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.CategoryManager
 {
@@ -27,10 +22,10 @@ namespace E_commerceManagementSystem.BLL.Manager.CategoryManager
 
         public async Task<GeneralRespons> GetByCategoryNameAsync(string categoryName)
         {
-          
-               return await base.GetAll(c => c.Name == categoryName);
-               
-           
+
+            return await base.GetAll(c => c.Name == categoryName);
+
+
         }
     }
 }

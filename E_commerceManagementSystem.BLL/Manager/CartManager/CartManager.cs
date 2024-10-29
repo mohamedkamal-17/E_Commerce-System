@@ -1,21 +1,12 @@
 ﻿using AutoMapper;
 using E_commerceManagementSystem.BLL.Dto.CartDto;
-using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.CartItemRepository;
 using E_commerceManagementSystem.DAL.Reposatories.CartRepository;
-using E_commerceManagementSystem.DAL.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.CartManager
 {
@@ -37,7 +28,7 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
         public override async Task<GeneralRespons> GetAllAsync()
         {
 
-            var resultList =await  _repository.GetAll(u => u.User)
+            var resultList = await _repository.GetAll(u => u.User)
                         .Include(c => c.CartItems)
                         .ThenInclude(ci => ci.Product)
                         .ToListAsync();
@@ -46,12 +37,12 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
             {
 
 
-               var dtoList = _mapper.Map<List<ReadCartDto>>(resultList);
+                var dtoList = _mapper.Map<List<ReadCartDto>>(resultList);
                 return CreateResponse(true, dtoList, "Carts retrieved successfully.", 204);
             }
             if (resultList != null && resultList.Count == 0)
             {
-               
+
                 return CreateResponse(true, null, "Carts retrieved successfully,but no cart exest", 200);
             }
 
@@ -60,19 +51,19 @@ namespace E_commerceManagementSystem.BLL.Manager.CartManager
 
         public async override Task<GeneralRespons> GetByIdAsync(int id)
         {
-            var idExsist= _repository.GetAll().Any(c=>c.Id==id);
-            if(idExsist)
+            var idExsist = _repository.GetAll().Any(c => c.Id == id);
+            if (idExsist)
             {
-                 var cart = await _repository.GetAll(c=>c.Id==id, u => u.User)
-                                                     .Include(c => c.CartItems)
+                var cart = await _repository.GetAll(c => c.Id == id, u => u.User)
+                                                    .Include(c => c.CartItems)
                                                      .ThenInclude(ci => ci.Product)
-                                                     .FirstOrDefaultAsync();
+                                                    .FirstOrDefaultAsync();
 
                 return CreateResponse(true, _mapper.Map<ReadCartDto>(cart), $"{typeof(Cart).Name} retrieved successfully.", 200);
             }
             else
                 return CreateResponse(false, null, $"no cart with this id.", 404);
-            
+
         }
 
 

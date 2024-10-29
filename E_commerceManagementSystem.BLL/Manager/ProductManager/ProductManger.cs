@@ -1,17 +1,10 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions; // Import for ProjectTo
 using E_commerceManagementSystem.BLL.Dto.ProductDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.InventoryRepository;
 using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
-using E_commerceManagementSystem.DAL.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 {
@@ -83,9 +76,9 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
 
             var inventory = new Inventory
             {
-                ProductId = product.Id,  
-                StockQuantity = product.StockQuantity ?? 0, 
-                ReorderLevel = 10, 
+                ProductId = product.Id,
+                StockQuantity = product.StockQuantity ?? 0,
+                ReorderLevel = 10,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
@@ -96,7 +89,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ProductManager
             await _repository.SaveChangesAsync();
 
             var ReadProduct = _mapper.Map<ReadProductDto>(product);
-            return new GeneralRespons {Model = ReadProduct, Success = true, Message = "Product created successfully." };
+            return new GeneralRespons { Model = ReadProduct, Success = true, Message = "Product created successfully." };
         }
     }
 }

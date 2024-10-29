@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.Dto.ReviewDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
@@ -7,12 +6,6 @@ using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
 using E_commerceManagementSystem.DAL.Reposatories.ReviewRepository;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
 {
@@ -32,7 +25,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
             _userManager = userManager;
         }
 
-        
+
         public override async Task<GeneralRespons> GetAllAsync()
         {
             return await base.GetAll(ve => ve.User, Version => Version.Product);
@@ -41,8 +34,8 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
         }
         public override async Task<GeneralRespons> GetByIdAsync(int id)
         {
-            return await base.GetAllByConditionAndIncludes(ve =>ve.Id== id, ve => ve.User, Version => Version.Product);
-            
+            return await base.GetAllByConditionAndIncludes(ve => ve.Id == id, ve => ve.User, Version => Version.Product);
+
 
 
         }

@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.Dto.InventoryDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.DAL.Data.Models;
 using E_commerceManagementSystem.DAL.Reposatories.InventoryRepository;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.InventoryManager
 {
@@ -24,7 +19,7 @@ namespace E_commerceManagementSystem.BLL.Manager.InventoryManager
             _mapper = mapper;
         }
 
-    
+
 
         public async Task<GeneralRespons> GetByProductId(int productId)
         {

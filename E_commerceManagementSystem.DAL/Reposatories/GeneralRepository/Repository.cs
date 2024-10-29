@@ -1,13 +1,7 @@
 ﻿using E_commerceManagementSystem.DAL.Data.Dphelper;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
 {
@@ -24,19 +18,19 @@ namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
 
         public async Task<IQueryable<T>> GetAllAsync()
         {
-            return  _dbSet.AsNoTracking();
+            return _dbSet.AsNoTracking();
         }
 
-        public async Task<IQueryable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
-        {
-            IQueryable<T> query = _dbSet.AsQueryable();
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+        //public async Task<IQueryable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
+        //{
+        //    IQueryable<T> query = _dbSet.AsQueryable();
+        //    foreach (var include in includes)
+        //    {
+        //        query = query.Include(include);
+        //    }
 
-            return query;
-        }
+        //    return query;
+        //}
 
 
         public async Task<T> GetByIdAsync(int id)
@@ -93,7 +87,7 @@ namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
             await _context.SaveChangesAsync();
         }
 
-    
+
         IQueryable<T> IRepository<T>.GetByConditionAsync(Expression<Func<T, bool>> expression)
         {
             IQueryable<T> result = _dbSet.Where(expression);
@@ -101,7 +95,7 @@ namespace E_commerceManagementSystem.DAL.Reposatories.GeneralRepository
         }
         public async Task SaveChangesAsync()
         {
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
     }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace E_commerceManagementSystem.DAL.Data.Models
+﻿namespace E_commerceManagementSystem.DAL.Data.Models
 {
     public class Shipping
     {
@@ -15,10 +9,10 @@ namespace E_commerceManagementSystem.DAL.Data.Models
 
         public string UserId { get; set; } // Foreign Key referencing Orders
         public ApplicationUser User { get; set; } // Navigation property
-        public bool IsDeleted { get; set; }=false;
+        public bool IsDeleted { get; set; } = false;
 
         public string ShippingMethod { get; set; } = "Care"; // e.g., Standard, Express, etc.
-        public string TrackingNumber { get; set; }=Guid.NewGuid().ToString();
+        public string TrackingNumber { get; set; } = Guid.NewGuid().ToString();
         public decimal ShippingCost { get; set; } = 60m;
 
         public DateTime? ShippedDate { get; set; } = DateTime.Now; // Nullable if not yet shipped

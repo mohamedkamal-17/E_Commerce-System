@@ -1,11 +1,8 @@
-﻿using Azure;
-using E_commerceManagementSystem.BLL.Dto.OrderDto;
+﻿using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
-using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace E_Commerce_System.Controllers
 {
@@ -60,7 +57,7 @@ namespace E_Commerce_System.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralRespons>> AddAsync([FromBody] AddOrderDto dto)
         {
-           
+
 
             var response = await _orderManager.AddAsync(dto);
             if (!response.Success)
@@ -76,7 +73,7 @@ namespace E_Commerce_System.Controllers
 
         public async Task<ActionResult<GeneralRespons>> Update(int id, [FromBody] UpdateOrderDto dto)
         {
-           
+
 
             var response = await _orderManager.UpdateAsync(id, dto);
             if (!response.Success)

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using E_commerceManagementSystem.BLL.Dto.CartDto;
+using E_commerceManagementSystem.BLL.Dto.CartItemDto;
 using E_commerceManagementSystem.BLL.Dto.CategoryDto;
 using E_commerceManagementSystem.BLL.Dto.InventoryDto;
-using E_commerceManagementSystem.BLL.Dto.CartDto;
 using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.Dto.OrederItemDto;
 using E_commerceManagementSystem.BLL.Dto.PaymentDto;
@@ -11,18 +12,10 @@ using E_commerceManagementSystem.BLL.Dto.ShippingDto;
 using E_commerceManagementSystem.BLL.Dto.WishlistDto;
 using E_commerceManagementSystem.BLL.Dto.WishListItemsDto;
 using E_commerceManagementSystem.DAL.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.IO.Pipelines;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Stripe;
 using Product = E_commerceManagementSystem.DAL.Data.Models.Product;
 using Review = E_commerceManagementSystem.DAL.Data.Models.Review;
 using Shipping = E_commerceManagementSystem.DAL.Data.Models.Shipping;
-using E_commerceManagementSystem.BLL.Dto.CartItemDto;
 
 namespace E_commerceManagementSystem.BLL.AutoMapper
 {
@@ -60,7 +53,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<Order, ReadOrderDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : string.Empty))
                            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
-;
+            ;
             // Compute TotalPrice from OrderItems
 
 
@@ -73,7 +66,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             .ForMember(dest => dest.Id, opt => opt.Ignore())
            .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
            .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
-           .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Product.Price)) 
+           .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Product.Price))
            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.Product.Price));
 
 
@@ -84,11 +77,11 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.Product.Price));
 
 
-       
+
             // CreateMap<OrderItem, AddOrderItemDto>().ReverseMap();
-//            CreateMap<OrderItem, UpdateOrderItemDto>().ReverseMap()
-//                    .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.ProductName))
-//;
+            //            CreateMap<OrderItem, UpdateOrderItemDto>().ReverseMap()
+            //                    .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.ProductName))
+            //;
             #endregion
 
             #region Review Mappings
@@ -100,7 +93,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<Review, AddReviewDto>().ReverseMap();
             #endregion
 
-            
+
             CreateMap<CartItem, ReadCartItemDto>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.Id));
@@ -121,7 +114,7 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
             CreateMap<AddPaymentDto, Payment>()
                 .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
                 .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Currency))
-               // .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
+                // .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
                 .ForMember(dest => dest.Status, opt => opt.Ignore()) // Status will be set after payment intent creation
                 .ForMember(dest => dest.PaymentIntentId, opt => opt.Ignore()) // PaymentIntentId comes from Stripe response
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // Set manually
@@ -156,12 +149,12 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
 
             // Mapping from AddShippingDto to Shipping
             CreateMap<AddShippingDto, Shipping>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src=>src.UserId)) // Set UserId in controller
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId)) // Set UserId in controller
                 .ForMember(dest => dest.ShippingStatus, opt => opt.MapFrom(_ => "Pending")) // Default status
-                //.ForMember(dest => dest.ShippedDate, opt => opt.MapFrom(_=>DateTime.Now)) 
-                //.ForMember(dest => dest.ExpectedDeliveryDate, opt => opt.MapFrom(_ => DateTime.Now.AddDays(10)))
-                //.ForMember(dest => dest.TrackingNumber, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
-                //.ForMember(dest => dest.ShippingCost, opt => opt.MapFrom(_ => 60m))
+                                                                                            //.ForMember(dest => dest.ShippedDate, opt => opt.MapFrom(_=>DateTime.Now)) 
+                                                                                            //.ForMember(dest => dest.ExpectedDeliveryDate, opt => opt.MapFrom(_ => DateTime.Now.AddDays(10)))
+                                                                                            //.ForMember(dest => dest.TrackingNumber, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
+                                                                                            //.ForMember(dest => dest.ShippingCost, opt => opt.MapFrom(_ => 60m))
 
                 .ReverseMap();
 

@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using E_commerceManagementSystem.BLL.Dto.CartDto;
 using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
-using E_commerceManagementSystem.BLL.Manager.CartManager;
 using E_commerceManagementSystem.BLL.Manager.GeneralManager;
 using E_commerceManagementSystem.BLL.Manager.InventoryManager;
 using E_commerceManagementSystem.DAL.Data.Models;
@@ -12,11 +9,6 @@ using E_commerceManagementSystem.DAL.Reposatories.InventoryRepository;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.OrderManager
 {
@@ -51,7 +43,7 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
         {
 
             return await base.GetAllByConditionAndIncludes(o => o.UserId == userId, o => o.OrderItems, o => o.User);
- 
+
         }
 
         public override async Task<GeneralRespons> AddAsync(AddOrderDto addDto)
@@ -79,7 +71,7 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
             //create a dictionary for fast look up by ProductId
             var inventoryDict = inventoryList.ToDictionary(i => i.ProductId);
 
-            foreach (var cartItem in  cart.CartItems)
+            foreach (var cartItem in cart.CartItems)
             {
 
                 //------this is old version that i check for productids from database two time in this loop and in the 2nd loop
@@ -96,7 +88,7 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
                     return CreateResponse(false, null, $"Inventory for product {cartItem.Product.ProductName} not found.", 404);
                 }
 
-                if (cartItem.Quantity > inventory.StockQuantity) 
+                if (cartItem.Quantity > inventory.StockQuantity)
                 {
                     return CreateResponse(false, null, $"Product {cartItem.Product.ProductName} has insufficient stock. Available: {inventory.StockQuantity}, Requested: {cartItem.Quantity}", 400);
                 }
@@ -111,17 +103,17 @@ namespace E_commerceManagementSystem.BLL.Manager.OrderManager
                 Address = addDto.Address,
                 TotalPrice = totalPrice,
                 PaymentId = addDto.PaymentId,
-                OrderItems = _mapper.Map<List<OrderItem>>(cart.CartItems) 
+                OrderItems = _mapper.Map<List<OrderItem>>(cart.CartItems)
             };
 
             await _repository.AddAsync(order);
 
-            foreach(var cartItem in cart.CartItems)
+            foreach (var cartItem in cart.CartItems)
             {
                 if (inventoryDict.TryGetValue(cartItem.ProductId, out var inventory))
                 {
                     inventory.StockQuantity -= cartItem.Quantity;
-                    await _inventoryRepo.UpdateAsync(inventory); 
+                    await _inventoryRepo.UpdateAsync(inventory);
                 }
             }
             var readOrderDto = _mapper.Map<ReadOrderDto>(order);

@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
-using E_commerceManagementSystem.BLL.Manager.CartItemManager;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Net; // Added for HTTP status codes
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 {
@@ -26,7 +21,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             _repository = repository;
             _mapper = mapper;
         }
-        
+
         public GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
         {
             return new GeneralRespons
@@ -58,17 +53,17 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
         }
 
-       
+
         public virtual async Task<GeneralRespons> GetByIdAsync(int id)
         {
             var result = await _repository.GetByIdAsync(id);
             if (result != null)
             {
                 var dto = _mapper.Map<TReadDto>(result);
-                return CreateResponse(true, dto, $"{typeof(T).Name} retrieved successfully.",200);
+                return CreateResponse(true, dto, $"{typeof(T).Name} retrieved successfully.", 200);
             }
 
-            return CreateResponse(false, null, $"{typeof(T).Name} not found.",404);
+            return CreateResponse(false, null, $"{typeof(T).Name} not found.", 404);
         }
 
         public virtual async Task<GeneralRespons> AddAsync(TAddDto addDto)
@@ -81,7 +76,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             await _repository.SaveChangesAsync();
             var readDto = _mapper.Map<TReadDto>(entity);
             return CreateResponse(true, readDto, $"{typeof(T).Name} added successfully.", 201);
-          
+
         }
 
         public virtual async Task<GeneralRespons> UpdateAsync(int id, TUpdateDto updateDto)
@@ -104,7 +99,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             await _repository.SaveChangesAsync();
             //var updatedReadDto =);
             return CreateResponse(true, _mapper.Map<TReadDto>(existingEntity), $"{typeof(T).Name} updated successfully.", 200);
-            
+
         }
 
         public async Task<GeneralRespons> DeleteAsync(int id)
@@ -112,7 +107,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
             var entity = await _repository.GetByIdAsync(id);
             if (entity == null)
             {
-                return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.",404);
+                return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.", 404);
             }
 
             await _repository.DeleteAsync(entity);
@@ -122,12 +117,12 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public async Task<GeneralRespons> GetAll()
         {
-            var result =await _repository.GetAll().AsNoTracking().ProjectTo<TReadDto>(_mapper.ConfigurationProvider).ToListAsync();
+            var result = await _repository.GetAll().AsNoTracking().ProjectTo<TReadDto>(_mapper.ConfigurationProvider).ToListAsync();
             if (result != null && result.Count() > 0)
                 return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully.", 200);
             if (result != null && result.Count == 0)
             {
-                
+
                 return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully. but no element exit", 200);
             }
             return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
@@ -137,7 +132,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public async Task<GeneralRespons> GetAll(Expression<Func<T, bool>> condition)
         {
-            var result=await _repository.GetAll(condition)
+            var result = await _repository.GetAll(condition)
                 .AsNoTracking()
                 .ProjectTo<TReadDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
@@ -153,7 +148,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
                  .AsNoTracking()
                  .ProjectTo<TReadDto>(_mapper.ConfigurationProvider)
                  .ToListAsync();
-            if (result != null&& result.Count()>0)
+            if (result != null && result.Count() > 0)
                 return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully.", 200);
 
             return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
@@ -162,7 +157,7 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public async Task<GeneralRespons> GetAllByConditionAndIncludes(Expression<Func<T, bool>> condition, params Expression<Func<T, object>>[] includes)
         {
-            var result = await _repository.GetAll(condition,includes)
+            var result = await _repository.GetAll(condition, includes)
                  .AsNoTracking()
                  .ProjectTo<TReadDto>(_mapper.ConfigurationProvider)
                  .ToListAsync();
