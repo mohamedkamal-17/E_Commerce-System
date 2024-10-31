@@ -26,6 +26,8 @@ namespace E_Commerce_System.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _cartManager.GetAllAsync();

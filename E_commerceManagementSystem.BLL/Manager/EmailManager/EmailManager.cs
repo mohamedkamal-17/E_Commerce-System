@@ -30,7 +30,6 @@ namespace E_commerceManagementSystem.BLL.Manager.EmailManager
 		{
 			GeneralAccountResponse response = new GeneralAccountResponse();
 			
-		
 			try
 			{
 				var message = new MailMessage
