@@ -10,7 +10,6 @@ using E_commerceManagementSystem.DAL.Reposatories.ProductRepository;
 using E_commerceManagementSystem.DAL.Repositories.Classes;
 using E_commerceManagementSystem.DAL.Reposatories.ReviewRepository;
 
-using E_commerceManagementSystem.BLL.Manager.ReviewManager;
 using E_commerceManagementSystem.DAL.Reposatories.OrederRepository;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using E_commerceManagementSystem.DAL.Reposatories.OrederItemRepository;
@@ -41,6 +40,8 @@ using System.Text;
 using E_commerceManagementSystem.BLL.AutoMapper;
 using Microsoft.OpenApi.Models;
 using E_commerceManagementSystem.BLL;
+using E_commerceManagementSystem.BLL.Manager.ProductManager.ReviewManager;
+using E_Commerce_System.Schema;
 
 
 namespace E_Commerce_System
@@ -142,7 +143,7 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IEmailManager, EmailManager>();
             builder.Services.AddMemoryCache();
 
-
+            builder.Services.AddGraphQL().AddQueryType<Query>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
              void ConfigureServices(IServiceCollection services)
             {

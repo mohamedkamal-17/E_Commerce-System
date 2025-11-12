@@ -14,7 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
+namespace E_commerceManagementSystem.BLL.Manager.ProductManager.ReviewManager
 {
     public class ReviewManager : Manager<Review, ReadReviewDto, AddReviewDto, UpdateReviewDto>, IReviewManager
     {
@@ -32,17 +32,17 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
             _userManager = userManager;
         }
 
-        
+
         public override async Task<GeneralRespons> GetAllAsync()
         {
-            return await base.GetAll(ve => ve.User, Version => Version.Product);
+            return await GetAll(ve => ve.User, Version => Version.Product);
 
 
         }
         public override async Task<GeneralRespons> GetByIdAsync(int id)
         {
-            return await base.GetAllByConditionAndIncludes(ve =>ve.Id== id, ve => ve.User, Version => Version.Product);
-            
+            return await GetAllByConditionAndIncludes(ve => ve.Id == id, ve => ve.User, Version => Version.Product);
+
 
 
         }
@@ -51,7 +51,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
         {
 
             // Check if the product exists
-            return await base.GetAllByConditionAndIncludes(ve => ve.ProductId == productId, ve => ve.User, Version => Version.Product);
+            return await GetAllByConditionAndIncludes(ve => ve.ProductId == productId, ve => ve.User, Version => Version.Product);
 
 
         }
@@ -60,7 +60,7 @@ namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
         {
 
             // Check if the user exists
-            return await base.GetAllByConditionAndIncludes(ve => ve.UserId == userId, ve => ve.User, Version => Version.Product);
+            return await GetAllByConditionAndIncludes(ve => ve.UserId == userId, ve => ve.User, Version => Version.Product);
         }
     }
 }

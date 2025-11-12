@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_commerceManagementSystem.BLL.Manager.ReviewManager
+namespace E_commerceManagementSystem.BLL.Manager.ProductManager.ReviewManager
 {
     public interface IReviewManager : IManager<Review, ReadReviewDto, AddReviewDto, UpdateReviewDto>
     {
