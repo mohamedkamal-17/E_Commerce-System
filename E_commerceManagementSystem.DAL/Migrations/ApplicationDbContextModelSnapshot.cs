@@ -44,6 +44,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -104,6 +107,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -121,18 +127,29 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.CartItem", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("CartID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId", "CartID");
+                    b.HasKey("Id");
 
                     b.HasIndex("CartID");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("CartItems", (string)null);
                 });
@@ -145,12 +162,20 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentCategoryID")
-                        .HasColumnType("int");
+                    b.Property<string>("ImgUrel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -168,12 +193,14 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReorderLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ReorderLevel")
+                        .HasColumnType("int");
 
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
@@ -198,14 +225,19 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ArrivalDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("PaymentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ShippingDate")
                         .HasColumnType("datetime2");
@@ -214,7 +246,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("TotalPrice")
+                    b.Property<double?>("TotalPrice")
                         .HasColumnType("float");
 
                     b.Property<string>("UserId")
@@ -222,6 +254,8 @@ namespace E_commerceManagementSystem.DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
 
                     b.HasIndex("UserId");
 
@@ -235,6 +269,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -268,98 +305,34 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Currency")
                         .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<string>("CustomerEmail")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("CustomerFirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("CustomerLastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("CustomerPhone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime?>("ExpiresAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GatewayName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("GatewayOrderId")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("GatewayPaymentToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GatewayPaymentUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("GatewayRawResponse")
+                    b.Property<string>("PaymentIntentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LastTransactionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LastTransactionTransactionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Metadata")
+                    b.Property<string>("PaymentMethod")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SelectedPaymentMethod")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GatewayName");
-
-                    b.HasIndex("GatewayOrderId");
-
-                    b.HasIndex("LastTransactionTransactionId");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.HasIndex("GatewayName", "GatewayOrderId");
-
-                    b.HasIndex("Status", "CreatedAt");
 
                     b.ToTable("Payments", (string)null);
                 });
@@ -387,6 +360,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.Property<int?>("InventoryId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -418,6 +394,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -453,6 +432,9 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Property<DateTime?>("ExpectedDeliveryDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -475,92 +457,18 @@ namespace E_commerceManagementSystem.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId")
                         .IsUnique();
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Shipping", (string)null);
-                });
-
-            modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Transaction", b =>
-                {
-                    b.Property<int>("TransactionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("CardBrand")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<string>("ErrorCode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("GatewayName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("GatewayRawResponse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GatewayTransactionId")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("MaskedCardNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaymentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PaymentMethod")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("TransactionId");
-
-                    b.HasIndex("GatewayName");
-
-                    b.HasIndex("GatewayTransactionId");
-
-                    b.HasIndex("PaymentId");
-
-                    b.HasIndex("ProcessedAt");
-
-                    b.HasIndex("GatewayName", "GatewayTransactionId");
-
-                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishList", b =>
@@ -571,11 +479,11 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -583,11 +491,40 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductID");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("WishLists", (string)null);
+                });
+
+            modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishListItems", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WishListId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductId1");
+
+                    b.HasIndex("WishListId");
+
+                    b.ToTable("WishListItems", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -766,11 +703,19 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Order", b =>
                 {
+                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("E_commerceManagementSystem.DAL.Data.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Payment");
 
                     b.Navigation("User");
                 });
@@ -792,23 +737,6 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Payment", b =>
-                {
-                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Transaction", "LastTransaction")
-                        .WithMany()
-                        .HasForeignKey("LastTransactionTransactionId");
-
-                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("E_commerceManagementSystem.DAL.Data.Models.Payment", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LastTransaction");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Product", b =>
@@ -847,7 +775,15 @@ namespace E_commerceManagementSystem.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.ApplicationUser", "User")
+                        .WithMany("Shipping")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Order");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Transaction", b =>
@@ -863,21 +799,36 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishList", b =>
                 {
-                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Product", "Product")
-                        .WithMany("WishList")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("E_commerceManagementSystem.DAL.Data.Models.ApplicationUser", "User")
                         .WithMany("WishList")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishListItems", b =>
+                {
+                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.Product", null)
+                        .WithMany("WishList")
+                        .HasForeignKey("ProductId1");
+
+                    b.HasOne("E_commerceManagementSystem.DAL.Data.Models.WishList", "WishList")
+                        .WithMany("WishListItems")
+                        .HasForeignKey("WishListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Product");
 
-                    b.Navigation("User");
+                    b.Navigation("WishList");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -937,6 +888,8 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.Navigation("Reviews");
 
+                    b.Navigation("Shipping");
+
                     b.Navigation("ShoppingCart");
 
                     b.Navigation("WishList");
@@ -956,10 +909,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
                 {
                     b.Navigation("OrderItems");
 
-                    b.Navigation("Payment");
-
-                    b.Navigation("Shipping")
-                        .IsRequired();
+                    b.Navigation("Shipping");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Payment", b =>
@@ -978,6 +928,11 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("WishList");
+                });
+
+            modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishList", b =>
+                {
+                    b.Navigation("WishListItems");
                 });
 #pragma warning restore 612, 618
         }

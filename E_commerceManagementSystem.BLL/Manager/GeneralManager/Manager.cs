@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.DAL.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 {
-    public class Manager<T, TAddDto, TUpdateDto> : IManager<T, TAddDto, TUpdateDto>
+    public class Manager<T, TReadDto, TAddDto, TUpdateDto> : IManager<T, TReadDto, TAddDto, TUpdateDto>
         where T : class
+        where TReadDto : class
         where TAddDto : class
         where TUpdateDto : class
     {
@@ -17,107 +18,154 @@ namespace E_commerceManagementSystem.BLL.Manager.GeneralManager
 
         public Manager(IRepository<T> repository, IMapper mapper)
         {
-            _repository = repository;// ?? throw new ArgumentNullException(nameof(repository));
-            _mapper = mapper;//?? throw new ArgumentNullException(nameof(mapper));
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        private GeneralRespons CreateResponse(bool success, object? model, string message, List<string>? errors = null)
+        public GeneralRespons CreateResponse(bool success, object? model, string message, int statusCode, List<string>? errors = null)
         {
             return new GeneralRespons
             {
                 Success = success,
                 Model = model,
                 Message = message,
+                StatusCode = statusCode, // Set StatusCode here
                 Errors = errors ?? new List<string>()
             };
         }
 
-        public async Task<GeneralRespons> GetAllAsync()
+        public virtual async Task<GeneralRespons> GetAllAsync()
         {
-            var result = await _repository.GetAllAsync();
-            if (result != null && result.Count > 0)
+            var queryableResult = await _repository.GetAllAsync();
+            var resultList = await queryableResult.ToListAsync();
+
+            if (resultList != null && resultList.Count > 0)
             {
-                return CreateResponse(true, result, $"{nameof(T)}s retrieved successfully.");
+                var dtoList = _mapper.Map<List<TReadDto>>(resultList);
+                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully.", 200);
             }
-            return CreateResponse(false, null, $"{nameof(T)}s not found.");
+            if (resultList != null && resultList.Count == 0)
+            {
+                var dtoList = _mapper.Map<List<TReadDto>>(resultList);
+                return CreateResponse(true, dtoList, $"{typeof(T).Name}s retrieved successfully. but no element exit", 200);
+            }
+
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
         }
 
-        public async Task<GeneralRespons> GetByIdAsync(int id)
+
+        public virtual async Task<GeneralRespons> GetByIdAsync(int id)
         {
             var result = await _repository.GetByIdAsync(id);
             if (result != null)
             {
-                return CreateResponse(true, result, $"{nameof(T)} retrieved successfully.");
+                var dto = _mapper.Map<TReadDto>(result);
+                return CreateResponse(true, dto, $"{typeof(T).Name} retrieved successfully.", 200);
             }
-            return CreateResponse(false, null, $"{nameof(T)} not found.");
+
+            return CreateResponse(false, null, $"{typeof(T).Name} not found.", 404);
         }
 
-        // Method for adding an entity using TAddDto
-        public async Task<GeneralRespons> AddAsync(TAddDto addDto)
+        public virtual async Task<GeneralRespons> AddAsync(TAddDto addDto)
         {
-            if (addDto == null)
-            {
-                return CreateResponse(false, null, "Add DTO cannot be null.");
-            }
-
             T entity = _mapper.Map<T>(addDto); // Map the AddDto to the entity
 
-            try
-            {
-                await _repository.AddAsync(entity);
-                return CreateResponse(true, entity, $"{nameof(T)} added successfully.");
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"Error adding {nameof(T)}: {ex.Message}", new List<string> { ex.Message });
-            }
+            await _repository.AddAsync(entity);
+
+            //save one time after all changes
+            await _repository.SaveChangesAsync();
+            var readDto = _mapper.Map<TReadDto>(entity);
+            return CreateResponse(true, readDto, $"{typeof(T).Name} added successfully.", 201);
+
         }
 
-        // Method for updating an entity using TUpdateDto
-        public async Task<GeneralRespons> UpdateAsync(int id, TUpdateDto updateDto)
+        public virtual async Task<GeneralRespons> UpdateAsync(int id, TUpdateDto updateDto)
         {
             if (updateDto == null)
             {
-                return CreateResponse(false, null, "Update DTO cannot be null.");
+                return CreateResponse(false, null, "Update DTO cannot be null.", 400);
             }
 
-            T entity = _mapper.Map<T>(updateDto); // Map the UpdateDto to the entity
-
-            try
+            var existingEntity = await _repository.GetByIdAsync(id);
+            if (existingEntity == null)
             {
-                // Optionally, check if the entity exists before updating
-                var existingEntity = await _repository.GetByIdAsync(id);
-                if (existingEntity == null)
-                {
-                    return CreateResponse(false, null, $"{nameof(T)} with ID {id} not found.");
-                }
+                return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found.", 404);
+            }
 
-                await _repository.UpdateAsync(entity);
-                return CreateResponse(true, entity, $"{nameof(T)} updated successfully.");
-            }
-            catch (Exception ex)
-            {
-                return CreateResponse(false, null, $"Error updating {nameof(T)}: {ex.Message}", new List<string> { ex.Message });
-            }
+            _mapper.Map(updateDto, existingEntity);
+
+            await _repository.UpdateAsync(existingEntity);
+            //save one time after all changes
+            await _repository.SaveChangesAsync();
+            //var updatedReadDto =);
+            return CreateResponse(true, _mapper.Map<TReadDto>(existingEntity), $"{typeof(T).Name} updated successfully.", 200);
+
         }
 
         public async Task<GeneralRespons> DeleteAsync(int id)
         {
-            try
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
             {
-                var entity = await _repository.GetByIdAsync(id);
-                if (entity == null)
-                {
-                    return CreateResponse(false, null, $"{nameof(T)} with ID {id} not found for deletion.");
-                }
+                return CreateResponse(false, null, $"{typeof(T).Name} with ID {id} not found for deletion.", 404);
+            }
 
-                await _repository.DeleteAsync(entity);
-                return CreateResponse(true, entity, $"{nameof(T)} deleted successfully.");
-            }
-            catch (Exception ex)
+            await _repository.DeleteAsync(entity);
+            await _repository.SaveChangesAsync();
+            return CreateResponse(true, null, $"{typeof(T).Name} deleted successfully.", 200);
+        }
+
+        public async Task<GeneralRespons> GetAll()
+        {
+            var result = await _repository.GetAll().AsNoTracking().ProjectTo<TReadDto>(_mapper.ConfigurationProvider).ToListAsync();
+            if (result != null && result.Count() > 0)
+                return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully.", 200);
+            if (result != null && result.Count == 0)
             {
-                return CreateResponse(false, null, $"Error deleting {nameof(T)}: {ex.Message}", new List<string> { ex.Message });
+
+                return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully. but no element exit", 200);
             }
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
+
+
+        }
+
+        public async Task<GeneralRespons> GetAll(Expression<Func<T, bool>> condition)
+        {
+            var result = await _repository.GetAll(condition)
+                .AsNoTracking()
+                .ProjectTo<TReadDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            if (result != null && result.Count() > 0)
+                return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully.", 200);
+
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
+        }
+
+        public async Task<GeneralRespons> GetAll(params Expression<Func<T, object>>[] includes)
+        {
+            var result = await _repository.GetAll(includes)
+                 .AsNoTracking()
+                 .ProjectTo<TReadDto>(_mapper.ConfigurationProvider)
+                 .ToListAsync();
+            if (result != null && result.Count() > 0)
+                return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully.", 200);
+
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
+
+        }
+
+        public async Task<GeneralRespons> GetAllByConditionAndIncludes(Expression<Func<T, bool>> condition, params Expression<Func<T, object>>[] includes)
+        {
+            var result = await _repository.GetAll(condition, includes)
+                 .AsNoTracking()
+                 .ProjectTo<TReadDto>(_mapper.ConfigurationProvider)
+                 .ToListAsync();
+            if (result != null && result.Count() > 0)
+                return CreateResponse(true, result, $"{typeof(T).Name}s retrieved successfully.", 200);
+
+            return CreateResponse(false, null, $"{typeof(T).Name}s not found.", 404);
+
         }
     }
 }

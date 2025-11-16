@@ -1,21 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace E_commerceManagementSystem.BLL.Dto.ProductDto
 {
-    public class AddproductDto
+    public class AddProductDto
     {
-      
-        public string ProductName { get; set; }
-        public string Description { get; set; }
-        public double Price { get; set; }
-        public int StockQuantity { get; set; }
-       
-        public string ImageURL { get; set; }
+        [Required]
 
-        public int CategoryId { get; set; } // Foreign Key
+        public string ProductName { get; set; }
+        [Required]
+
+        public string Description { get; set; }
+        [Required]
+
+        public double Price { get; set; }
+        [Required]
+
+        public int? StockQuantity { get; set; }
+        [Required]
+
+        public string? ImageURL { get; set; }
+        [Required]
+
+        public int? CategoryId { get; set; }
+
+
     }
 }

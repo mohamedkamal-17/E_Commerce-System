@@ -1,12 +1,6 @@
 ﻿using E_commerceManagementSystem.DAL.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_commerceManagementSystem.DAL.Configration
 {
@@ -23,7 +17,7 @@ namespace E_commerceManagementSystem.DAL.Configration
            .HasForeignKey(s => s.CategoryId);     // Define CategoryID as the foreign key
 
             // one to one relation between shoppingCart and products
-         
+
 
 
 
