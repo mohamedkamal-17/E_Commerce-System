@@ -17,6 +17,9 @@ namespace E_commerceManagementSystem.DAL.Configration
             builder.HasOne(o => o.Order)
                  .WithOne(o => o.Shipping)
                  .HasForeignKey<Shipping>(o => o.OrderId);
+
+            builder.Property(s => s.ShippingCost)
+                .HasPrecision(18, 2);
         }
     }
 }

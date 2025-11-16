@@ -23,7 +23,7 @@ namespace E_commerceManagementSystem.DAL.Configration
 
             // one to one relation between orders and payments
                builder.HasOne(a => a.Payment)
-              .WithOne(ab => ab.Orders)
+              .WithOne(ab => ab.Order)
               .HasForeignKey<Payment>(ab => ab.OrderId);
 
         }
