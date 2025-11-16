@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option csharp_namespace = "PaymentService";
+
+package payment;
+
+service PaymentGrpc{
+  rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse);
+  rpc GetPaymentStatus (GetPaymentStatusRequest) returns (GetPaymentStatusResponse);
+}
+
+
+message CreatePaymentRequest {
+    int32 order_id = 1;
+    string user_id = 2;
+
+    double amount = 3;
+    string currency = 4;
+
+    string customer_email = 5;
+    string customer_first_name = 6;
+    string customer_last_name = 7;
+    string customer_phone = 8;
+
+    string payment_method = 9; //card, wallet
+    string gateway = 10; //paymob,..
+}
+message CreatePaymentResponse {
+    int32 payment_id = 1;
+    string status = 2;
+
+    string redirect_url = 3; // link iframe for frontend
+    string payment_token = 4;
+    string gateway_order_id = 5;
+    string error_message = 6;
+}
+
+message GetPaymentStatusRequest {
+    int32 payment_id = 1;
+}
+message GetPaymentStatusResponse {
+    int32 payment_id = 1;
+    string status = 2;
+    double amount = 3;
+    string currency = 4;
+}
