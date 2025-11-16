@@ -4,6 +4,7 @@ using E_commerceManagementSystem.DAL.Data.Dphelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerceManagementSystem.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251115041331_addPaymentAndTransactions2")]
+    partial class addPaymentAndTransactions2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,7 +119,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.CartItem", b =>
@@ -134,7 +137,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("CartID");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Category", b =>
@@ -154,7 +157,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Inventory", b =>
@@ -186,7 +189,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("Inventory", (string)null);
+                    b.ToTable("Inventory");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Order", b =>
@@ -225,7 +228,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.OrderItem", b =>
@@ -257,7 +260,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Payment", b =>
@@ -361,7 +364,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("Status", "CreatedAt");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Product", b =>
@@ -405,7 +408,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Review", b =>
@@ -439,7 +442,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Shipping", b =>
@@ -480,7 +483,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Shipping", (string)null);
+                    b.ToTable("Shipping");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.Transaction", b =>
@@ -560,7 +563,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("GatewayName", "GatewayTransactionId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("E_commerceManagementSystem.DAL.Data.Models.WishList", b =>
@@ -587,7 +590,7 @@ namespace E_commerceManagementSystem.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WishLists", (string)null);
+                    b.ToTable("WishLists");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
