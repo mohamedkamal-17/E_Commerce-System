@@ -17,7 +17,7 @@ namespace E_Commerce_System.Controllers
         {
             _orderManager = orderManager;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<GeneralRespons>> GetAllAsync()
         {

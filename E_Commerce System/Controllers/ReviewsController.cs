@@ -1,6 +1,6 @@
 ﻿using E_commerceManagementSystem.BLL.Dto.ReviewDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
-using E_commerceManagementSystem.BLL.Manager.ReviewManager;
+using E_commerceManagementSystem.BLL.Manager.ProductManager.ReviewManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
