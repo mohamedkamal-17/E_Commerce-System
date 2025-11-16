@@ -25,11 +25,11 @@ namespace E_commerceManagementSystem.DAL.Data.Dphelper
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Inventory).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Review).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CartItem).Assembly);
-
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(Transaction).Assembly);
+            
             base.OnModelCreating(modelBuilder);
         }
-
+        
         public DbSet<ApplicationUser > ApplicationUser { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Inventory> Inventory { get; set; }
@@ -42,6 +42,7 @@ namespace E_commerceManagementSystem.DAL.Data.Dphelper
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<WishList> WishLists { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
 
     }
