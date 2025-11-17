@@ -18,8 +18,6 @@ using E_commerceManagementSystem.DAL.Reposatories.InventoryRepository;
 using E_commerceManagementSystem.BLL.Manager.InventoryManager;
 using E_commerceManagementSystem.DAL.Reposatories.ShippingRepository;
 using E_commerceManagementSystem.BLL.Manager.ShippingManger;
-using E_commerceManagementSystem.DAL.Reposatories.PaymebtRepository;
-using E_commerceManagementSystem.BLL.Manager.PaymentManager;
 using E_commerceManagementSystem.DAL.Reposatories.CategoryRepository;
 using E_commerceManagementSystem.BLL.Manager.CategoryManger;
 using E_commerceManagementSystem.DAL.Reposatories.WishlistRepsitory;
@@ -120,8 +118,6 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IShippingRepo, ShippingRepo>();
             builder.Services.AddScoped<IShippingManager, ShippingManager>();
 
-            builder.Services.AddScoped<IPaymentRepo, PaymentRepo>();
-            builder.Services.AddScoped<IPaymentManger, PaymentManager>();
 
             builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
             builder.Services.AddScoped<ICategoryManager, CategoryManager>();
@@ -143,7 +139,7 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IEmailManager, EmailManager>();
             builder.Services.AddMemoryCache();
 
-            builder.Services.AddGraphQL().AddQueryType<Query>();
+           // builder.Services.AddGraphQL().AddQueryType<Query>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
              void ConfigureServices(IServiceCollection services)
             {

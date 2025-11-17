@@ -12,7 +12,6 @@ using E_commerceManagementSystem.BLL.Dto.ShippingDto;
 using E_commerceManagementSystem.BLL.Dto.WishlistDto;
 using E_commerceManagementSystem.BLL.Dto.WishListItemsDto;
 using E_commerceManagementSystem.DAL.Data.Models;
-using Stripe;
 using Product = E_commerceManagementSystem.DAL.Data.Models.Product;
 using Review = E_commerceManagementSystem.DAL.Data.Models.Review;
 using Shipping = E_commerceManagementSystem.DAL.Data.Models.Shipping;
@@ -109,36 +108,36 @@ namespace E_commerceManagementSystem.BLL.AutoMapper
 
             CreateMap<Cart, AddCartDto>();
 
-            #region Payment Mappings
-            // Mapping from AddPaymentDto to Payment entity
-            CreateMap<AddPaymentDto, Payment>()
-                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
-                .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Currency))
-                // .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
-                .ForMember(dest => dest.Status, opt => opt.Ignore()) // Status will be set after payment intent creation
-                .ForMember(dest => dest.PaymentIntentId, opt => opt.Ignore()) // PaymentIntentId comes from Stripe response
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // Set manually
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore()); // Set manually
+         //   #region Payment Mappings
+         //   // Mapping from AddPaymentDto to Payment entity
+         //   CreateMap<AddPaymentDto, Payment>()
+         //      // .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
+         //       .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Currency))
+         //       // .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
+         //       .ForMember(dest => dest.Status, opt => opt.Ignore()) // Status will be set after payment intent creation
+         //     //  .ForMember(dest => dest.PaymentIntentId, opt => opt.Ignore()) // PaymentIntentId comes from Stripe response
+         //       .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // Set manually
+         //       .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore()); // Set manually
 
-            CreateMap<Cart, UpdateCartDto>().ReverseMap()
-                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.Now));
+         //   CreateMap<Cart, UpdateCartDto>().ReverseMap()
+         //       .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.Now));
 
-            CreateMap<Cart, AddCartDto>().ReverseMap()
-               .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.Now));
-            // Mapping from PaymentIntent (Stripe response) to AddIntentPaymentResponseDto
-            CreateMap<PaymentIntent, AddIntentPymentRsponsDto>()
-                .ForMember(dest => dest.PaymentIntentId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+         //   CreateMap<Cart, AddCartDto>().ReverseMap()
+         //      .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.Now));
+         //   // Mapping from PaymentIntent (Stripe response) to AddIntentPaymentResponseDto
+         ////   CreateMap<PaymentIntent, AddIntentPymentRsponsDto>()
+         //       .ForMember(dest => dest.PaymentIntentId, opt => opt.MapFrom(src => src.Id))
+         //       .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
 
-            // Mapping from Payment entity to ReadPaymentDto (optional for reading data)
-            CreateMap<Payment, ReadPaymentDto>()
-                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
-                .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Currency))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
-                .ForMember(dest => dest.PaymentIntentId, opt => opt.MapFrom(src => src.PaymentIntentId))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt));
-            #endregion
+         //   // Mapping from Payment entity to ReadPaymentDto (optional for reading data)
+         //   CreateMap<Payment, ReadPaymentDto>()
+         //       .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
+         //       .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Currency))
+         //       .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+         //       .ForMember(dest => dest.PaymentIntentId, opt => opt.MapFrom(src => src.PaymentIntentId))
+         //       .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+         //       .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt));
+         //   #endregion
 
             #region Shipping Mappings
             // Mapping from Shipping to ReadShippingDto

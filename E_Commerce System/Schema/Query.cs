@@ -1,7 +1,6 @@
 ﻿using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
-using Stripe.Climate;
 using System;
 using System.Collections.Generic;
 using System.Linq;

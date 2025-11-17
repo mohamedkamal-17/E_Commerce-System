@@ -1,8 +1,12 @@
-﻿using E_commerceManagementSystem.BLL.Dto.OrderDto;
+﻿using Azure;
+using E_commerceManagementSystem.BLL.Dto.OrderDto;
 using E_commerceManagementSystem.BLL.DTOs.GeneralResponseDto;
 using E_commerceManagementSystem.BLL.Manager.OrderManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PaymentService;
+using PaymentService.DTOs;
+using Stripe;
 
 namespace E_Commerce_System.Controllers
 {
@@ -12,10 +16,12 @@ namespace E_Commerce_System.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderManager _orderManager;
+        private readonly PaymentGrpc.PaymentGrpcClient _grpcClient;
 
-        public OrderController(IOrderManager orderManager)
+        public OrderController(IOrderManager orderManager, PaymentGrpc.PaymentGrpcClient grpcClient)
         {
             _orderManager = orderManager;
+            _grpcClient = grpcClient;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -67,6 +73,45 @@ namespace E_Commerce_System.Controllers
             }
 
             return Ok(response);
+        }
+
+        [HttpPost("orders/{orderId}/pay")]
+
+        public async Task<ActionResult> PayOrder(int orderId)
+        {
+            var response = await _orderManager.GetByIdAsync(orderId);
+            if (!response.Success)
+                return StatusCode(response.StatusCode, response);
+
+            var order = response.Model as ReadOrderDto;
+
+            if (order == null)
+                return BadRequest("Order data is missing");
+
+            var grpcRequest = new CreatePaymentRequest
+            {
+                OrderId = orderId,
+                UserId = order.UserId,
+                Amount = (double)order.TotalPrice,
+                CustomerEmail = order.UserEmail,
+                CustomerFirstName = order.UserName,
+                CustomerLastName = "",
+                CustomerPhone = order.UserPhoneNumber,
+                Currency = "EGP",
+                PaymentMethod = "card",
+                Gateway = "paymob"
+            };
+
+            var grpcResponse = await _grpcClient.CreatePaymentAsync(grpcRequest);
+            if (grpcResponse.Status != "success")
+                return BadRequest(grpcResponse.ErrorMessage);
+
+            return Ok(new
+            {
+                RedirectUri = grpcResponse.RedirectUrl,
+                PaymentId = grpcResponse.PaymentId,
+                paymentToken = grpcResponse.PaymentToken
+            });
         }
 
         [HttpPut("{id}")]

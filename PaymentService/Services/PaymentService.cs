@@ -32,7 +32,7 @@ namespace PaymentService.Services
             //get token to use paymob APIs
             string token = await _paymob.Authenticate();
 
-            int paymobOrderId = await _paymob.CreateOrder(token, request.Amount);
+            int paymobOrderId = await _paymob.CreateOrder(token, request.Amount,request.OrderId);
 
             string paymentToken = await _paymob.CreatePaymentKey(
                 token,

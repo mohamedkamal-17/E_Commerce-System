@@ -7,6 +7,8 @@ namespace E_commerceManagementSystem.BLL.Dto.OrderDto
         public int Id { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
+        public string UserEmail { get; set; }
+        public string UserPhoneNumber { get; set; }
         public string Status { get; set; }
         public double? TotalPrice { get; set; }
         public string Address { get; set; }

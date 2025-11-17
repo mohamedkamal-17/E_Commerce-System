@@ -7,5 +7,7 @@
        public string IframeId               { get; set; }
        public string BaseUrl { get; set; } = "https://accept.paymob.com";
         public string HmacSecret { get; set; }
+        public string WebhookSecret { get; set; } = string.Empty; 
+
     }
 }

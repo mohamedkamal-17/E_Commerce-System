@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\E_commerceManagementSystem.DAL\E_commerceManagementSystem.DAL.csproj" />
+    <ProjectReference Include="..\PaymentService\PaymentService.csproj" />
   </ItemGroup>
 
 </Project>

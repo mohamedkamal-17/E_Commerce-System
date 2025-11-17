@@ -8,16 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <Protobuf Include="Protos\Payment.proto" GrpcServices="Both" />
+	  <PackageReference Include="Grpc.Core.Api" Version="2.71.0" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\E_commerceManagementSystem.BLL\E_commerceManagementSystem.BLL.csproj" />
+    <ProjectReference Include="..\PaymentService\PaymentService.csproj" />
   </ItemGroup>
 
 </Project>
