@@ -68,18 +68,18 @@ namespace E_Commerce_System.Controllers
         //}
 
         // GET: api/Payment/{paymentId}
-        [HttpGet("{paymentId}")]
-        public async Task<IActionResult> GetPaymentDetails(int paymentId)
-        {
-            var response = await _paymentManager.GetByIdAsync(paymentId);
+        //[HttpGet("{paymentId}")]
+        //public async Task<IActionResult> GetPaymentDetails(int paymentId)
+        //{
+        //    var response = await _paymentManager.GetByIdAsync(paymentId);
 
-            if (!response.Success)
-            {
-                // Check status code in response and return appropriate result
-                return StatusCode(response.StatusCode, response);
-            }
+        //    if (!response.Success)
+        //    {
+        //        // Check status code in response and return appropriate result
+        //        return StatusCode(response.StatusCode, response);
+        //    }
 
-            return Ok(response); // Return 200 with payment details
-        }
+        //    return Ok(response); // Return 200 with payment details
+        //}
     }
 }
